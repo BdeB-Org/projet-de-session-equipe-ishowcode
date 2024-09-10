@@ -1,5 +1,6 @@
 import * as React from "react"
 
+//Ce composant est un simple composant d'entrée qui peut être utilisé pour les formulaires.
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(

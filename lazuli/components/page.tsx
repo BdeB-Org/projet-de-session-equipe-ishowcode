@@ -3,8 +3,11 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
+//  cette page est la page d'accueil de notre application, elle contient un header, un main et un footer
 export function Page() {
   return (
+
+    //  le header contient le nom de la plateforme et un menu de navigation
     <div className="flex flex-col min-h-screen bg-blue-900 text-blue-100">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-blue-700">
         <Link className="flex items-center justify-center" href="#">

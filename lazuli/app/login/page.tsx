@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-
+//  cette page est la page de connexion de notre application, elle contient un header, un main et un footer
 export default function LoginPage() {
   return (
     <div className="flex flex-col min-h-screen bg-blue-900 text-blue-100">
