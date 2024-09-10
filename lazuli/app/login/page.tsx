@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-blue-900 text-blue-100">
+    <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-blue-700">
         <Link className="flex items-center justify-center" href="/">
           <span className="font-bold text-xl">Lazuli</span>
@@ -52,9 +52,10 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600">
-                Se connecter
-              </Button>
+              <Link href="/Dashboard">
+                <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600">
+                    Se connecter</Button>
+              </Link>  
             </div>
           </form>
           <div className="text-center">
