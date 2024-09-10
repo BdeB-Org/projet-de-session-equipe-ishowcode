@@ -1,5 +1,6 @@
 import * as React from "react"
 
+//Ce composant est un simple composant de libellé qui peut être utilisé pour les formulaires.
 export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(

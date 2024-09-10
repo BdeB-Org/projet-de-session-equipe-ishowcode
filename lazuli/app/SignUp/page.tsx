@@ -17,16 +17,16 @@ export default function SignupPage() {
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold">Créer un compte</h2>
-            <p className="mt-2 text-sm text-blue-300">
+            <h2 className="mt-6 text-3xl font-bold slide-down">Créer un compte</h2>
+            <p className="mt-2 text-sm text-blue-300 slide-down">
               Remplissez les informations ci-dessous pour créer votre compte.
             </p>
           </div>
-          <form className="mt-8 space-y-6" action="#" method="POST">
+          <form className="mt-8 space-y-6 " action="#" method="POST">
             <div className="space-y-4 rounded-md shadow-sm">
-              <div>
+              <div className= "slide-down-form1">
                 <Label htmlFor="name" className="sr-only">
-                  Nom complet
+                Prénom
                 </Label>
                 <Input
                   id="name"
@@ -35,10 +35,24 @@ export default function SignupPage() {
                   autoComplete="name"
                   required
                   className="bg-blue-800 text-blue-100 placeholder-blue-400 focus:ring focus:ring-blue-500"
-                  placeholder="Nom complet"
+                  placeholder="Prénom"
                 />
               </div>
-              <div>
+              <div className= "slide-down-form2">
+                <Label htmlFor="name" className="sr-only">
+                  Nom
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  className="bg-blue-800 text-blue-100 placeholder-blue-400 focus:ring focus:ring-blue-500"
+                  placeholder="Nom"
+                />
+              </div>
+              <div className= "slide-down-form3">
                 <Label htmlFor="email-address" className="sr-only">
                   Adresse e-mail
                 </Label>
@@ -52,7 +66,7 @@ export default function SignupPage() {
                   placeholder="Adresse e-mail"
                 />
               </div>
-              <div>
+              <div className= "slide-down-form4">
                 <Label htmlFor="password" className="sr-only">
                   Mot de passe
                 </Label>
@@ -66,7 +80,7 @@ export default function SignupPage() {
                   placeholder="Mot de passe"
                 />
               </div>
-              <div>
+              <div className= "slide-down-form5">
                 <Label htmlFor="confirm-password" className="sr-only">
                   Confirmez le mot de passe
                 </Label>
@@ -116,15 +130,31 @@ export default function SignupPage() {
         @tailwind utilities;
 
         .fade-in {
-          animation: fadeIn 0.8s ease-in-out;
+          animation: fadeIn 1.5s ease-in-out;
         }
         .slide-down {
-          animation: slideDown 0.5s ease-in-out;
+          animation: slideDown 1.5s ease-in-out;
+        }
+
+        .slide-down-form1 {
+          animation: slideDown 1.8s ease-in-out;
+        }
+          .slide-down-form2 {
+          animation: slideDown 2.2s ease-in-out;
+        }
+          .slide-down-form3 {
+          animation: slideDown 2.6s ease-in-out;
+        }
+          .slide-down-form4 {
+          animation: slideDown 3.0s ease-in-out;
+        }
+          .slide-down-form5 {
+          animation: slideDown 3.4s ease-in-out;
         }
 
         @keyframes fadeIn {
           from {
-            opacity: 0;
+            opacity: 0.5;
           }
           to {
             opacity: 1;
@@ -133,7 +163,7 @@ export default function SignupPage() {
 
         @keyframes slideDown {
           from {
-            transform: translateY(-50px);
+            transform: translateY(-100px);
             opacity: 0;
           }
           to {
