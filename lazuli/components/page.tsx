@@ -74,6 +74,12 @@ export function Page() {
               Démarrer la Simulation
             </Button>
           </Link>
+          <h1>-------</h1>
+          <Link href="/SignUp">
+            <Button className="bg-blue-500 text-white hover:bg-blue-600">
+              Devenir un membre
+            </Button>
+          </Link>
           <div className="mt-8 p-4 bg-blue-800 rounded-lg">
             <h2 className="text-lg font-semibold mb-2">Mode Simulation Actif</h2>
             <p className="text-sm text-blue-300">Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.</p>
