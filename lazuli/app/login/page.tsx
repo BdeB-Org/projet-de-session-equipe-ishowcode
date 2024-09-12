@@ -53,9 +53,11 @@ export default function LoginPage() {
             </div>
 
             <div>
+            <Link href="/Dashboard">
               <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
                 Se connecter
               </Button>
+            </Link>
             </div>
           </form>
           <div className="text-center slide-down-form3">

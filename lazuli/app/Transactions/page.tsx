@@ -12,7 +12,7 @@ const containerVariants = {
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
 };
 
-export default function DashboardPage() {
+export default function TransactionsPage() {
   return (
     <motion.div 
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
@@ -21,17 +21,17 @@ export default function DashboardPage() {
     >
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
-        <Link className="flex items-center justify-center" href="/">
+        <Link className="flex items-center justify-center" href="/dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-6">
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">
             Dashboard
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="#">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">
             Transactions
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="#">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/profil">
             Profil
           </Link>
         </nav>
@@ -48,14 +48,13 @@ export default function DashboardPage() {
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
               🏠 Accueil
             </Link>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
+            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/explore">
               🔎 Explore
             </Link>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
+            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/transfer">
               🔄 Transfer
             </Link>
-
-            {/* Align image and text horizontally */}
+            {/* Aligner l'image et le texte sur une seule ligne */}
             <div className="flex items-center space-x-2">
               <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />
               <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
@@ -65,47 +64,15 @@ export default function DashboardPage() {
           </nav>
         </motion.aside>
 
-        {/* Dashboard main panel */}
+        {/* Transactions panel */}
         <section className="flex-1 space-y-6">
-          {/* Balance summary */}
+          {/* Title */}
           <motion.div 
             className="bg-white p-6 rounded-lg shadow-md"
             variants={containerVariants}
           >
-            <h2 className="text-xl font-semibold">Solde total</h2>
-            <div className="flex items-center justify-between mt-4">
-              <p className="text-4xl font-bold">CA$172.03</p>
-              <p className="text-red-600 text-sm">-CA$69.07 (-28.65%)</p>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">Disponible pour échanger : CA$0.35</p>
-            <div className="mt-6">
-              {/* Graphique placeholder */}
-              <motion.div 
-                className="h-40 bg-gray-200 rounded-lg"
-                whileHover={{ scale: 1.05 }}
-              >
-                <p className="flex items-center justify-center h-full">Graphique</p>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Actions */}
-          <motion.div 
-            className="flex gap-4 justify-center"
-            variants={containerVariants}
-          >
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
-              Acheter
-            </Button>
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
-              Vendre
-            </Button>
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
-              Convertir
-            </Button>
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
-              Dépôt
-            </Button>
+            <h2 className="text-xl font-semibold">Historique des transactions</h2>
+            <p className="text-gray-600 mt-4">Aucune transaction à afficher pour le moment.</p>
           </motion.div>
         </section>
       </main>
