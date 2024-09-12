@@ -76,7 +76,7 @@ export default function SignupPage() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Mot de passe"
                 />
               </div>
@@ -90,7 +90,7 @@ export default function SignupPage() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Confirmez le mot de passe"
                 />
               </div>

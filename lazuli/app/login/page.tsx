@@ -32,7 +32,7 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400  rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150  rounded-full text-lg py-3 px-4"
                   placeholder="Adresse e-mail"
                 />
               </div>
@@ -46,7 +46,7 @@ export default function LoginPage() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400 rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
                   placeholder="Mot de passe"
                 />
               </div>
