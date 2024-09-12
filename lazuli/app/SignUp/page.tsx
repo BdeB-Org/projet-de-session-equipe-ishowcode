@@ -97,7 +97,7 @@ export default function SignupPage() {
             </div>
             <div className="slide-down-form6">
             <div className="hover:animate-pulse">
-                <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 rounded-full text-sm py-2 px-3">
+                <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
                 S'inscrire
                 </Button>
             </div>

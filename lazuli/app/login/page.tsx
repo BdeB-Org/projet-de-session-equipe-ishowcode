@@ -53,12 +53,12 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full">
+              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
                 Se connecter
               </Button>
             </div>
           </form>
-          <div className="text-center">
+          <div className="text-center slide-down-form3">
             <Link className="text-sm text-blue-300 hover:text-blue-200" href="#">
               Mot de passe oublié ?
             </Link>
@@ -96,7 +96,9 @@ export default function LoginPage() {
           .slide-down-form2 {
           animation: slideDown 2.2s ease-in-out;
         }
-
+        .slide-down-form3 {
+          animation: slideUp 2s ease-in-out;
+        }
 
         @keyframes fadeIn {
           from {
@@ -110,6 +112,16 @@ export default function LoginPage() {
         @keyframes slideDown {
           from {
             transform: translateY(-100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+          @keyframes slideUp {
+          from {
+            transform: translateY(100px);
             opacity: 0;
           }
           to {

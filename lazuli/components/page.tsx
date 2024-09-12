@@ -8,15 +8,18 @@ export function Page() {
   return (
 
     //  le header contient le nom de la plateforme et un menu de navigation
-    <div className="flex flex-col min-h-screen bg-blue-900 text-blue-100">
-      <header className="px-4 lg:px-6 h-14 flex items-center border-b border-blue-700">
+    <div className="flex flex-col min-h-screen bg-[#1a1a40] text-blue-100">
+      <header className="px-4 lg:px-6 h-14 flex items-center border-b border-blue-100">
         <Link className="flex items-center justify-center" href="#">
           <span className="font-bold text-xl">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Button className="bg-green-500 text-white hover:bg-green-600 animate-pulse">
+
+          {/* 
+          <Button className="bg-blue-100 text-black hover:bg-blue-600 animate-pulse">
             Commencer
-          </Button>
+           </Button>*/}
+
           <Link className="text-sm font-medium hover:text-blue-300" href="#">
             À propos
           </Link>
@@ -31,7 +34,7 @@ export function Page() {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 784.37 1277.39"
-              className="w-full h-full text-blue-300 animate-pulse"
+              className="w-full h-full animate-pulse"
               aria-label="Logo Crypto animé"
             >
               <g>
@@ -67,36 +70,36 @@ export function Page() {
                 />
               </g>
             </svg>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900 opacity-50"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent  opacity-50"></div>
           </div>
           <h1 className="text-4xl font-bold mb-4">Bienvenue sur Lazuli</h1>
-          <p className="text-xl text-blue-300 mb-4">Simulateur de Trading Crypto</p>
-          <p className="text-md text-blue-200 mb-8">Expérimentez le trading de crypto-monnaies sans risque avec notre plateforme de simulation avancée. Perfectionnez vos stratégies sans utiliser de vraie monnaie.</p>
+          <p className="text-xl text-blue-100 mb-4">Simulateur de Trading Crypto</p>
+          <p className="text-md text-blue-100 mb-8">Expérimentez le trading de crypto-monnaies sans risque avec notre plateforme de simulation avancée. Perfectionnez vos stratégies sans utiliser de vraie monnaie.</p>
           <Link href="/login">
-            <Button className="bg-blue-500 text-white hover:bg-blue-600">
+            <Button className="bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full ">
               Démarrer la Simulation
             </Button>
           </Link>
-          <h1>-------</h1>
+          <h1>- - - - - - -</h1>
           <Link href="/SignUp">
-            <Button className="bg-blue-500 text-white hover:bg-blue-600">
+            <Button className=" bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full ">
               Devenir un membre
             </Button>
           </Link>
-          <div className="mt-8 p-4 bg-blue-800 rounded-lg">
+          <div className="mt-8 p-4 bg-[#3b3b82] rounded-lg">
             <h2 className="text-lg font-semibold mb-2">Mode Simulation Actif</h2>
-            <p className="text-sm text-blue-300">Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.</p>
+            <p className="text-sm text-blue-100">Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.</p>
           </div>
         </div>
       </main>
-      <footer className="py-6 px-4 md:px-6 border-t border-blue-700">
+      <footer className="py-6 px-4 md:px-6 border-t border-[#3b3b82]">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-blue-400">© 2023 Lazuli. Tous droits réservés. Ceci est une plateforme de simulation.</p>
+          <p className="text-sm text-blue-100">© 2024 Lazuli. Tous droits réservés. Ceci est une plateforme de simulation.</p>
           <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
-            <Link className="text-sm text-blue-400 hover:text-blue-300" href="#">
+            <Link className="text-sm text-blue-100 hover:text-blue-100" href="#">
               Conditions d'utilisation
             </Link>
-            <Link className="text-sm text-blue-400 hover:text-blue-300" href="#">
+            <Link className="text-sm text-blue-100 hover:text-blue-100" href="#">
               Politique de confidentialité
             </Link>
           </nav>
