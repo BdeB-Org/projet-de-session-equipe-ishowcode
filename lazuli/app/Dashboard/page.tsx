@@ -1,9 +1,9 @@
 'use client'
 
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Image from 'next/image'; 
+import Image from 'next/image'
 import myImage from '../Images/transaction_logo.webp'; 
 
 // Animation variants
