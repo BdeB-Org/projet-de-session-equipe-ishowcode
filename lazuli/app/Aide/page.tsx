@@ -9,9 +9,9 @@ export default function Support() {
 
   const faqs = [
     {
-      question: "Qu'est-ce que la Blockchain ?",
+      question: "Qu'est-ce que Lazuli ?",
       answer:
-        "La Blockchain est une technologie décentralisée utilisée pour stocker des informations de manière sécurisée sur plusieurs ordinateurs. Elle garantit l'intégrité des données et permet l'utilisation de cryptomonnaies telles que le Bitcoin.",
+        "La Lazuli est une technologie décentralisée utilisée pour stocker des informations de manière sécurisée sur plusieurs ordinateurs. Elle garantit l'intégrité des données et permet l'utilisation de cryptomonnaies telles que le Bitcoin.",
     },
     {
       question: "Comment sécuriser mon portefeuille ?",
@@ -281,7 +281,7 @@ export default function Support() {
         }
 
         .beat-animation {
-          animation: beatAnimation 2s ease-in-out infinite;
+          animation: beatAnimation 5s ease-in-out infinite;
         }
 
         .lazuli-hover-effect:hover {

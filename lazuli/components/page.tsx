@@ -80,7 +80,7 @@ export function Page() {
               Démarrer la Simulation
             </Button>
           </Link>
-          <h1>- - - - - - -</h1>
+          <br /><br />
           <Link href="/SignUp">
             <Button className=" bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full ">
               Devenir un membre
