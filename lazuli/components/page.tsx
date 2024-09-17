@@ -1,13 +1,9 @@
-'use client'
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import ChatIcon from "@/components/chatIcon"; 
 
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-
-//  cette page est la page d'accueil de notre application, elle contient un header, un main et un footer
 export function Page() {
   return (
-
-    //  le header contient le nom de la plateforme et un menu de navigation
     <div className="flex flex-col min-h-screen bg-blue-900 text-blue-100">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-blue-700">
         <Link className="flex items-center justify-center" href="#">
@@ -25,6 +21,7 @@ export function Page() {
           </Link>
         </nav>
       </header>
+
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="text-center max-w-2xl">
           <div className="relative w-64 h-64 mx-auto mb-8">
@@ -71,7 +68,11 @@ export function Page() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Bienvenue sur Lazuli</h1>
           <p className="text-xl text-blue-300 mb-4">Simulateur de Trading Crypto</p>
-          <p className="text-md text-blue-200 mb-8">Expérimentez le trading de crypto-monnaies sans risque avec notre plateforme de simulation avancée. Perfectionnez vos stratégies sans utiliser de vraie monnaie.</p>
+          <p className="text-md text-blue-200 mb-8">
+            Expérimentez le trading de crypto-monnaies sans risque avec notre
+            plateforme de simulation avancée. Perfectionnez vos stratégies sans
+            utiliser de vraie monnaie.
+          </p>
           <Link href="/login">
             <Button className="bg-blue-500 text-white hover:bg-blue-600">
               Démarrer la Simulation
@@ -85,23 +86,38 @@ export function Page() {
           </Link>
           <div className="mt-8 p-4 bg-blue-800 rounded-lg">
             <h2 className="text-lg font-semibold mb-2">Mode Simulation Actif</h2>
-            <p className="text-sm text-blue-300">Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.</p>
+            <p className="text-sm text-blue-300">
+              Tous les échanges et soldes sur cette plateforme sont simulés.
+              Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.
+            </p>
           </div>
         </div>
       </main>
+
       <footer className="py-6 px-4 md:px-6 border-t border-blue-700">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-blue-400">© 2023 Lazuli. Tous droits réservés. Ceci est une plateforme de simulation.</p>
+          <p className="text-sm text-blue-400">
+            © 2023 Lazuli. Tous droits réservés. Ceci est une plateforme de
+            simulation.
+          </p>
           <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
-            <Link className="text-sm text-blue-400 hover:text-blue-300" href="#">
+            <Link
+              className="text-sm text-blue-400 hover:text-blue-300"
+              href="#"
+            >
               Conditions d'utilisation
             </Link>
-            <Link className="text-sm text-blue-400 hover:text-blue-300" href="#">
+            <Link
+              className="text-sm text-blue-400 hover:text-blue-300"
+              href="#"
+            >
               Politique de confidentialité
             </Link>
           </nav>
         </div>
       </footer>
+
+      <ChatIcon />
     </div>
-  )
+  );
 }
