@@ -32,7 +32,7 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400  rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150  rounded-full text-lg py-3 px-4"
                   placeholder="Adresse e-mail"
                 />
               </div>
@@ -46,19 +46,19 @@ export default function LoginPage() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400 rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
                   placeholder="Mot de passe"
                 />
               </div>
             </div>
 
             <div>
-              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full">
+              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
                 Se connecter
               </Button>
             </div>
           </form>
-          <div className="text-center">
+          <div className="text-center slide-down-form3">
             <Link className="text-sm text-blue-300 hover:text-blue-200" href="#">
               Mot de passe oublié ?
             </Link>
@@ -96,7 +96,9 @@ export default function LoginPage() {
           .slide-down-form2 {
           animation: slideDown 2.2s ease-in-out;
         }
-
+        .slide-down-form3 {
+          animation: slideUp 2s ease-in-out;
+        }
 
         @keyframes fadeIn {
           from {
@@ -110,6 +112,16 @@ export default function LoginPage() {
         @keyframes slideDown {
           from {
             transform: translateY(-100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+          @keyframes slideUp {
+          from {
+            transform: translateY(100px);
             opacity: 0;
           }
           to {

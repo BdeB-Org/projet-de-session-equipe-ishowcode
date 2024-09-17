@@ -76,7 +76,7 @@ export default function SignupPage() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Mot de passe"
                 />
               </div>
@@ -90,14 +90,14 @@ export default function SignupPage() {
                   type="password"
                   autoComplete="new-password"
                   required
-                  className="bg-white text-blue-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-150 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Confirmez le mot de passe"
                 />
               </div>
             </div>
             <div className="slide-down-form6">
             <div className="hover:animate-pulse">
-                <Button type="submit" className="w-full bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300 rounded-full text-sm py-2 px-3">
+                <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
                 S'inscrire
                 </Button>
             </div>
