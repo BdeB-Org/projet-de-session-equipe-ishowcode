@@ -23,7 +23,7 @@ export function Page() {
           <Link className="text-sm font-medium hover:text-blue-300" href="/APropos">
             À propos
           </Link>
-          <Link className="text-sm font-medium hover:text-blue-300" href="#">
+          <Link className="text-sm font-medium hover:text-blue-300" href="/Aide">
             Aide
           </Link>
         </nav>
