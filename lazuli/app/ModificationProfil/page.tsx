@@ -4,9 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from 'next/image';
-import myImage from '../Images/transaction_logo.webp';
-import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 
 // Animation variants
 const containerVariants = {
@@ -16,15 +13,17 @@ const containerVariants = {
 
 const dropdownVariants = {
   hidden: { opacity: 0, height: 0 },
-  visible: { opacity: 1, height: "auto", transition: { duration: 0.3 } },
+  visible: { opacity: 1, height: "auto", transition: { duration: 0.6 } },
 };
 
 const buttonVariants = {
-  hover: { scale: 1.05, transition: { duration: 0.2 } },
+  hover: { scale: 1.05, transition: { duration: 0.8 } },
 };
 
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [birthDate, setBirthDate] = useState("1990-01-01"); // Initialize with the date
+  const [isEditing, setIsEditing] = useState(false); // State to toggle editing mode
 
   return (
     <motion.div 
@@ -38,43 +37,24 @@ export default function ProfilPage() {
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">
-            Dashboard
-          </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">
-            Transactions
-          </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
-            Profil
-          </Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">Dashboard</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">Transactions</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">Profil</Link>
         </nav>
       </header>
 
       {/* Main content */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
-        {/* Sidebar */}
-        <motion.aside 
-          className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md"
-          variants={containerVariants}
-        >
-          <nav className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Image src={accueilLogoImg.src} alt="Accueil Icon" width={30} height={30} />
-              <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-                Accueil
-              </Link>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />
-              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
-                Transactions
-              </Link>
-            </div>
-          </nav>
-        </motion.aside>
-
         {/* Profil panel */}
         <section className="flex-1 space-y-6">
+          <motion.div variants={buttonVariants} whileHover="hover">
+            <Link href="/Profil">
+              <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
+                Retour
+              </Button>
+            </Link>
+          </motion.div>
+
           {/* Title */}
           <motion.div 
             className="bg-white p-6 rounded-lg shadow-md"
@@ -94,7 +74,19 @@ export default function ProfilPage() {
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Date de naissance :</p>
-                <p className="text-lg">01 Janvier 1990</p>
+                {isEditing ? (
+                  <input 
+                    type="date" 
+                    value={birthDate} 
+                    onChange={(e) => setBirthDate(e.target.value)} 
+                    className="text-lg border border-gray-300 rounded px-2"
+                  />
+                ) : (
+                  <p className="text-lg">{birthDate}</p>
+                )}
+                <Button onClick={() => setIsEditing(!isEditing)} >
+                  {isEditing ? "Sauvegarder" : "Modifier"}
+                </Button>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Gain</p>
@@ -127,20 +119,8 @@ export default function ProfilPage() {
             {/* Buttons */}
             <div className="flex gap-4 mt-5">
               <motion.div variants={buttonVariants} whileHover="hover">
-              <Link href="/ModificationProfil">
-                <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
-                  Modifier le profil
-                </Button>
-              </Link>
-              </motion.div>
-              <motion.div variants={buttonVariants} whileHover="hover">
                 <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
                   Changer le mot de passe
-                </Button>
-              </motion.div>
-              <motion.div variants={buttonVariants} whileHover="hover">
-                <Button className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-400 transition duration-300">
-                  Supprimer le compte
                 </Button>
               </motion.div>
             </div>
@@ -153,12 +133,8 @@ export default function ProfilPage() {
         <div className="container mx-auto flex justify-between items-center">
           <p className="text-sm text-gray-500">© 2024 Lazuli. Tous droits réservés.</p>
           <nav className="flex gap-4">
-            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">
-              Terms of Use
-            </Link>
-            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">
-              Privacy Policy
-            </Link>
+            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">Terms of Use</Link>
+            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">Privacy Policy</Link>
           </nav>
         </div>
       </footer>
