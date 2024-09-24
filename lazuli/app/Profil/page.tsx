@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import Image from 'next/image'; 
+import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 
@@ -13,7 +13,7 @@ const containerVariants = {
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
 };
 
-export default function TransactionsPage() {
+export default function ProfilPage() {
   return (
     <motion.div 
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
@@ -49,16 +49,9 @@ export default function TransactionsPage() {
           <div className="flex items-center space-x-2">
           <Image src={accueilLogoImg.src} alt="Transaction Icon" width={30} height={30} />
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-              Accueil
+               Accueil
             </Link>
             </div>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/explore">
-              🔎 Explore
-            </Link>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/transfer">
-              🔄 Transfer
-            </Link>
-            {/* Aligner l'image et le texte sur une seule ligne */}
             <div className="flex items-center space-x-2">
               <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />
               <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
@@ -68,15 +61,40 @@ export default function TransactionsPage() {
           </nav>
         </motion.aside>
 
-        {/* Transactions panel */}
+        {/* Profil panel */}
         <section className="flex-1 space-y-6">
           {/* Title */}
           <motion.div 
             className="bg-white p-6 rounded-lg shadow-md"
             variants={containerVariants}
           >
-            <h2 className="text-xl font-semibold">Historique des transactions</h2>
-            <p className="text-gray-600 mt-4">Aucune transaction à afficher pour le moment.</p>
+            <h2 className="text-xl font-semibold">Mon Profil</h2>
+
+            {/* Profile Info */}
+            <div className="mt-4 space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between">
+                <p className="text-lg font-medium">Nom complet :</p>
+                <p className="text-lg">Jean Dupont</p>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-between">
+                <p className="text-lg font-medium">Adresse e-mail :</p>
+                <p className="text-lg">jeandupont@email.com</p>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-between">
+                <p className="text-lg font-medium">Date de naissance :</p>
+                <p className="text-lg">01 Janvier 1990</p>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-4 mt-6">
+              <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
+                Modifier le profil
+              </Button>
+              <Button className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-400">
+                Se déconnecter
+              </Button>
+            </div>
           </motion.div>
         </section>
       </main>

@@ -4,7 +4,8 @@ import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from 'next/image'
-import myImage from '../Images/transaction_logo.webp'; 
+import transactionLogoImg from '../Images/transaction_logo.webp'; 
+import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 
 // Animation variants
 const containerVariants = {
@@ -31,7 +32,7 @@ export default function DashboardPage() {
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="#">
             Transactions
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="#">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
             Profil
           </Link>
         </nav>
@@ -45,19 +46,20 @@ export default function DashboardPage() {
           variants={containerVariants}
         >
           <nav className="space-y-4">
+          <div className="flex items-center space-x-2">
+          <Image src={accueilLogoImg.src} alt="Transaction Icon" width={30} height={30} />
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-              🏠 Accueil
+              Accueil
             </Link>
+            </div>
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
               🔎 Explore
             </Link>
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
               🔄 Transfer
             </Link>
-
-            {/* Align image and text horizontally */}
             <div className="flex items-center space-x-2">
-              <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />
+              <Image src={transactionLogoImg.src} alt="Transaction Icon" width={30} height={30} />
               <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
                 Transactions
               </Link>
