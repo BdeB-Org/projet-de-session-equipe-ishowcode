@@ -14,7 +14,7 @@ export async function POST(req) {
     const db = client.db("lazulibd");
     const users = db.collection("utilisateur");
 
-    const user = await users.findOne({ email: email, password: password });
+    const user = await users.findOne({ email: email});
     //verifie l'utlisateur 
     if (user) {
       const passwordMatch = await bcrypt.compare(password, user.password);
