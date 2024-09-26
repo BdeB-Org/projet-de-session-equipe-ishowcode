@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+//page de modification du profil
 
-// Animation variants
+// Animation 
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
@@ -19,11 +20,11 @@ const dropdownVariants = {
 const buttonVariants = {
   hover: { scale: 1.05, transition: { duration: 0.8 } },
 };
-
+// fausses données en attendant la connextion avec la bd
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [birthDate, setBirthDate] = useState("1990-01-01"); // Initialize with the date
-  const [isEditing, setIsEditing] = useState(false); // State to toggle editing mode
+  const [birthDate, setBirthDate] = useState("1990-01-01"); 
+  const [isEditing, setIsEditing] = useState(false); 
 
   return (
     <motion.div 
@@ -43,9 +44,9 @@ export default function ProfilPage() {
         </nav>
       </header>
 
-      {/* Main content */}
+      {/* Main */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
-        {/* Profil panel */}
+        {/* Profil*/}
         <section className="flex-1 space-y-6">
           <motion.div variants={buttonVariants} whileHover="hover">
             <Link href="/Profil">
@@ -55,14 +56,14 @@ export default function ProfilPage() {
             </Link>
           </motion.div>
 
-          {/* Title */}
+          {/* Titre */}
           <motion.div 
             className="bg-white p-6 rounded-lg shadow-md"
             variants={containerVariants}
           >
             <h2 className="text-xl font-semibold">Mon Profil</h2>
 
-            {/* Profile Info */}
+            {/* Profil */}
             <div className="mt-4 space-y-4">
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Nom complet :</p>
@@ -116,7 +117,7 @@ export default function ProfilPage() {
               </div>
             </div>
 
-            {/* Buttons */}
+            {/* Button */}
             <div className="flex gap-4 mt-5">
               <motion.div variants={buttonVariants} whileHover="hover">
                 <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">

@@ -8,7 +8,9 @@ import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 
-// Animation variants
+//page modification profil
+
+// Animation 
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
@@ -23,6 +25,7 @@ const buttonVariants = {
   hover: { scale: 1.05, transition: { duration: 0.2 } },
 };
 
+// communication avec l'api profil
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -52,6 +55,7 @@ export default function ProfilPage() {
     }
   };
   
+  //frontend de la page
   return (
     <motion.div 
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
@@ -76,7 +80,7 @@ export default function ProfilPage() {
         </nav>
       </header>
 
-      {/* Main content */}
+      {/* Main */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
         {/* Sidebar */}
         <motion.aside 
@@ -99,16 +103,16 @@ export default function ProfilPage() {
           </nav>
         </motion.aside>
 
-        {/* Profil panel */}
+        {/* Profil */}
         <section className="flex-1 space-y-6">
-          {/* Title */}
+          {/* Titre */}
           <motion.div 
             className="bg-white p-6 rounded-lg shadow-md"
             variants={containerVariants}
           >
             <h2 className="text-xl font-semibold">Mon Profil</h2>
 
-            {/* Profile Info */}
+            {/* Profil*/}
             <div className="mt-4 space-y-4">
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Nom complet :</p>
@@ -154,7 +158,7 @@ export default function ProfilPage() {
               </div>
             </div>
 
-            {/* Buttons */}
+            {/* Button */}
             <div className="flex gap-4 mt-5">
         <motion.div variants={buttonVariants} whileHover="hover">
           <Link href="/ModificationProfil">

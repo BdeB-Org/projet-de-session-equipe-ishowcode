@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import { NextResponse } from 'next/server';
 
 const uri = "mongodb+srv://Cluster81130:helloworld@cluster81130.nv3ke.mongodb.net/?retryWrites=true&w=majority&appName=Cluster81130";
-
+// route pour communiquer avec la bd pour le login
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
@@ -15,7 +15,7 @@ await client.connect();
     const users = db.collection("utilisateur");
 
     const user = await users.findOne({ email: email, password: password });
-
+    //verifie l'utlisateur 
     if (user) {
       return NextResponse.json({ message: "Connexion réussie", userId: user._id });
     } else {

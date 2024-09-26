@@ -7,12 +7,15 @@ import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 
-// Animation variants
+//page transactions du siteweb, c'est en quelque sortes le point central du site lazuli
+
+// Animation 
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
 };
 
+//frontent du siteweb
 export default function TransactionsPage() {
   return (
     <motion.div 
@@ -38,7 +41,7 @@ export default function TransactionsPage() {
         </nav>
       </header>
 
-      {/* Main content */}
+      {/* Main */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
         {/* Sidebar */}
         <motion.aside 
@@ -68,7 +71,7 @@ export default function TransactionsPage() {
           </nav>
         </motion.aside>
 
-        {/* Transactions panel */}
+        {/* Transaction*/}
         <section className="flex-1 space-y-6">
           {/* Title */}
           <motion.div 

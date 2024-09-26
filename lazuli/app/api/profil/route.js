@@ -2,7 +2,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import { NextResponse } from 'next/server';
 
 const uri = "mongodb+srv://Cluster81130:helloworld@cluster81130.nv3ke.mongodb.net/?retryWrites=true&w=majority&appName=Cluster81130";
-
+// route pour le profil, ici on a une fonction delete 
 export async function DELETE(req) {
   try {
     const { userId } = await req.json();
