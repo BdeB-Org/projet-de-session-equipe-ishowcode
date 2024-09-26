@@ -1,4 +1,4 @@
-'use client';
+'use client'; // Ensure this is a client component
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
+import { useRouter } from 'next/navigation'; // Correct import
 
 // Animation variants
 const containerVariants = {
@@ -25,6 +26,7 @@ const buttonVariants = {
 
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter(); // Move this inside the component
 
   const handleDeleteAccount = async () => {
     const userId = localStorage.getItem('userId');
@@ -46,7 +48,7 @@ export default function ProfilPage() {
     
     if (response.ok) {
       alert(data.message);
-
+      router.push('/'); // Redirect to main page
     } else {
       alert(data.error || "Failed to delete account.");
     }
@@ -64,15 +66,9 @@ export default function ProfilPage() {
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">
-            Dashboard
-          </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">
-            Transactions
-          </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
-            Profil
-          </Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">Dashboard</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">Transactions</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">Profil</Link>
         </nav>
       </header>
 
@@ -86,15 +82,11 @@ export default function ProfilPage() {
           <nav className="space-y-4">
             <div className="flex items-center space-x-2">
               <Image src={accueilLogoImg.src} alt="Accueil Icon" width={30} height={30} />
-              <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-                Accueil
-              </Link>
+              <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">Accueil</Link>
             </div>
             <div className="flex items-center space-x-2">
               <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />
-              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
-                Transactions
-              </Link>
+              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">Transactions</Link>
             </div>
           </nav>
         </motion.aside>
@@ -156,26 +148,28 @@ export default function ProfilPage() {
 
             {/* Buttons */}
             <div className="flex gap-4 mt-5">
-        <motion.div variants={buttonVariants} whileHover="hover">
-          <Link href="/ModificationProfil">
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
-              Modifier le profil
-            </Button>
-          </Link>
-        </motion.div>
-        <motion.div variants={buttonVariants} whileHover="hover">
-        <Link href="/">
-          <Button 
-            onClick={handleDeleteAccount} 
-            className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-400 transition duration-300"
-          >
-            Supprimer le compte
-          </Button>
-          </Link>
-        </motion.div>
-      </div>
-    </motion.div>
-          
+              <motion.div variants={buttonVariants} whileHover="hover">
+                <Link href="/ModificationProfil">
+                  <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
+                    Modifier le profil
+                  </Button>
+                </Link>
+              </motion.div>
+              <motion.div variants={buttonVariants} whileHover="hover">
+                <Button 
+                  onClick={async () => {
+                    const confirmDelete = window.confirm("Are you sure you want to delete?");
+                    if (confirmDelete) {
+                      await handleDeleteAccount();
+                    }
+                  }} 
+                  className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-400 transition duration-300"
+                >
+                  Supprimer le compte
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
         </section>
       </main>
 
@@ -184,18 +178,11 @@ export default function ProfilPage() {
         <div className="container mx-auto flex justify-between items-center">
           <p className="text-sm text-gray-500">© 2024 Lazuli. Tous droits réservés.</p>
           <nav className="flex gap-4">
-            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">
-              Terms of Use
-            </Link>
-            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">
-              Privacy Policy
-            </Link>
+            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">Terms of Use</Link>
+            <Link className="text-sm text-gray-500 hover:text-[#5d3fd3]" href="#">Privacy Policy</Link>
           </nav>
         </div>
       </footer>
     </motion.div>
-
-      
-
   );
 }
