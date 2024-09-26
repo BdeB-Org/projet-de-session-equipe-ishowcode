@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await model.generateContent(message);
-    const reply = result.response.text(); // Adjust based on actual response structure
+    const reply = result.response.text(); 
     return NextResponse.json({ reply });
   } catch (error) {
     console.error('Error:', error);
