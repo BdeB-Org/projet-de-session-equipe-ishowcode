@@ -26,6 +26,32 @@ const buttonVariants = {
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleDeleteAccount = async () => {
+    const userId = localStorage.getItem('userId');
+  
+    if (!userId) {
+      alert("User not authenticated.");
+      return;
+    }
+  
+    const response = await fetch('/api/profil', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+  
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert(data.message);
+
+    } else {
+      alert(data.error || "Failed to delete account.");
+    }
+  };
+  
   return (
     <motion.div 
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
@@ -97,6 +123,10 @@ export default function ProfilPage() {
                 <p className="text-lg">01 Janvier 1990</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
+                <p className="text-lg font-medium">Mot de passe :</p>
+                <p className="text-lg">********</p>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Gain</p>
                 <p className="text-lg">$0</p>
               </div>
@@ -126,25 +156,26 @@ export default function ProfilPage() {
 
             {/* Buttons */}
             <div className="flex gap-4 mt-5">
-              <motion.div variants={buttonVariants} whileHover="hover">
-              <Link href="/ModificationProfil">
-                <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
-                  Modifier le profil
-                </Button>
-              </Link>
-              </motion.div>
-              <motion.div variants={buttonVariants} whileHover="hover">
-                <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
-                  Changer le mot de passe
-                </Button>
-              </motion.div>
-              <motion.div variants={buttonVariants} whileHover="hover">
-                <Button className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-400 transition duration-300">
-                  Supprimer le compte
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
+        <motion.div variants={buttonVariants} whileHover="hover">
+          <Link href="/ModificationProfil">
+            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
+              Modifier le profil
+            </Button>
+          </Link>
+        </motion.div>
+        <motion.div variants={buttonVariants} whileHover="hover">
+        <Link href="/">
+          <Button 
+            onClick={handleDeleteAccount} 
+            className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-400 transition duration-300"
+          >
+            Supprimer le compte
+          </Button>
+          </Link>
+        </motion.div>
+      </div>
+    </motion.div>
+          
         </section>
       </main>
 
@@ -163,5 +194,8 @@ export default function ProfilPage() {
         </div>
       </footer>
     </motion.div>
+
+      
+
   );
 }

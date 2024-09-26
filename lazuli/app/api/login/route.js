@@ -7,8 +7,9 @@ export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
+    const client = new MongoClient(uri);
+await client.connect();
+
 
     const db = client.db("lazulibd");
     const users = db.collection("utilisateur");

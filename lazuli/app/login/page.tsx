@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -22,10 +22,12 @@ export default function LoginPage() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       const result = await res.json();
-
+  
       if (res.ok) {
+        // Store user ID in localStorage (or a token if you implement JWT)
+        localStorage.setItem('userId', result.userId); // Save user ID
         alert(`Connexion réussie !`);
         router.push('/Dashboard');
       } else {
@@ -36,6 +38,7 @@ export default function LoginPage() {
       alert("Erreur lors de la connexion. Veuillez vérifier la console pour plus d'informations.");
     }
   };
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white">
