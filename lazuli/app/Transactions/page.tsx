@@ -6,6 +6,7 @@ import Link from "next/link"
 import Image from 'next/image'; 
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
+import { useRouter } from 'next/navigation'; 
 
 //page transactions du siteweb, c'est en quelque sortes le point central du site lazuli
 
@@ -17,6 +18,11 @@ const containerVariants = {
 
 //frontent du siteweb
 export default function TransactionsPage() {
+  const router = useRouter(); 
+
+  const handleLogout = () => {
+    router.push('/');
+  };
   return (
     <motion.div 
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
@@ -25,20 +31,26 @@ export default function TransactionsPage() {
     >
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
-        <Link className="flex items-center justify-center" href="/dashboard">
+        <Link className="flex items-center justify-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
             Dashboard
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
             Profil
           </Link>
         </nav>
+        <Button
+          onClick={handleLogout}
+          className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4"
+        >
+          Déconnecter
+        </Button>
       </header>
 
       {/* Main */}
