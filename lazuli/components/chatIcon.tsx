@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function ChatIcon() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<string[]>([]);
-  
+
   return (
     <>
       <div
@@ -18,7 +19,7 @@ export default function ChatIcon() {
       {isOpen && (
         <div className="fixed bottom-16 right-6 w-80 h-96 bg-white text-black rounded-lg shadow-lg flex flex-col">
           <div className="flex justify-between items-center bg-blue-600 text-white p-4 rounded-t-lg">
-            <h3 className="text-lg">Chat avec GPT</h3>
+            <h3 className="text-lg">Chat avec Gemini</h3>
             <button 
               onClick={() => setIsOpen(false)} 
               className="text-white"
@@ -45,29 +46,24 @@ export default function ChatIcon() {
 
 function ChatInput({ setMessages }: { setMessages: React.Dispatch<React.SetStateAction<string[]>> }) {
   const [message, setMessage] = useState('');
-  
+
   const sendMessage = async () => {
     if (!message.trim()) return;
     setMessages(prev => [...prev, `User: ${message}`]);
 
     try {
-      const response = await fetch('/api/chatgpt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      const response = await axios.post('/api/gemini', { message });
+      if (response.data.reply) {
+        setMessages(prev => [...prev, `Gemini: ${response.data.reply}`]); 
+      } else {
+        setMessages(prev => [...prev, 'Error: No reply from Gemini']);
       }
-      
-      const data = await response.json();
-      
-      setMessages(prev => [...prev, `GPT: ${data.reply}`]);
-      
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error:', error.response ? error.response.data : error.message);
+      } else {
+        console.error('Error:', error);
+      }
       setMessages(prev => [...prev, 'Error: Could not send message']);
     }
 
