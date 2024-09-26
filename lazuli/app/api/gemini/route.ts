@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// api gemini de google utlisé dans chatbot.tsx
 const apiKey = process.env.API_KEY;
 if (!apiKey) {
   throw new Error('API_KEY environment variable is not defined');
 }
 const genAI = new GoogleGenerativeAI(apiKey);  
-
+//modele gemini 1.5
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
 export async function POST(req: Request) {
   const { message } = await req.json();
-
+  // post le modèle gemini
   try {
     const result = await model.generateContent(message);
     const reply = result.response.text(); 

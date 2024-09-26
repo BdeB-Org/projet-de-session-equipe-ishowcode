@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+// code du chaticon qui se trouve dans la page d'acceuil
+
 export default function ChatIcon() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ text: string; fromUser: boolean }[]>([{ text: 'Comment puis-je peux vous aider?', fromUser: false }]);
@@ -32,7 +34,7 @@ export default function ChatIcon() {
     if (!message.trim()) return;
 
     setMessages(prev => [...prev, { text: message, fromUser: true }]);
-
+    //api de gemini, utilise route.js dans le folder gemini
     try {
       const response = await axios.post('/api/gemini', { message });
       if (response.data.reply) {
@@ -51,13 +53,14 @@ export default function ChatIcon() {
 
     setMessage('');
   };
-
+  // enovie le message
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       sendMessage();
     }
   };
 
+  // frontend du chaticon
   return (
     <>
       <div

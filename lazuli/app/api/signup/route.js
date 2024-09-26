@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 const uri = "mongodb+srv://Cluster81130:helloworld@cluster81130.nv3ke.mongodb.net/?retryWrites=true&w=majority&appName=Cluster81130";
-
+// route pour le profil, ici on a une fonction qui crée l'utilisateur
 export async function POST(req) {
   try {
     const { name, email, password } = await req.json();

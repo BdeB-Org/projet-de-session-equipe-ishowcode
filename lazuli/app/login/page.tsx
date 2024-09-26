@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+// page de login
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +14,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    //appele l'api de login
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -24,10 +25,10 @@ export default function LoginPage() {
       });
   
       const result = await res.json();
-  
+      //verifie si la connexion réussie ou échoue
       if (res.ok) {
-        // Store user ID in localStorage (or a token if you implement JWT)
-        localStorage.setItem('userId', result.userId); // Save user ID
+    
+        localStorage.setItem('userId', result.userId); 
         alert(`Connexion réussie !`);
         router.push('/Dashboard');
       } else {
@@ -39,7 +40,7 @@ export default function LoginPage() {
     }
   };
   
-
+  //frontend de la page
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">

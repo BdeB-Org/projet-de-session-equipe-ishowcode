@@ -4,6 +4,8 @@ import { useState } from "react";
 import * as Accordion from "@radix-ui/react-accordion";
 import Link from "next/link";
 
+//page de support lazuli
+
 export default function Support() {
   const [searchQuery, setSearchQuery] = useState("");
 
