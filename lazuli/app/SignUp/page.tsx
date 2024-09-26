@@ -80,7 +80,7 @@ export default function SignupPage() {
                   required
                   onChange={handleInputChange}
                   value={formData.name}
-                  className="bg-white text-blue-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Prénom"
                 />
               </div>
@@ -94,7 +94,7 @@ export default function SignupPage() {
                   required
                   onChange={handleInputChange}
                   value={formData.lastName}
-                  className="bg-white text-blue-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Nom"
                 />
               </div>
@@ -108,7 +108,7 @@ export default function SignupPage() {
                   required
                   onChange={handleInputChange}
                   value={formData.email}
-                  className="bg-white text-white-100 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
+                  className="bg-white text-blue-900 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Adresse e-mail"
                 />
               </div>

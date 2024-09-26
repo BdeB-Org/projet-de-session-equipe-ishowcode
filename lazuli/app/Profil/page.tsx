@@ -1,4 +1,4 @@
-'use client'; // Ensure this is a client component
+'use client'; 
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -7,9 +7,9 @@ import Link from "next/link";
 import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
-import { useRouter } from 'next/navigation'; // Correct import
+import { useRouter } from 'next/navigation'; 
 
-//page modification profil
+
 
 // Animation 
 const containerVariants = {
@@ -26,10 +26,10 @@ const buttonVariants = {
   hover: { scale: 1.05, transition: { duration: 0.2 } },
 };
 
-// communication avec l'api profil
+
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter(); // Move this inside the component
+  const router = useRouter(); 
 
   const handleDeleteAccount = async () => {
     const userId = localStorage.getItem('userId');
@@ -51,7 +51,7 @@ export default function ProfilPage() {
     
     if (response.ok) {
       alert(data.message);
-      router.push('/'); // Redirect to main page
+      router.push('/'); 
     } else {
       alert(data.error || "Failed to delete account.");
     }
