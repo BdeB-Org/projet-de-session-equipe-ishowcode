@@ -86,3 +86,79 @@
     @apply bg-background text-foreground;
   }
 }
+
+.chatbox {
+  font-size: 1.5rem;
+}
+
+.chatbox-container {
+  width: 24rem; 
+  height: 24rem; 
+}
+
+#chat-window {
+  overflow-y: auto; 
+  scrollbar-width: thin; 
+}
+
+
+#chat-window::-webkit-scrollbar {
+  width: 8px; 
+}
+
+#chat-window::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#chat-window::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+#chat-window::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+@keyframes fadeIn {
+from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+
+.animate-fadeIn {
+animation: fadeIn 0.3s ease forwards; 
+}
+
+@keyframes scaleDown {
+0% {
+  transform: scale(1);
+  opacity: 1;
+}
+100% {
+  transform: scale(0);
+  opacity: 0;
+}
+}
+
+@keyframes scaleUp {
+0% {
+  transform: scale(0);
+  opacity: 0;
+}
+100% {
+  transform: scale(1);
+  opacity: 1;
+}
+}
+
+.animate-scaleDown {
+animation: scaleDown 0.3s ease forwards;
+}
+
+.animate-scaleUp {
+animation: scaleUp 0.3s ease forwards;
+}

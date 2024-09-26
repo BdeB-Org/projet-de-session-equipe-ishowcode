@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import ChatIcon from "@/components/chatIcon"; 
 
 //  cette page est la page d'accueil de notre application, elle contient un header, un main et un footer
 export function Page() {
@@ -105,6 +106,7 @@ export function Page() {
           </nav>
         </div>
       </footer>
+      <ChatIcon />
     </div>
   )
 }
