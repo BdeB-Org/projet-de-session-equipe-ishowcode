@@ -169,6 +169,69 @@ export default function SignupPage() {
           </nav>
         </div>
       </footer>
+      <style jsx global>{`
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        .fade-in {
+          animation: fadeIn 1.5s ease-in-out;
+        }
+        .slide-down {
+          animation: slideDown 1.5s ease-in-out;
+        }
+
+        .slide-down-form1 {
+          animation: slideDown 1.8s ease-in-out;
+        }
+          .slide-down-form2 {
+          animation: slideDown 2.2s ease-in-out;
+        }
+          .slide-down-form3 {
+          animation: slideDown 2.6s ease-in-out;
+        }
+          .slide-down-form4 {
+          animation: slideDown 3.0s ease-in-out;
+        }
+          .slide-down-form5 {
+          animation: slideDown 3.4s ease-in-out;
+        }
+        .slide-down-form6 {
+          animation: slideUp 1.5s ease-in-out;
+        }
+          .slide-down-form7 {
+          animation: slideUp 2s ease-in-out;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0.5;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+          @keyframes slideUp {
+          from {
+            transform: translateY(100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }
