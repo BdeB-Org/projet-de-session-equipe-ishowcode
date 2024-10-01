@@ -1,11 +1,13 @@
-"use client"; 
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from 'next/navigation'; 
 
 export default function SignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -14,11 +16,40 @@ export default function SignupPage() {
     confirmPassword: ''
   });
 
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const uppercasePattern = /[A-Z]/;
+    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+
+    if (password.length < minLength) {
+      return "Le mot de passe doit contenir au moins 8 caractères.";
+    }
+    if (!uppercasePattern.test(password)) {
+      return "Le mot de passe doit contenir au moins une lettre majuscule.";
+    }
+    if (!specialCharPattern.test(password)) {
+      return "Le mot de passe doit contenir au moins un caractère spécial.";
+    }
+    return "";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Réinitialiser le message d'erreur
+    setErrorMessage('');
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Les mots de passe ne correspondent pas.");
+      setErrorMessage("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    //Valider le mot de passe
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setErrorMessage(passwordError);
       return;
     }
 
@@ -38,11 +69,14 @@ export default function SignupPage() {
       if (res.ok) {
         const result = await res.json();
         alert(`Compte créé avec succès ! ID: ${result.userId}`);
+        router.push('/login');
       } else {
-        alert("Une erreur est survenue.");
+        const errorResult = await res.json();
+        setErrorMessage(errorResult.error || "Une erreur est survenue.");
       }
     } catch (error) {
       console.error("Erreur lors de la création du compte :", error);
+      setErrorMessage("Une erreur est survenue lors de la création du compte.");
     }
   };
 
@@ -141,6 +175,14 @@ export default function SignupPage() {
                 />
               </div>
             </div>
+
+            {/* Afficher le message d'erreur s'il existe */}
+            {errorMessage && (
+              <div className="text-red-500 text-sm mt-2">
+                {errorMessage}
+              </div>
+            )}
+
             <div className="slide-down-form6">
               <div className="hover:animate-pulse">
                 <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full">
