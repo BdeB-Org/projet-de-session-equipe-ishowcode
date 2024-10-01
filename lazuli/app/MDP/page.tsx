@@ -1,46 +1,45 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 
-// page de login
-export default function LoginPage() {
+export default function RequestPasswordReset() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //appele l'api de login
+    setLoading(true);
+
     try {
-      const res = await fetch('/api/login', {
+      const res = await fetch(`/api/MDP/`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       });
-  
-      const result = await res.json();
-      //verifie si la connexion réussie ou échoue
+
+      setLoading(false); 
+
       if (res.ok) {
-    
-        localStorage.setItem('userId', result.userId); 
-        alert(`Connexion réussie !`);
-        router.push('/Dashboard');
+        alert("Un lien de réinitialisation a été envoyé à votre adresse e-mail !");
+        router.push('/miseAJourPasswordSucces');
       } else {
+        const result = await res.json();
         alert(result.error || "Une erreur est survenue.");
       }
     } catch (error) {
-      console.error("Erreur lors de la connexion :", error);
-      alert("Erreur lors de la connexion. Veuillez vérifier la console pour plus d'informations.");
+      setLoading(false); 
+      console.error("Erreur lors de l'envoi de l'email :", error);
+      alert("Erreur lors de l'envoi de l'email. Veuillez vérifier la console pour plus d'informations.");
     }
   };
-  
-  //frontend de la page
+
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">
@@ -51,17 +50,19 @@ export default function LoginPage() {
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-[3rem] font-bold slide-down">Connexion à votre compte</h2>
+            <h2 className="mt-6 text-[3rem] font-bold slide-down">Réinitialiser votre mot de passe</h2>
             <p className="mt-2 text-sm text-blue-300 slide-down">
-              Entrez vos identifiants pour accéder à la simulation
+              Vous avez oublié votre mot de passe!
+              <br />
+              Entrez votre adresse courriel
             </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4 rounded-md shadow-sm">
               <div className="slide-down-form1">
-                <Label htmlFor="email-address" className="sr-only">Adresse e-mail</Label>
+                <Label htmlFor="email" className="sr-only">Adresse e-mail</Label>
                 <Input
-                  id="email-address"
+                  id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
@@ -72,31 +73,20 @@ export default function LoginPage() {
                   placeholder="Adresse e-mail"
                 />
               </div>
-              <div className="slide-down-form2">
-                <Label htmlFor="password" className="sr-only">Mot de passe</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
-                  className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
-                  placeholder="Mot de passe"
-                />
-              </div>
             </div>
-
             <div>
-              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
-                Se connecter
+              <Button 
+                type="submit" 
+                className={`w-full ${loading ? 'bg-gray-500' : 'bg-[#3b3b82]'} text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3`}
+                disabled={loading}
+              >
+                {loading ? 'Envoi...' : 'Envoyer'}
               </Button>
             </div>
           </form>
           <div className="text-center slide-down-form3">
-            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/MDP">
-              Mot de passe oublié ?
+            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/ReinitialisationMDP">
+              Vous recevrez un email pour réinitialiser votre mot de passe
             </Link>
           </div>
         </div>
@@ -125,17 +115,15 @@ export default function LoginPage() {
         .slide-down {
           animation: slideDown 1.5s ease-in-out;
         }
-
         .slide-down-form1 {
           animation: slideDown 1.8s ease-in-out;
         }
-          .slide-down-form2 {
+        .slide-down-form2 {
           animation: slideDown 2.2s ease-in-out;
         }
         .slide-down-form3 {
           animation: slideUp 2s ease-in-out;
         }
-
         @keyframes fadeIn {
           from {
             opacity: 0.5;
@@ -144,7 +132,6 @@ export default function LoginPage() {
             opacity: 1;
           }
         }
-
         @keyframes slideDown {
           from {
             transform: translateY(-100px);
@@ -155,7 +142,7 @@ export default function LoginPage() {
             opacity: 1;
           }
         }
-          @keyframes slideUp {
+        @keyframes slideUp {
           from {
             transform: translateY(100px);
             opacity: 0;
@@ -166,7 +153,6 @@ export default function LoginPage() {
           }
         }
       `}</style>
-
     </div>
   );
 }

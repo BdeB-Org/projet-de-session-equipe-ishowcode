@@ -51,52 +51,24 @@ export default function LoginPage() {
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h2 className="mt-6 text-[3rem] font-bold slide-down">Connexion à votre compte</h2>
+            <h2 className="mt-6 text-[3rem] font-bold slide-down">Succées</h2>
             <p className="mt-2 text-sm text-blue-300 slide-down">
-              Entrez vos identifiants pour accéder à la simulation
+              Une courriel a été envoié. Suivez l'instruction das le courriel
             </p>
-          </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4 rounded-md shadow-sm">
-              <div className="slide-down-form1">
-                <Label htmlFor="email-address" className="sr-only">Adresse e-mail</Label>
-                <Input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
-                  className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
-                  placeholder="Adresse e-mail"
-                />
-              </div>
-              <div className="slide-down-form2">
-                <Label htmlFor="password" className="sr-only">Mot de passe</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
-                  className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
-                  placeholder="Mot de passe"
-                />
-              </div>
+          
             </div>
 
             <div>
+            <Link href="/login">
               <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
-                Se connecter
+                Retour
               </Button>
+            </Link>
             </div>
-          </form>
+          
           <div className="text-center slide-down-form3">
-            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/MDP">
-              Mot de passe oublié ?
+            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/a">
+                Je veux pas retourner
             </Link>
           </div>
         </div>

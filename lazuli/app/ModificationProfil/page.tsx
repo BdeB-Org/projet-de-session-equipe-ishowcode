@@ -35,6 +35,7 @@ export default function ProfilPage() {
   const [name, setName] = useState('Jean Dupont');
   const [email, setEmail] = useState('jeandupont@email.com');
 
+  /** 
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -47,11 +48,11 @@ export default function ProfilPage() {
       reader.readAsDataURL(file);
     }
   };
-
+*/
   const handleSubmit = async () => {
     const userId = 'user-id-here'; 
 
-    const response = await fetch('/api/route', {
+    const response = await fetch('/api/ModificationProfil', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, name, email, birthDate, profilePic }),
@@ -111,7 +112,7 @@ export default function ProfilPage() {
               <input 
                 type="file" 
                 accept="image/*" 
-                onChange={handleProfilePicChange} 
+                /**onChange={handleProfilePicChange} **/
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
             </motion.div>
