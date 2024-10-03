@@ -1,25 +1,14 @@
-'use client'; 
+'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from 'next/image'; 
-
+import Image from 'next/image';
 
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 80, damping: 15 } },
-};
-
-const dropdownVariants = {
-  hidden: { opacity: 0, height: 0 },
-  visible: { opacity: 1, height: "auto", transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-const buttonVariants = {
-  hover: { scale: 1.1, rotate: 3, transition: { duration: 0.4, yoyo: Infinity } },
-  click: { scale: 0.9, transition: { type: "spring", stiffness: 200, damping: 8 } },
 };
 
 const profileSectionVariants = {
@@ -29,28 +18,44 @@ const profileSectionVariants = {
 
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [birthDate, setBirthDate] = useState("1990-01-01");
+  const [birthDate, setBirthDate] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [profilePic, setProfilePic] = useState('/default-avatar.png');
-  const [name, setName] = useState('Jean Dupont');
-  const [email, setEmail] = useState('jeandupont@email.com');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
-  /** 
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setProfilePic(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-*/
+  // Fetch the user's profile data on load
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = localStorage.getItem('userId'); // Assuming userId is stored in localStorage
+
+      if (!userId) {
+        console.error("User ID is missing from localStorage");
+        return;
+      }
+
+      const res = await fetch(`/api/getProfile?userId=${userId}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        setName(data.name || '');
+        setEmail(data.email || '');
+        setBirthDate(data.birthDate || '');
+        setProfilePic(data.profilePic || '/default-avatar.png');
+      } else {
+        console.error("Error fetching profile data:", data.error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const handleSubmit = async () => {
-    const userId = 'user-id-here'; 
+    const userId = localStorage.getItem('userId'); // Fetching userId from localStorage
+
+    if (!userId) {
+      console.error("User ID is missing from localStorage");
+      return;
+    }
 
     const response = await fetch('/api/ModificationProfil', {
       method: 'POST',
@@ -112,7 +117,6 @@ export default function ProfilPage() {
               <input 
                 type="file" 
                 accept="image/*" 
-                /**onChange={handleProfilePicChange} **/
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
             </motion.div>
@@ -164,33 +168,9 @@ export default function ProfilPage() {
               )}
             </div>
 
-            <div className="flex justify-between items-center">
-              <p className="text-lg font-semibold">Monnaie :</p>
-              <div className="relative">
-                <button 
-                  onClick={() => setIsOpen(!isOpen)} 
-                  className="text-lg px-3 py-2 border rounded bg-gray-700 shadow-sm hover:bg-gray-600"
-                >
-                  $
-                </button>
-                <motion.div 
-                  variants={dropdownVariants} 
-                  initial="hidden" 
-                  animate={isOpen ? "visible" : "hidden"}
-                  className="absolute mt-2 w-32 bg-gray-700 border rounded shadow"
-                >
-                  {['USD', 'EUR', 'GBP', 'IDR'].map((currency, idx) => (
-                    <a key={idx} href="#" className="block px-4 py-2 hover:bg-gray-600">
-                      {currency}
-                    </a>
-                  ))}
-                </motion.div>
-              </div>
-            </div>
-
             {/* Buttons */}
             <div className="flex gap-4 mt-6">
-              <motion.div variants={buttonVariants} whileHover="hover" whileTap="click">
+              <motion.div>
                 <Button 
                   className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
                   onClick={() => {
@@ -207,20 +187,6 @@ export default function ProfilPage() {
           </div>
         </motion.section>
       </main>
-
-      {/* Footer */}
-      <footer className="py-6 px-4 bg-gray-900 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center">
-          <p className="text-sm text-gray-500">© 2024 Lazuli. Tous droits réservés.</p>
-          <nav className="flex gap-4">
-            {['Terms of Use', 'Privacy Policy'].map((item, i) => (
-              <Link key={i} className="text-sm text-gray-500 hover:text-[#6a4fc3]" href={`/${item.replace(' ', '').toLowerCase()}`}>
-                {item}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </footer>
     </motion.div>
   );
 }
