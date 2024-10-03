@@ -1,7 +1,18 @@
+// /app/api/ModificationProfil/route.js
+
 import { NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
+import formidable from 'formidable';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-const uri = "mongodb+srv://Cluster81130:helloworld@cluster81130.nv3ke.mongodb.net/?retryWrites=true&w=majority&appName=Cluster81130";
+export const config = {
+  api: {
+    bodyParser: false, // Désactiver l'analyseur de corps par défaut
+  },
+};
+
+const uri = process.env.MONGODB_URI; // Assurez-vous que cette variable d'environnement est définie
 const client = new MongoClient(uri);
 let db;
 
@@ -12,7 +23,6 @@ async function connectToDatabase() {
   }
 }
 
-// GET request to fetch user profile data
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
@@ -23,7 +33,7 @@ export async function GET(req) {
     const user = await db.collection('utilisateur').findOne({ _id: new ObjectId(userId) });
 
     if (user) {
-      console.log("Fetched user data: ", user); // Debug log to check the fetched data
+      console.log("Fetched user data: ", user);
       return NextResponse.json({
         name: user.name,
         email: user.email,
@@ -39,16 +49,65 @@ export async function GET(req) {
   }
 }
 
-// POST request to update user profile data
 export async function POST(req) {
   try {
-    const { userId, name, email, birthDate, profilePic } = await req.json();
     await connectToDatabase();
 
+    const form = formidable({ multiples: false });
+
+    // Convertir la requête en flux pour formidable
+    const reqBody = await req.blob();
+    const buffer = Buffer.from(await reqBody.arrayBuffer());
+
+    const [fields, files] = await new Promise((resolve, reject) => {
+      form.parse(buffer, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve([fields, files]);
+      });
+    });
+
+    const { userId, name, email, birthDate } = fields;
+
+    let profilePicUrl = null;
+
+    if (files.profilePic) {
+      const file = files.profilePic;
+
+      // Valider le type de fichier
+      if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
+        return NextResponse.json({ error: "Type de fichier non supporté" }, { status: 400 });
+      }
+
+      // Créer le dossier 'public/uploads' s'il n'existe pas
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+      await fs.mkdir(uploadDir, { recursive: true });
+
+      const fileName = `${userId}_${Date.now()}_${file.originalFilename}`;
+      const uploadPath = path.join(uploadDir, fileName);
+
+      // Lire le fichier depuis le chemin temporaire
+      const data = await fs.readFile(file.filepath);
+
+      // Écrire le fichier dans le dossier 'uploads'
+      await fs.writeFile(uploadPath, data);
+
+      profilePicUrl = `/uploads/${fileName}`;
+    }
+
     const users = db.collection('utilisateur');
+    const updateFields = {
+      name,
+      email,
+      birthDate,
+    };
+
+    if (profilePicUrl) {
+      updateFields.profilePic = profilePicUrl;
+    }
+
     const updatedUser = await users.updateOne(
       { _id: new ObjectId(userId) },
-      { $set: { name, email, birthDate, profilePic } }
+      { $set: updateFields }
     );
 
     if (updatedUser.modifiedCount > 0) {
