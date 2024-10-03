@@ -7,15 +7,14 @@ const BalloonsPage = () => {
   useEffect(() => {
     const balloons = document.querySelectorAll(".balloon");
     balloons.forEach((balloon) => {
-      const randomX = Math.random() * 100; // Random horizontal position
-      const randomY = Math.random() * 100; // Random vertical position
-      /**balloon.style.transform = `translate(${randomX}vw, ${randomY}vh)`;**/
+      const randomX = Math.random() * 100;
+      const randomY = Math.random() * 100;
     });
   }, []);
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-blue-200">
-      <h1 className="absolute top-10 text-4xl font-bold text-center">
+    <div className="relative flex items-center justify-center min-h-screen bg-[#1a1a40]">
+      <h1 className="absolute top-10 text-4xl font-bold text-center text-white">
         🎈 Bienvenue dans le monde des ballons ! 🎈
       </h1>
       <div className="absolute bottom-0 left-0 w-full flex justify-center">
@@ -23,7 +22,7 @@ const BalloonsPage = () => {
           <div key={index} className="balloon" />
         ))}
       </div>
-      <Link href="/" className="absolute top-5 left-5 text-lg text-blue-800">
+      <Link href="/" className="absolute top-5 left-5 text-lg text-white">
         Retour
       </Link>
       <style jsx>{`

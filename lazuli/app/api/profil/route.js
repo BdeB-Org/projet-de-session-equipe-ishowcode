@@ -23,7 +23,7 @@ export async function DELETE(req) {
 
     if (result.deletedCount === 1) {
       console.log("User deleted successfully.");
-      return new Response(JSON.stringify({ message: "User account deleted successfully." }), { status: 200 });
+      return new Response(JSON.stringify({ message: "Compte utilisateur supprimé avec succès." }), { status: 200 });
     } else {
       console.error("User not found.");
       return new Response(JSON.stringify({ error: "User not found." }), { status: 404 });

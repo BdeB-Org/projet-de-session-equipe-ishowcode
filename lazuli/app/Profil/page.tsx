@@ -1,5 +1,4 @@
 'use client'; 
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,6 @@ import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import { useRouter } from 'next/navigation'; 
-
 
 
 // Animation 
@@ -29,12 +27,7 @@ const buttonVariants = {
 
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter(); 
-
-
-  const handleLogout = () => {
-    router.push('/');
-  };
+  const router = useRouter();
 
   const handleDeleteAccount = async () => {
     const userId = localStorage.getItem('userId');
@@ -71,20 +64,14 @@ export default function ProfilPage() {
     >
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
-        <Link className="flex items-center" href="/Dashboard">
+        <Link className="flex items-center" href="/dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">Dashboard</Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">Transactions</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">Dashboard</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">Transactions</Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">Profil</Link>
         </nav>
-        <Button
-          onClick={handleLogout}
-          className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4"
-        >
-          Déconnecter
-        </Button>
       </header>
 
       {/* Main */}
@@ -173,7 +160,7 @@ export default function ProfilPage() {
               <motion.div variants={buttonVariants} whileHover="hover">
                 <Button 
                   onClick={async () => {
-                    const confirmDelete = window.confirm("Are you sure you want to delete?");
+                    const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte?");
                     if (confirmDelete) {
                       await handleDeleteAccount();
                     }

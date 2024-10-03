@@ -68,7 +68,7 @@ export default function LoginPage() {
           
           <div className="text-center slide-down-form3">
             <Link className="text-sm text-blue-300 hover:text-blue-200" href="/a">
-                Je veux pas retourner
+                Je ne veux pas retourner
             </Link>
           </div>
         </div>

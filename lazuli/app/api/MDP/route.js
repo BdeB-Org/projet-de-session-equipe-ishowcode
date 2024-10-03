@@ -1,27 +1,28 @@
-// pages/api/requestPasswordReset.js
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 export async function POST(req) {
   try {
-    console.log("Requête reçue"); 
     const { email } = await req.json();
-    console.log("Email reçu:", email); 
 
     const { db } = await connectToDatabase();
     const users = db.collection("utilisateur");
 
-    const user = await users.findOne({ email: email });
-    console.log("Utilisateur trouvé:", user); 
-
+    const user = await users.findOne({ email });
     if (!user) {
-      console.log("Aucun utilisateur trouvé"); 
       return NextResponse.json({ error: "Aucun utilisateur trouvé avec cet e-mail." }, { status: 404 });
     }
 
-    const resetLink = `localhost:3000/changerPassword${encodeURIComponent(email)}`;
-    console.log("Lien de réinitialisation:", resetLink); 
+    const token = crypto.randomBytes(32).toString('hex');
+    
+    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/ChangerMDP?token=${token}`;
+
+    await users.updateOne(
+      { email },
+      { $set: { resetToken: token, resetTokenExpiry: Date.now() + 3600000 } }
+    );
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -35,14 +36,12 @@ export async function POST(req) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Réinitialisation de votre mot de passe',
-      text: `Cliquez sur ce lien pour réinitialiser votre mot de passe: ${resetLink}`,
+      html: `<p>Cliquez sur ce lien pour réinitialiser votre mot de passe: <a href="${resetLink}">Réinitialiser le mot de passe</a></p>`,
     });
 
-    console.log("E-mail envoyé avec succès"); // Log de succès
     return NextResponse.json({ message: "Un lien de réinitialisation a été envoyé à votre adresse e-mail." });
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email :", error);
     return NextResponse.json({ error: "Erreur lors de l'envoi de l'email." }, { status: 500 });
   }
 }
-
