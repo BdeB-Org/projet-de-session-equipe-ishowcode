@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from 'next/image';
+import { useRouter } from 'next/navigation'; 
 
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
@@ -21,10 +22,38 @@ export default function ProfilPage() {
   const [birthDate, setBirthDate] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [profilePic, setProfilePic] = useState('/default-avatar.png');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  // Fetch the user's profile data on load
+  // Fonction pour récupérer les données du profil
+  const fetchData = async () => {
+    const userId = localStorage.getItem('userId'); 
+
+    if (!userId) {
+      console.error("User ID is missing from localStorage");
+      return;
+    }
+
+    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setName(data.name || '');
+      setEmail(data.email || '');
+      setBirthDate(data.birthDate || '');
+      setProfilePic(data.profilePic || '/default-avatar.png');
+    } else {
+      console.error("Error fetching profile data:", data.error);
+    }
+  };
+
+  const router = useRouter(); 
+
+  const handleLogout = () => {
+    router.push('/');
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const userId = localStorage.getItem('userId'); // Assuming userId is stored in localStorage
@@ -49,6 +78,23 @@ export default function ProfilPage() {
     fetchData();
   }, []);
 
+  // Fonction pour gérer le changement d'image
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedImage(file);
+  
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target && e.target.result) {
+          setProfilePic(e.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Fonction pour soumettre les modifications
   const handleSubmit = async () => {
     const userId = localStorage.getItem('userId'); // Fetching userId from localStorage
 
@@ -66,6 +112,8 @@ export default function ProfilPage() {
     const data = await response.json();
     if (response.ok) {
       alert(data.message); 
+      await fetchData(); 
+      setIsEditing(false); 
     } else {
       alert(data.error); 
     }
@@ -95,6 +143,12 @@ export default function ProfilPage() {
             </Link>
           ))}
         </nav>
+        <Button
+          onClick={handleLogout}
+          className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4"
+        >
+          Déconnecter
+        </Button>
       </header>
 
       {/* Main content */}

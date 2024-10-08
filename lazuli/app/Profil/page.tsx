@@ -29,6 +29,10 @@ export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+  const handleLogout = () => {
+    router.push('/');
+  };
+
   const handleDeleteAccount = async () => {
     const userId = localStorage.getItem('userId');
   
@@ -72,6 +76,12 @@ export default function ProfilPage() {
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">Transactions</Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">Profil</Link>
         </nav>
+        <Button
+          onClick={handleLogout}
+          className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4"
+        >
+          Déconnecter
+        </Button>
       </header>
 
       {/* Main */}

@@ -1,21 +1,22 @@
 import { NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
+import { join } from 'path';
+import { promises as fs } from 'fs';
 
-const uri = "mongodb+srv://Cluster81130:helloworld@cluster81130.nv3ke.mongodb.net/?retryWrites=true&w=majority&appName=Cluster81130";
+const uri = process.env.MONGODB_URI; // Assurez-vous que cette variable d'environnement est définie
 const client = new MongoClient(uri);
 let db;
 
 async function connectToDatabase() {
   if (!db) {
     await client.connect();
-    db = client.db("lazulibd"); 
+    db = client.db("lazulibd");
   }
 }
 
-// GET request to fetch user profile data
-export async function GET(req) {
+export async function GET(request) {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
     await connectToDatabase();
@@ -23,7 +24,7 @@ export async function GET(req) {
     const user = await db.collection('utilisateur').findOne({ _id: new ObjectId(userId) });
 
     if (user) {
-      console.log("Fetched user data: ", user); // Debug log to check the fetched data
+      console.log("Fetched user data: ", user);
       return NextResponse.json({
         name: user.name,
         email: user.email,
@@ -39,16 +40,56 @@ export async function GET(req) {
   }
 }
 
-// POST request to update user profile data
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const { userId, name, email, birthDate, profilePic } = await req.json();
     await connectToDatabase();
 
+    const formData = await request.formData();
+
+    const userId = formData.get('userId');
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const birthDate = formData.get('birthDate');
+
+    const profilePic = formData.get('profilePic'); // C'est un objet File ou null
+
+    let profilePicUrl = null;
+
+    if (profilePic && profilePic.size > 0) {
+      // Valider le type de fichier
+      if (!['image/jpeg', 'image/png'].includes(profilePic.type)) {
+        return NextResponse.json({ error: "Type de fichier non supporté" }, { status: 400 });
+      }
+
+      // Lire le contenu du fichier
+      const buffer = Buffer.from(await profilePic.arrayBuffer());
+
+      // Définir le chemin d'enregistrement
+      const uploadDir = join(process.cwd(), 'public', 'uploads');
+      await fs.mkdir(uploadDir, { recursive: true });
+      const fileName = `${userId}_${Date.now()}_${profilePic.name}`;
+      const filePath = join(uploadDir, fileName);
+
+      // Enregistrer le fichier
+      await fs.writeFile(filePath, buffer);
+
+      profilePicUrl = `/uploads/${fileName}`;
+    }
+
     const users = db.collection('utilisateur');
+    const updateFields = {
+      name,
+      email,
+      birthDate,
+    };
+
+    if (profilePicUrl) {
+      updateFields.profilePic = profilePicUrl;
+    }
+
     const updatedUser = await users.updateOne(
       { _id: new ObjectId(userId) },
-      { $set: { name, email, birthDate, profilePic } }
+      { $set: updateFields }
     );
 
     if (updatedUser.modifiedCount > 0) {
@@ -58,6 +99,9 @@ export async function POST(req) {
     }
   } catch (err) {
     console.error("Erreur lors de la mise à jour:", err);
-    return NextResponse.json({ error: "Une erreur s'est produite lors de la mise à jour du profil" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Une erreur s'est produite lors de la mise à jour du profil" },
+      { status: 500 }
+    );
   }
 }
