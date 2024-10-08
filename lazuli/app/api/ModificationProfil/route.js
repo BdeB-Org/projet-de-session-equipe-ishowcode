@@ -1,3 +1,5 @@
+// /app/api/ModificationProfil/route.js
+
 import { NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
 import { join } from 'path';
@@ -44,6 +46,7 @@ export async function POST(request) {
   try {
     await connectToDatabase();
 
+    // Utiliser request.formData() pour récupérer les données du formulaire
     const formData = await request.formData();
 
     const userId = formData.get('userId');
@@ -57,7 +60,7 @@ export async function POST(request) {
 
     if (profilePic && profilePic.size > 0) {
       // Valider le type de fichier
-      if (!['image/jpeg', 'image/png'].includes(profilePic.type)) {
+      if (!['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'].includes(profilePic.type)) {
         return NextResponse.json({ error: "Type de fichier non supporté" }, { status: 400 });
       }
 
