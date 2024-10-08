@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
@@ -21,7 +21,7 @@ export async function POST(req) {
 
     await users.updateOne(
       { email },
-      { $set: { resetToken: token, resetTokenExpiry: Date.now() + 3600000 } }
+      { $set: { resetToken: token, resetTokenExpiry: Date.now() + 3600000 } } 
     );
 
     const transporter = nodemailer.createTransport({

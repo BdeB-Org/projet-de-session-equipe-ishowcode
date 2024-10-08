@@ -4,27 +4,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
-  const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    // Check if router and router.query are defined
-    if (router.query && router.query.email && router.query.token) {
-      setEmail(router.query.email);
-      setToken(router.query.token);
+    const tokenParam = searchParams.get('token');
+    if (tokenParam) {
+      setToken(tokenParam);
     }
-  }, [router.query]);
+  }, [searchParams]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -33,36 +32,56 @@ export default function ChangePasswordPage() {
       return;
     }
 
-    // Validate password...
+      const validatePassword = (password: string) => {
+        const minLength = 8;
+        const uppercasePattern = /[A-Z]/;
+        const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
+    
+        if (password.length < minLength) {
+          return "Le mot de passe doit contenir au moins 8 caractères.";
+        }
+        if (!uppercasePattern.test(password)) {
+          return "Le mot de passe doit contenir au moins une lettre majuscule.";
+        }
+        if (!specialCharPattern.test(password)) {
+          return "Le mot de passe doit contenir au moins un caractère spécial.";
+        }
+        return "";
+      };
+
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setErrorMessage(passwordError);
+      return;
+    }
 
     try {
-        const res = await fetch('/api/change-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            email, 
-            password: formData.password 
-          })
-        });
-      
-        if (res.ok) {
-          alert("Mot de passe changé avec succès !");
-          router.push('/login');
-        } else {
-          const errorResult = await res.json();
-          console.error("Erreur dans la réponse de l'API :", errorResult);
-          setErrorMessage(errorResult.error || "Une erreur est survenue.");
-        }
-      } catch (error) {
-        console.error("Erreur lors du changement de mot de passe :", error);
-        setErrorMessage("Une erreur est survenue lors du changement de mot de passe.");
+      const res = await fetch('/api/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          token, 
+          password: formData.password 
+        })
+      });
+
+      if (res.ok) {
+        alert("Mot de passe changé avec succès !");
+        router.push('/login');
+      } else {
+        const errorResult = await res.json();
+        console.error("Erreur dans la réponse de l'API :", errorResult);
+        setErrorMessage(errorResult.error || "Une erreur est survenue.");
       }
-      
+    } catch (error) {
+      console.error("Erreur lors du changement de mot de passe :", error);
+      setErrorMessage("Une erreur est survenue lors du changement de mot de passe.");
+    }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
