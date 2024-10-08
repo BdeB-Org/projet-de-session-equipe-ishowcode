@@ -1,5 +1,3 @@
-// /app/ModificationProfil/page.tsx
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -23,81 +21,51 @@ export default function ProfilPage() {
   const [birthDate, setBirthDate] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [profilePic, setProfilePic] = useState('/default-avatar.png');
-  const [selectedImage, setSelectedImage] = useState<File | null>(null); // Nouvel état pour l'image sélectionnée
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  // Fonction pour récupérer les données du profil
-  const fetchData = async () => {
-    const userId = localStorage.getItem('userId'); 
-
-    if (!userId) {
-      console.error("User ID is missing from localStorage");
-      return;
-    }
-
-    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
-    const data = await res.json();
-
-    if (res.ok) {
-      setName(data.name || '');
-      setEmail(data.email || '');
-      setBirthDate(data.birthDate || '');
-      setProfilePic(data.profilePic || '/default-avatar.png');
-    } else {
-      console.error("Error fetching profile data:", data.error);
-    }
-  };
-
+  // Fetch the user's profile data on load
   useEffect(() => {
+    const fetchData = async () => {
+      const userId = localStorage.getItem('userId'); // Assuming userId is stored in localStorage
+
+      if (!userId) {
+        console.error("User ID is missing from localStorage");
+        return;
+      }
+
+      const res = await fetch(`/api/getProfile?userId=${userId}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        setName(data.name || '');
+        setEmail(data.email || '');
+        setBirthDate(data.birthDate || '');
+        setProfilePic(data.profilePic || '/default-avatar.png');
+      } else {
+        console.error("Error fetching profile data:", data.error);
+      }
+    };
     fetchData();
   }, []);
 
-  // Fonction pour gérer le changement d'image
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedImage(file);
-  
-      // Prévisualiser l'image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target && e.target.result) {
-          setProfilePic(e.target.result as string); // Mettre à jour l'image affichée
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Fonction pour soumettre les modifications
   const handleSubmit = async () => {
-    const userId = localStorage.getItem('userId'); 
+    const userId = localStorage.getItem('userId'); // Fetching userId from localStorage
 
     if (!userId) {
       console.error("User ID is missing from localStorage");
       return;
-    }
-
-    const formData = new FormData();
-    formData.append('userId', userId);
-    formData.append('name', name);
-    formData.append('email', email);
-    formData.append('birthDate', birthDate);
-    if (selectedImage) {
-      formData.append('profilePic', selectedImage);
     }
 
     const response = await fetch('/api/ModificationProfil', {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, name, email, birthDate, profilePic }),
     });
 
     const data = await response.json();
     if (response.ok) {
       alert(data.message); 
-      await fetchData(); // Rafraîchir les données
-      setIsEditing(false); // Sortir du mode édition
     } else {
       alert(data.error); 
     }
@@ -111,7 +79,7 @@ export default function ProfilPage() {
     >
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-gray-900 shadow-lg">
-        <Link className="flex items-center" href="/Dashboard">
+        <Link className="flex items-center" href="/dashboard">
           <motion.span
             className="font-extrabold text-xl text-[#6a4fc3] tracking-wider"
             initial={{ y: -20, opacity: 0 }}
@@ -121,15 +89,11 @@ export default function ProfilPage() {
           </motion.span>
         </Link>
         <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
-            Dashboard
-          </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
-            Transactions
-          </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
-            Profil
-          </Link>
+          {['Dashboard', 'Transactions', 'Profil'].map((item, i) => (
+            <Link key={i} className="text-sm font-medium hover:text-[#6a4fc3]" href={`/${item.toLowerCase()}`}>
+              {item}
+            </Link>
+          ))}
         </nav>
       </header>
 
@@ -150,14 +114,11 @@ export default function ProfilPage() {
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
               <Image src={profilePic} alt="Profile Picture" fill objectFit="cover" className="rounded-full" />
-              {isEditing && (
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
-                />
-              )}
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
             </motion.div>
           </div>
 
@@ -215,9 +176,8 @@ export default function ProfilPage() {
                   onClick={() => {
                     if (isEditing) {
                       handleSubmit();
-                    } else {
-                      setIsEditing(true);
                     }
+                    setIsEditing(!isEditing);
                   }}
                 >
                   {isEditing ? "Sauvegarder" : "Modifier"}
