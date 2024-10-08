@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from 'next/image';
+import { useRouter } from 'next/navigation'; 
 
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,10 +17,17 @@ export default function ProfilPage() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const router = useRouter();
 
+    const handleLogout = () => {
+      router.push('/');
+  };
+  
   // Fonction pour récupérer les données du profil
   const fetchData = async () => {
-    const userId = localStorage.getItem('userId'); 
+    const userId = localStorage.getItem('userId');
+
+    
 
     if (!userId) {
       console.error("User ID is missing from localStorage");
@@ -123,6 +131,12 @@ export default function ProfilPage() {
             Profil
           </Link>
         </nav>
+        <Button
+          onClick={handleLogout}
+          className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4"
+        >
+          Déconnecter
+        </Button>
       </header>
 
       {/* Main content */}

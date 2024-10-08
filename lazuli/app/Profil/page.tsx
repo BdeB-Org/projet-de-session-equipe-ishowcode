@@ -68,12 +68,12 @@ export default function ProfilPage() {
     >
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
-        <Link className="flex items-center" href="/dashboard">
+        <Link className="flex items-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/dashboard">Dashboard</Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/transactions">Transactions</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">Dashboard</Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">Transactions</Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">Profil</Link>
         </nav>
         <Button
