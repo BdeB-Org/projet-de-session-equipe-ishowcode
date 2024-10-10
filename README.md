@@ -2,7 +2,8 @@
 Lazuli est un simulateur de cryptomonnaies conçu pour reproduire les dynamiques du marché crypto dans un environnement sécurisé. Il permet aux utilisateurs de simuler des transactions, de tester des stratégies d'investissement et d'analyser les fluctuations des cours sans risquer de capital réel. Lazuli est un outil pédagogique idéal pour les débutants souhaitant apprendre le fonctionnement des cryptomonnaies, ainsi qu'un laboratoire pour les traders expérimentés cherchant à affiner leurs tactiques.
 
 
-<img width="959" alt="image" src="https://github.com/user-attachments/assets/762d746e-b9da-47f2-b5e3-9019412f8b8a">
+
+<img width="959" alt="Page accueil" src="https://github.com/user-attachments/assets/36cdde8f-ea5f-4823-9fb4-dd7da7586ce6">
 
 
 
@@ -61,7 +62,82 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
    http://localhost:3000
    ```
 
+##Présentation des pages de Lazuli
+
+ **Présentation du page Page Accueil :**
+
+ Dans le page d'acceuil vous pouvez créer un compte si vous etes un nouveau utilisateur sinon si vous êtes déja un membre vous pouvez te connecter. De plus, dans il y a un bouton d'assistance où vous pouvez demander des questions à Gemin et il y a option de voir le page a propos ou d'avoir de l'aide.
+
+
+<img width="1503" alt="image" src="https://github.com/user-attachments/assets/59fa4ada-7cbe-4596-b8a2-f5fb196b594a">
 
 
 
+ **Présentation du page Creation un Compte :**
+
+Dans le page creation un compte, l'utilisateur peut créer un compte sur Lazuli en remplir le formulaire. Dans le formulaire, vous devez inclure votre Préno,Nom,Adresse courriel, un mot de passe avec un minimum de 8 caractères, un lettre majuscule, un caractère speciale, un chiffre. De plus, vous devez récrir le mot passe pour assurer la création du compte. Si l'utilisateur a déja un compte donc il peut aller dans le lien pour se connecter.
+
+
+<img width="959" alt="Page Devenir un membre" src="https://github.com/user-attachments/assets/d7c59df8-f79e-49a9-a48e-28f63f048060">
+
+
+
+  **Présentation du Page Se Connecter :**
+
+Dans le page se connecter, l'utilisateur doit rentrer son courriel et son mot de passe pour accéder à son compte de Lazuli. Si l'utilisateur à oublier son mot de passe alors il peut le réinitialiser avec le lien mot passe oublié.
+
+<img width="959" alt="Page Se Connecte" src="https://github.com/user-attachments/assets/51f42f24-ca8a-4adf-9ab3-f5a15b9beca5">
+
+
+ **Présentation du Page À propos :**
+
+Dans le page à propos, on explique qui on est et c'est quoi notre but.
+
+<img width="959" alt="Page À propos" src="https://github.com/user-attachments/assets/a2bf4469-4491-460e-8b01-df9a2b0be3f9">
+
+
+
+ **Présentation du Page Aide :**
+
+Dans le page aide, vous pouvez cherchez des informations sur les fonctionnalités sur le site.
+
+<img width="959" alt="page Aide" src="https://github.com/user-attachments/assets/11f58c0a-f9f5-4753-9330-7a4081324617">
+
+
+
+**Présentation du Page Dashboard :**
+
+Dans le page du dashboard l'utilisateur peut voir l'argent qu'il a et il a des options pour acheter,vendre,convertir et dépot. De plus, vous avez l'option de voir votre page de transaction et votre page de profile et vous pouvez déconnecter votre compte.
+
+<img width="959" alt="Page Dashboard" src="https://github.com/user-attachments/assets/f654b992-a6d4-4a35-b66b-5a30e3a096be">
+
+
+
+**Présentation du Page Transaction :**
+
+Dans le page de transaction, utilisateur pouvez voir les achats que vous avez faites.
+
+<img width="959" alt="Page Transaction" src="https://github.com/user-attachments/assets/167c5fc8-db8c-4cc9-a740-4970f26ecbeb">
+
+
+
+**Présentation du Page Profil :**
+
+Dans le page de profil, l'utilisateur peut voir ses informations personnels et il a l'option de modifier son profil ou supprimer son compte.
+
+<img width="959" alt="Page Profil" src="https://github.com/user-attachments/assets/b43579e2-8fa1-4aed-bd73-7dd79674de1a">
+
+
+
+**Présentation du Page Modification Profil :**
+
+Dans le page modification profil, l'utilisateur peut changer ses informations personnels comme son nom et il a l'option d'ajouter son date de naissance et l'utilisateur peut modifier son mot de passe.
+
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/5e64f2db-ad61-4471-8997-77224d7da907">
+
+**Présentation du Page Réinitialiser votre mot de passe :**
+
+Dans le page réinitialiser votre mot passe, si l'utilisateur a oublié le mot de passe de son compte il peut mettre son courriel pour qu'on l'envoi un courriel pour lui permettre de changer son mot de passe.
+
+<img width="959" alt=" Page Réinitialiser votre mot de passe" src="https://github.com/user-attachments/assets/52b50c8e-0e02-4574-b2cf-ddbab34e3c82">
 
