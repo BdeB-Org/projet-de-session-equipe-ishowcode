@@ -1,13 +1,15 @@
-'use client'
+// /app/Dashboard/page.tsx
 
-import { motion } from 'framer-motion'
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from 'next/image'
+'use client';
+
+import { motion } from 'framer-motion';
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp'; 
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import { useRouter } from 'next/navigation';
-
+import { useEffect, useState } from 'react';
 
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
@@ -16,10 +18,27 @@ const containerVariants = {
 
 export default function DashboardPage() {
   const router = useRouter(); 
+  const [balance, setBalance] = useState(172.03); // Initial balance, can be fetched
 
   const handleLogout = () => {
     router.push('/');
   };
+
+  const fetchBalance = async () => {
+    // Fetch the balance from your API
+    const res = await fetch(`/api/balance`);
+    const data = await res.json();
+    if (res.ok) {
+      setBalance(data.balance);
+    } else {
+      console.error("Error fetching balance:", data.error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBalance();
+  }, []);
+
   return (
     <motion.div 
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
@@ -58,11 +77,11 @@ export default function DashboardPage() {
           variants={containerVariants}
         >
           <nav className="space-y-4">
-          <div className="flex items-center space-x-2">
-          <Image src={accueilLogoImg.src} alt="Transaction Icon" width={30} height={30} />
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-              Accueil
-            </Link>
+            <div className="flex items-center space-x-2">
+              <Image src={accueilLogoImg.src} alt="Transaction Icon" width={30} height={30} />
+              <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
+                Accueil
+              </Link>
             </div>
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
               🔎 Explore
@@ -88,19 +107,9 @@ export default function DashboardPage() {
           >
             <h2 className="text-xl font-semibold">Solde total</h2>
             <div className="flex items-center justify-between mt-4">
-              <p className="text-4xl font-bold">CA$172.03</p>
-              <p className="text-red-600 text-sm">-CA$69.07 (-28.65%)</p>
+              <p className="text-4xl font-bold">CA${balance.toFixed(2)}</p>
             </div>
             <p className="text-sm text-gray-500 mt-2">Disponible pour échanger : CA$0.35</p>
-            <div className="mt-6">
-              {/* Graphique placeholder */}
-              <motion.div 
-                className="h-40 bg-gray-200 rounded-lg"
-                whileHover={{ scale: 1.05 }}
-              >
-                <p className="flex items-center justify-center h-full">Graphique</p>
-              </motion.div>
-            </div>
           </motion.div>
 
           {/* Actions */}
@@ -114,12 +123,11 @@ export default function DashboardPage() {
             <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
               Vendre
             </Button>
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
-              Convertir
-            </Button>
-            <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
-              Dépôt
-            </Button>
+            <Link href="/Depot">
+              <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9]">
+                Dépôt
+              </Button>
+            </Link>
           </motion.div>
         </section>
       </main>
