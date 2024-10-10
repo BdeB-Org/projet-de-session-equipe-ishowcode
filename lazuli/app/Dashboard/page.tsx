@@ -64,7 +64,7 @@ export default function DashboardPage() {
               Accueil
             </Link>
             </div>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
+            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/explore">
               🔎 Explore
             </Link>
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
