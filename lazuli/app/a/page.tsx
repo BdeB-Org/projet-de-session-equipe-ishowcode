@@ -1,8 +1,9 @@
 // pages/balloons.js
+//page bonus 
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
-
+//Contenant des ballon animés
 const BalloonsPage = () => {
   useEffect(() => {
     const balloons = document.querySelectorAll(".balloon");
@@ -10,7 +11,7 @@ const BalloonsPage = () => {
       const randomX = Math.random() * 100;
       const randomY = Math.random() * 100;
     });
-  }, []);
+  }, []); 
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#1a1a40]">
@@ -49,4 +50,4 @@ const BalloonsPage = () => {
   );
 };
 
-export default BalloonsPage;
+export default BalloonsPage; 

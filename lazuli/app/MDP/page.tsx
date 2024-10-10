@@ -21,6 +21,7 @@ export default function RequestPasswordReset() {
         headers: {
           'Content-Type': 'application/json'
         },
+        //envoie l'email 
         body: JSON.stringify({ email }),
       });
 
@@ -39,7 +40,7 @@ export default function RequestPasswordReset() {
       alert("Erreur lors de l'envoi de l'email. Veuillez vérifier la console pour plus d'informations.");
     }
   };
-
+  //frontend de la page
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">

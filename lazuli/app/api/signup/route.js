@@ -6,9 +6,10 @@ const uri = "mongodb+srv://Cluster81130:helloworld@cluster81130.nv3ke.mongodb.ne
 
 export async function POST(req) {
   try {
+    //Recupere les donnes 
     const { name, email, password } = await req.json();
     console.log("Données reçues du formulaire:", { name, email }); 
-
+    //Hashage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const client = new MongoClient(uri);
@@ -17,15 +18,15 @@ export async function POST(req) {
 
     const db = client.db("lazulibd");
     const users = db.collection("utilisateur");
-
+    //Verifie si l'utilisateur avec le meme email existe
     const existingUser = await users.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ error: "Cet email est déjà utilisé." }, { status: 400 });
     }
-
+    //Ajoute l'utilisateur dans la base de données
     const result = await users.insertOne({ name, email, password: hashedPassword });
     console.log("Utilisateur ajouté avec succès:", result.insertedId); 
-
+    //Retourne le message un l'utilisateur a été ajouté
     return NextResponse.json({ message: "Utilisateur créé avec succès", userId: result.insertedId }, { status: 201 });
   } catch (err) {
     console.error("Erreur dans l'API d'inscription:", err);

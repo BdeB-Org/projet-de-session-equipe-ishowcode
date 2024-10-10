@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
-
+//Envoyer un email de réinitialisation de mot de passe
 export async function POST(req) {
   try {
     const { email } = await req.json();
@@ -31,7 +31,7 @@ export async function POST(req) {
         pass: process.env.EMAIL_PASS,
       },
     });
-
+    //Envoyer email avec lien reinialisation
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,

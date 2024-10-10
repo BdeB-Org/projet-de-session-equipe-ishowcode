@@ -26,7 +26,7 @@ export default function ChangePasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
-
+    //Verifier si les mots de passe correspondent
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage("Les mots de passe ne correspondent pas.");
       return;
@@ -36,13 +36,15 @@ export default function ChangePasswordPage() {
         const minLength = 8;
         const uppercasePattern = /[A-Z]/;
         const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
-    
+        //Verifie si le mot de passe est assez long
         if (password.length < minLength) {
           return "Le mot de passe doit contenir au moins 8 caractères.";
         }
+        //Verifie si le mot de passe contient une lettre majuscule
         if (!uppercasePattern.test(password)) {
           return "Le mot de passe doit contenir au moins une lettre majuscule.";
         }
+        //Verifie si le mot de passe contient un caractère spécial
         if (!specialCharPattern.test(password)) {
           return "Le mot de passe doit contenir au moins un caractère spécial.";
         }
@@ -54,7 +56,7 @@ export default function ChangePasswordPage() {
       setErrorMessage(passwordError);
       return;
     }
-
+    //Envoie requete a API pour changer le mot de passe
     try {
       const res = await fetch('/api/change-password', {
         method: 'POST',
@@ -80,7 +82,7 @@ export default function ChangePasswordPage() {
       setErrorMessage("Une erreur est survenue lors du changement de mot de passe.");
     }
   };
-
+  //Gérer les changements dans les champs de formulaire
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -88,6 +90,7 @@ export default function ChangePasswordPage() {
       [name]: value 
     }));
   };
+  //frontend de la page
 
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white fade-in">
@@ -160,6 +163,7 @@ export default function ChangePasswordPage() {
           </nav>
         </div>
       </footer>
+      //
       <style jsx global>{`
         @tailwind base;
         @tailwind components;

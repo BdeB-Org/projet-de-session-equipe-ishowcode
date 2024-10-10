@@ -1,7 +1,7 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
-
+//Fonction pour changer le mot de passe
 export async function POST(req) {
   const { token, password } = await req.json();
 
@@ -17,9 +17,9 @@ export async function POST(req) {
     if (!user) {
       return NextResponse.json({ error: "Token invalide ou expiré." }, { status: 400 });
     }
-
+    //Hashage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
-
+    //Mise à jour du mot de passe
     await users.updateOne(
       { _id: user._id },
       { 
@@ -27,7 +27,7 @@ export async function POST(req) {
         $unset: { resetToken: "", resetTokenExpiry: "" }
       }
     );
-
+    //Retour un message si le mot de passe a été changé
     return NextResponse.json({ message: "Mot de passe changé avec succès." });
   } catch (error) {
     console.error("Erreur lors du changement de mot de passe :", error);

@@ -1,21 +1,19 @@
-// /app/api/ModificationProfil/route.js
-
 import { NextResponse } from 'next/server';
 import { MongoClient, ObjectId } from 'mongodb';
 import { join } from 'path';
 import { promises as fs } from 'fs';
 
-const uri = process.env.MONGODB_URI; // Assurez-vous que cette variable d'environnement est définie
+const uri = process.env.MONGODB_URI; 
 const client = new MongoClient(uri);
 let db;
-
+//Conecter a la base de données
 async function connectToDatabase() {
   if (!db) {
     await client.connect();
     db = client.db("lazulibd");
   }
 }
-
+//Récupérer les informations de l'utilisateur
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -46,7 +44,6 @@ export async function POST(request) {
   try {
     await connectToDatabase();
 
-    // Utiliser request.formData() pour récupérer les données du formulaire
     const formData = await request.formData();
 
     const userId = formData.get('userId');
@@ -54,12 +51,12 @@ export async function POST(request) {
     const email = formData.get('email');
     const birthDate = formData.get('birthDate');
 
-    const profilePic = formData.get('profilePic'); // C'est un objet File ou null
+    const profilePic = formData.get('profilePic'); 
 
     let profilePicUrl = null;
 
     if (profilePic && profilePic.size > 0) {
-      // Valider le type de fichier
+
       if (!['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'].includes(profilePic.type)) {
         return NextResponse.json({ error: "Type de fichier non supporté" }, { status: 400 });
       }
@@ -89,7 +86,7 @@ export async function POST(request) {
     if (profilePicUrl) {
       updateFields.profilePic = profilePicUrl;
     }
-
+    //Mettre à jour l'informations du l'utilisateur
     const updatedUser = await users.updateOne(
       { _id: new ObjectId(userId) },
       { $set: updateFields }
@@ -100,7 +97,9 @@ export async function POST(request) {
     } else {
       return NextResponse.json({ error: "Aucune mise à jour effectuée" }, { status: 400 });
     }
-  } catch (err) {
+  } 
+  //Gérer les erreurs
+  catch (err) {
     console.error("Erreur lors de la mise à jour:", err);
     return NextResponse.json(
       { error: "Une erreur s'est produite lors de la mise à jour du profil" },
