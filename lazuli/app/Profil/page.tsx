@@ -1,12 +1,13 @@
 'use client'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
+
 
 
 // Animation 
@@ -27,6 +28,13 @@ const buttonVariants = {
 
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [birthDate, setBirthDate] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [profilePic, setProfilePic] = useState('/default-avatar.png');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const router = useRouter();
 
   const handleLogout = () => {
@@ -58,6 +66,36 @@ export default function ProfilPage() {
       alert(data.error || "Failed to delete account.");
     }
   };
+
+  // Fonction pour récupérer les données du profil
+  const fetchData = async () => {
+    const userId = localStorage.getItem('userId');
+
+    
+
+    if (!userId) {
+      console.error("User ID is missing from localStorage");
+      return;
+    }
+
+    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setName(data.name || '');
+      setEmail(data.email || '');
+      setBirthDate(data.birthDate || '');
+      setProfilePic(data.profilePic || '/default-avatar.png');
+      setPassword(data.password || '');
+    } else {
+      console.error("Error fetching profile data:", data.error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
   
   //frontend de la page
   return (
@@ -114,28 +152,34 @@ export default function ProfilPage() {
 
             {/* Profil*/}
             <div className="mt-4 space-y-4">
+              {/* Image de Profil */}
+              <div className="flex justify-center">
+                <div className="relative w-32 h-32 border-4 border-[#5d3fd3] rounded-full overflow-hidden">
+                  <Image src={profilePic} alt="Photo de Profil" fill style={{ objectFit: 'cover' }} className="rounded-full" />
+                </div>
+              </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Nom complet :</p>
-                <p className="text-lg">Jean Dupont</p>
+                <p className="text-lg">{name}</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Adresse e-mail :</p>
-                <p className="text-lg">jeandupont@email.com</p>
+                <p className="text-lg">{email}</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Date de naissance :</p>
-                <p className="text-lg">01 Janvier 1990</p>
+                <p className="text-lg">{birthDate}</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Mot de passe :</p>
-                <p className="text-lg">********</p>
+                <p className="text-lg">{password}</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
-                <p className="text-lg font-medium">Gain</p>
+                <p className="text-lg font-medium">Montant Argent :</p>
                 <p className="text-lg">$0</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between items-center">
-                <p className="text-lg font-medium">Monnai</p>
+                <p className="text-lg font-medium">Monnaie :</p>
                 <div className="relative">
                   <button 
                     onClick={() => setIsOpen(!isOpen)} 
