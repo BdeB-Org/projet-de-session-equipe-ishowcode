@@ -18,6 +18,9 @@ const containerVariants = {
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
 };
 
+// lier les plugins de Chart.js 
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip);
+
 // interface CryptoInfo pour les informations sur les cryptomonnaies
 interface CryptoInfo {
   name: string;
