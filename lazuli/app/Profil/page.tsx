@@ -212,6 +212,13 @@ export default function ProfilPage() {
                 </Link>
               </motion.div>
               <motion.div variants={buttonVariants} whileHover="hover">
+                <Link href="/Depot">
+                  <Button className="bg-[#5d3fd3] text-white px-4 py-2 rounded-full hover:bg-[#4533a9] transition duration-300">
+                    Dépot
+                  </Button>
+                </Link>
+              </motion.div>
+              <motion.div variants={buttonVariants} whileHover="hover">
                 <Button 
                   onClick={async () => {
                     const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer votre compte?");
