@@ -109,10 +109,23 @@ export default function ProfilPage() {
         <Link className="flex items-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
-        <nav className="ml-auto flex gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">Dashboard</Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">Transactions</Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">Profil</Link>
+        <nav className="ml-auto flex items-center gap-6">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
+            Dashboard
+          </Link>
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
+            Transactions
+          </Link>
+          {/* Photo de profil dans le header */}
+          <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
+            <Image
+              src={profilePic || '/default-avatar.png'}
+              alt="Photo de Profil"
+              fill
+              style={{ objectFit: 'cover' }}
+              className="rounded-full"
+            />
+          </Link>
         </nav>
         <Button
           onClick={handleLogout}

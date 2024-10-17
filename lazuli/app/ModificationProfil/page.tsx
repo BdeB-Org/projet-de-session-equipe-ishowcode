@@ -1,5 +1,3 @@
-// /app/ModificationProfil/page.tsx
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,23 +10,24 @@ import { useRouter } from 'next/navigation';
 export default function ProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [birthDate, setBirthDate] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
   const [profilePic, setProfilePic] = useState('/default-avatar.png');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const router = useRouter();
 
-    const handleLogout = () => {
-      router.push('/');
+  const handleLogout = () => {
+    router.push('/');
   };
-  
+
   // Fonction pour récupérer les données du profil
   const fetchData = async () => {
     const userId = localStorage.getItem('userId');
-
-    
 
     if (!userId) {
       console.error("User ID is missing from localStorage");
@@ -57,8 +56,7 @@ export default function ProfilPage() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedImage(file);
-  
-      // Prévisualiser l'image
+
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target && e.target.result) {
@@ -78,30 +76,59 @@ export default function ProfilPage() {
       return;
     }
 
+    // Réinitialiser le message d'erreur
+    setErrorMessage('');
+
+    // Valider les mots de passe si l'utilisateur a rempli les champs
+    if (oldPassword || newPassword || confirmPassword) {
+      if (!oldPassword || !newPassword || !confirmPassword) {
+        setErrorMessage("Veuillez remplir tous les champs de mot de passe.");
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        setErrorMessage("Les nouveaux mots de passe ne correspondent pas.");
+        return;
+      }
+
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+
+      if (!passwordRegex.test(newPassword)) {
+        setErrorMessage("Le nouveau mot de passe doit comporter au moins 8 caractères, inclure au moins une lettre majuscule et un caractère spécial.");
+        return;
+      }
+    }
+
     const formData = new FormData();
     formData.append('userId', userId);
     formData.append('name', name);
     formData.append('email', email);
     formData.append('birthDate', birthDate);
+    if (oldPassword && newPassword) {
+      formData.append('oldPassword', oldPassword);
+      formData.append('newPassword', newPassword);
+    }
     if (selectedImage) {
       formData.append('profilePic', selectedImage);
     }
 
-    // Ne pas définir manuellement l'en-tête 'Content-Type'
     const response = await fetch('/api/ModificationProfil', {
       method: 'POST',
       body: formData,
-      // Ne pas inclure d'en-têtes ici
     });
 
     const data = await response.json();
     if (response.ok) {
       alert(data.message); 
-      await fetchData(); // Rafraîchir les données
-      setIsEditing(false); // Sortir du mode édition
+      router.push('/Profil');
     } else {
-      alert(data.error); 
+      setErrorMessage(data.error || "Une erreur s'est produite.");
     }
+  };
+
+  // Fonction pour annuler les modifications
+  const handleCancel = () => {
+    router.push('/Profil');
   };
 
   return (
@@ -121,15 +148,22 @@ export default function ProfilPage() {
             Lazuli
           </motion.span>
         </Link>
-        <nav className="ml-auto flex gap-6">
+        <nav className="ml-auto flex items-center gap-6">
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
             Dashboard
           </Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
-            Profil
+          {/* Photo de profil dans le header */}
+          <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
+            <Image
+              src={profilePic || '/default-avatar.png'}
+              alt="Photo de Profil"
+              fill
+              style={{ objectFit: 'cover' }}
+              className="rounded-full"
+            />
           </Link>
         </nav>
         <Button
@@ -145,7 +179,12 @@ export default function ProfilPage() {
         <motion.section 
           className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl"
         >
-          <h2 className="text-2xl font-bold mb-6">Mon Profil</h2>
+          <h2 className="text-2xl font-bold mb-6">Modifier Mon Profil</h2>
+
+          {/* Afficher le message d'erreur s'il y en a */}
+          {errorMessage && (
+            <div className="text-red-500 mb-4">{errorMessage}</div>
+          )}
 
           {/* Profile Picture Upload */}
           <div className="flex justify-center items-center mb-6">
@@ -154,14 +193,12 @@ export default function ProfilPage() {
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
               <Image src={profilePic} alt="Profile Picture" fill style={{ objectFit: 'cover' }} className="rounded-full" />
-              {isEditing && (
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleImageChange}
-                />
-              )}
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={handleImageChange}
+              />
             </motion.div>
           </div>
 
@@ -169,75 +206,88 @@ export default function ProfilPage() {
             {/* Name Field */}
             <div className="flex justify-between items-center">
               <p className="text-lg font-semibold">Nom complet :</p>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="text-lg border border-gray-300 rounded px-2 text-black"
-                />
-              ) : (
-                <p className="text-lg">{name}</p>
-              )}
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              />
             </div>
 
             {/* Email Field */}
             <div className="flex justify-between items-center">
               <p className="text-lg font-semibold">Adresse e-mail :</p>
-              {isEditing ? (
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="text-lg border border-gray-300 rounded px-2 text-black"
-                />
-              ) : (
-                <p className="text-lg">{email}</p>
-              )}
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              />
             </div>
 
             {/* Date of Birth Field */}
             <div className="flex justify-between items-center">
               <p className="text-lg font-semibold">Date de naissance :</p>
-              {isEditing ? (
-                <input
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="text-lg border border-gray-300 rounded px-2 text-black"
-                />
-              ) : (
-                <p className="text-lg">{birthDate}</p>
-              )}
+              <input
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              />
+            </div>
+
+            {/* Ancien Mot de Passe */}
+            <div className="flex justify-between items-center">
+              <p className="text-lg font-semibold">Ancien mot de passe :</p>
+              <input
+                type="password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              />
+            </div>
+
+            {/* Nouveau Mot de Passe */}
+            <div className="flex justify-between items-center">
+              <p className="text-lg font-semibold">Nouveau mot de passe :</p>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              />
+            </div>
+
+            {/* Confirmer le Nouveau Mot de Passe */}
+            <div className="flex justify-between items-center">
+              <p className="text-lg font-semibold">Confirmer le nouveau mot de passe :</p>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              />
             </div>
 
             {/* Buttons */}
             <div className="flex gap-4 mt-6">
-  <motion.div>
-    <Button 
-      className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
-      onClick={() => {
-        if (isEditing) {
-          handleSubmit();
-        } else {
-          setIsEditing(true);
-        }
-      }}
-    >
-      {isEditing ? "Sauvegarder" : "Modifier"}
-    </Button>
-  </motion.div>
-
-  <motion.div>
-    <Button 
-      onClick={() => router.back()} 
-      className="bg-[#6a4fc3] hover:bg-[#5a3fbc] rounded-full transition duration-300"
-    >
-      Retour
-    </Button>
-  </motion.div>
-</div>
-
+              <motion.div>
+                <Button 
+                  className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
+                  onClick={handleSubmit}
+                >
+                  Sauvegarder
+                </Button>
+              </motion.div>
+              <motion.div>
+                <Button 
+                  className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition"
+                  onClick={handleCancel}
+                >
+                  Annuler
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </motion.section>
       </main>

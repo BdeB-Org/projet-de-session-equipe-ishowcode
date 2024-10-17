@@ -1,3 +1,5 @@
+// /app/Dashboard/page.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,7 +7,14 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { CategoryScale } from 'chart.js';
-import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, Tooltip } from 'chart.js';
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  Tooltip,
+} from 'chart.js';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -13,65 +22,88 @@ import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 
-const containerVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
-};
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip
+);
 
-// lier les plugins de Chart.js 
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip);
-
-// interface CryptoInfo pour les informations sur les cryptomonnaies
+// Interface pour les informations sur les cryptomonnaies
 interface CryptoInfo {
   name: string;
   price: string;
   change: string;
   marketCap: number;
-  volume: number; 
-  low24h: number; 
-  high24h: number; 
+  volume: number;
+  low24h: number;
+  high24h: number;
 }
 
-// interface PriceData pour les données de prix dans le graphique
+// Interface pour les données de prix dans le graphique
 interface PriceData {
   x: string;
   y: number;
 }
 
-// DashboardPage
 export default function DashboardPage() {
-  // useState pour afficher ou masquer l'exploration des cryptomonnaies
   const [showExplore, setShowExplore] = useState(false);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
-  const [cryptoData, setCryptoData] = useState<{ [key: string]: CryptoInfo }>({});
+  const [cryptoData, setCryptoData] = useState<{ [key: string]: CryptoInfo }>(
+    {}
+  );
   const [priceHistory, setPriceHistory] = useState<PriceData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
   const [balance, setBalance] = useState(172.03);
+  const [profilePic, setProfilePic] = useState('/default-avatar.png');
+
+  const router = useRouter();
 
   // Fonction pour gérer la déconnexion
   const handleLogout = () => {
     router.push('/');
   };
-  // Fonction pour récupérer le solde du compte
+
+  // Fonction pour récupérer la photo de profil
+  const fetchProfileData = async () => {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      console.error('User ID is missing from localStorage');
+      return;
+    }
+
+    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setProfilePic(data.profilePic || '/default-avatar.png');
+    } else {
+      console.error('Error fetching profile data:', data.error);
+    }
+  };
+
+  // Fonction pour récupérer le solde du compte (si nécessaire)
   const fetchBalance = async () => {
     const res = await fetch(`/api/balance`);
     const data = await res.json();
     if (res.ok) {
       setBalance(data.balance);
     } else {
-      console.error("Error fetching balance:", data.error);
+      console.error('Error fetching balance:', data.error);
     }
   };
 
-  // useEffect pour récupérer le solde du compte
   useEffect(() => {
-    if (selectedCrypto) {
-      fetchPriceHistory(selectedCrypto);
-    }
-  }, [selectedCrypto]);
-  
-  // useEffect pour récupérer les informations sur les cryptomonnaies
+    fetchProfileData();
+    fetchCryptoData();
+    // Si vous avez besoin de récupérer le solde du compte
+    // fetchBalance();
+  }, []);
+
+  // Fonction pour récupérer les informations sur les cryptomonnaies
   const fetchCryptoData = async () => {
     setLoading(true);
     try {
@@ -85,9 +117,9 @@ export default function DashboardPage() {
           price: `CA$${response.data.bitcoin.cad}`,
           change: `${response.data.bitcoin.cad_24h_change.toFixed(2)}%`,
           marketCap: response.data.bitcoin.cad_market_cap,
-          volume: response.data.bitcoin.cad_24h_vol, 
-          low24h: response.data.bitcoin.cad_24h_low, 
-          high24h: response.data.bitcoin.cad_24h_high, 
+          volume: response.data.bitcoin.cad_24h_vol,
+          low24h: response.data.bitcoin.cad_24h_low,
+          high24h: response.data.bitcoin.cad_24h_high,
         },
         ethereum: {
           name: 'Ethereum (ETH)',
@@ -149,9 +181,7 @@ export default function DashboardPage() {
     }
   };
 
-  // useEffect pour récupérer les informations sur les cryptomonnaies
   useEffect(() => {
-    fetchCryptoData();
     if (selectedCrypto) {
       fetchPriceHistory(selectedCrypto);
     }
@@ -165,29 +195,33 @@ export default function DashboardPage() {
   const handleReturn = () => {
     setSelectedCrypto(null);
   };
-    // Données du graphique
+
+  // Données du graphique
   const chartData = {
-    labels: priceHistory.map(data => data.x),
-    datasets: [{
-      label: `${cryptoData[selectedCrypto || 'bitcoin']?.name} Price (CAD)`,
-      data: priceHistory.map(data => data.y),
-      borderColor: '#5d3fd3',
-      backgroundColor: (context: { chart: { ctx: CanvasRenderingContext2D } }) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(93, 63, 211, 0.4)');
-        gradient.addColorStop(1, 'rgba(93, 63, 211, 0.1)');
-        return gradient;
+    labels: priceHistory.map((data) => data.x),
+    datasets: [
+      {
+        label: `${cryptoData[selectedCrypto || 'bitcoin']?.name} Price (CAD)`,
+        data: priceHistory.map((data) => data.y),
+        borderColor: '#5d3fd3',
+        backgroundColor: (context: { chart: { ctx: CanvasRenderingContext2D } }) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+          gradient.addColorStop(0, 'rgba(93, 63, 211, 0.4)');
+          gradient.addColorStop(1, 'rgba(93, 63, 211, 0.1)');
+          return gradient;
+        },
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: '#5d3fd3',
+        pointHoverRadius: 6,
+        pointHoverBackgroundColor: '#3a1a94',
+        tension: 0.4,
+        fill: true,
       },
-      borderWidth: 2,
-      pointRadius: 4,
-      pointBackgroundColor: '#5d3fd3',
-      pointHoverRadius: 6,
-      pointHoverBackgroundColor: '#3a1a94',
-      tension: 0.4,
-      fill: true,
-    }]
+    ],
   };
+
   // Options du graphique
   const chartOptions = {
     responsive: true,
@@ -228,68 +262,78 @@ export default function DashboardPage() {
         callbacks: {
           label: function (context: any) {
             return `Price: CA$${context.raw}`;
-          }
+          },
         },
       },
     },
   };
 
-// Retourner le contenu du DashboardPage
   return (
-    // Div principale
     <motion.div className="flex flex-col min-h-screen bg-[#f8f9fa] text-black">
+      {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
         <Link className="flex items-center justify-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
-        <nav className="ml-auto flex gap-6">
+        <nav className="ml-auto flex items-center gap-6">
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
             Dashboard
           </Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
-            Profil
+          {/* Photo de profil dans le header */}
+          <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
+            <Image
+              src={profilePic || '/default-avatar.png'}
+              alt="Photo de Profil"
+              fill
+              style={{ objectFit: 'cover' }}
+              className="rounded-full"
+            />
           </Link>
         </nav>
-        <Button onClick={handleLogout} className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4">
+        <Button
+          onClick={handleLogout}
+          className="text-sm font-medium text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded ml-4"
+        >
           Déconnecter
         </Button>
       </header>
 
+      {/* Main content */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
         {/* Sidebar */}
         <motion.aside
           className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md"
-          variants={containerVariants}
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0, transition: { type: 'spring', stiffness: 60 } }}
         >
           <nav className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Image src={accueilLogoImg.src} alt="Transaction Icon" width={30} height={30} />
-              <Link href="/Dashboard" legacyBehavior>
-                <a
-                  className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer"
-                  onClick={() => {
-                    setShowExplore(false);
-                  }}
-                >
+              <Image src={accueilLogoImg} alt="Accueil Icon" width={30} height={30} />
+              <Link href="/Dashboard">
+                <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
                   Accueil
-                </a>
+                </span>
               </Link>
             </div>
-            <a
-              className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer"
-              onClick={() => setShowExplore(true)}
-            >
-              🔎 Explorer
-            </a>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="#">
-              🔄 Transfer
-            </Link>
             <div className="flex items-center space-x-2">
-              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
-                Transactions
+              <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer" onClick={() => setShowExplore(true)}>
+                🔎 Explorer
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
+                🔄 Transfer
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Image src={transactionLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Link href="/Transactions">
+                <span className="text-lg font-semibold hover:text-[#5d3fd3]">
+                  Transactions
+                </span>
               </Link>
             </div>
           </nav>
@@ -298,15 +342,22 @@ export default function DashboardPage() {
         {/* Main Content */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-md">
           {!showExplore ? (
-            <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
               <h1 className="text-2xl font-bold mb-4">Bienvenue sur Lazuli !</h1>
-              <p className="text-gray-700">Consultez les dernières informations sur vos cryptomonnaies préférées.</p>
+              <p className="text-gray-700">
+                Consultez les dernières informations sur vos cryptomonnaies préférées.
+              </p>
             </motion.div>
           ) : selectedCrypto ? (
-            <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold">{cryptoData[selectedCrypto]?.name} - Prix Historique</h3>
-                <Button onClick={handleReturn} className="text-sm font-semibold bg-gray-200 text-black py-1 px-3 rounded hover:bg-gray-300">
+                <h3 className="text-xl font-semibold">
+                  {cryptoData[selectedCrypto]?.name} - Prix Historique
+                </h3>
+                <Button
+                  onClick={handleReturn}
+                  className="text-sm font-semibold bg-gray-200 text-black py-1 px-3 rounded hover:bg-gray-300"
+                >
                   Retour
                 </Button>
               </div>
@@ -319,7 +370,7 @@ export default function DashboardPage() {
               )}
             </motion.div>
           ) : (
-            <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
               <h2 className="text-2xl font-semibold mb-4">Explorer les Cryptomonnaies</h2>
 
               {/* Crypto List */}
@@ -328,7 +379,11 @@ export default function DashboardPage() {
                   <li key={index} className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
                     <span className="font-medium">{cryptoData[crypto]?.name}</span>
                     <span className="text-sm text-gray-600">{cryptoData[crypto]?.price}</span>
-                    <span className={`text-sm ${cryptoData[crypto]?.change.includes('-') ? 'text-red-500' : 'text-green-500'}`}>
+                    <span
+                      className={`text-sm ${
+                        cryptoData[crypto]?.change.includes('-') ? 'text-red-500' : 'text-green-500'
+                      }`}
+                    >
                       {cryptoData[crypto]?.change}
                     </span>
                     <Button
