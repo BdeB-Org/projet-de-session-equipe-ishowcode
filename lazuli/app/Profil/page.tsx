@@ -35,6 +35,7 @@ export default function ProfilPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [balance, setBalance] = useState(0);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -87,6 +88,7 @@ export default function ProfilPage() {
       setBirthDate(data.birthDate || '');
       setProfilePic(data.profilePic || '/default-avatar.png');
       setPassword(data.password || '');
+      setBalance(data.balance || 0); 
     } else {
       console.error("Error fetching profile data:", data.error);
     }
@@ -171,6 +173,7 @@ export default function ProfilPage() {
                   <Image src={profilePic} alt="Photo de Profil" fill style={{ objectFit: 'cover' }} className="rounded-full" />
                 </div>
               </div>
+              <hr></hr>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Nom complet :</p>
                 <p className="text-lg">{name}</p>
@@ -189,7 +192,7 @@ export default function ProfilPage() {
               </div>
               <div className="flex flex-col sm:flex-row justify-between">
                 <p className="text-lg font-medium">Montant Argent :</p>
-                <p className="text-lg">$0</p>
+                <p className="text-lg">CA${balance.toFixed(2)}</p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between items-center">
                 <p className="text-lg font-medium">Monnaie :</p>
