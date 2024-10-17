@@ -213,21 +213,31 @@ export default function ProfilPage() {
 
             {/* Buttons */}
             <div className="flex gap-4 mt-6">
-              <motion.div>
-                <Button 
-                  className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
-                  onClick={() => {
-                    if (isEditing) {
-                      handleSubmit();
-                    } else {
-                      setIsEditing(true);
-                    }
-                  }}
-                >
-                  {isEditing ? "Sauvegarder" : "Modifier"}
-                </Button>
-              </motion.div>
-            </div>
+  <motion.div>
+    <Button 
+      className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
+      onClick={() => {
+        if (isEditing) {
+          handleSubmit();
+        } else {
+          setIsEditing(true);
+        }
+      }}
+    >
+      {isEditing ? "Sauvegarder" : "Modifier"}
+    </Button>
+  </motion.div>
+
+  <motion.div>
+    <Button 
+      onClick={() => router.back()} 
+      className="bg-[#6a4fc3] hover:bg-[#5a3fbc] rounded-full transition duration-300"
+    >
+      Retour
+    </Button>
+  </motion.div>
+</div>
+
           </div>
         </motion.section>
       </main>

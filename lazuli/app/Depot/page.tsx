@@ -45,6 +45,31 @@ export default function ProfilPage() {
       setErrorMessage("Erreur lors de la récupération des données du profil.");
     }
   };
+  const handleResetBalance = async () => {
+    const userId = localStorage.getItem('userId');
+    
+    try {
+      const updateResponse = await fetch(`/api/updateBalance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, newBalance: 0 }), // Reset balance to 0
+      });
+  
+      if (updateResponse.ok) {
+        setBalance(0);
+        setSuccessMessage("Le solde a été réinitialisé à 0.");
+      } else {
+        const errorData = await updateResponse.json();
+        console.error("Error resetting balance:", errorData.error);
+        setErrorMessage("Erreur lors de la réinitialisation du solde.");
+      }
+    } catch (error) {
+      console.error("Error resetting balance:", error);
+      setErrorMessage("Erreur lors de la réinitialisation du solde.");
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -99,6 +124,14 @@ export default function ProfilPage() {
       <main className="flex-1 flex justify-center items-center p-6">
         <motion.section className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl">
           <div className="text-center mb-6">
+          <div className="text-left mb-6">
+            <Button 
+              onClick={() => router.back()} 
+              className="bg-[#6a4fc3] hover:bg-[#5a3fbc] transition duration-300"
+            >
+              Retour
+            </Button>
+          </div>
             <h5 className="text-4xl font-bold mb-3">Dépôt d'Argent</h5>
             <p className="text-lg">Ajoutez un montant à votre compte</p>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
@@ -126,8 +159,15 @@ export default function ProfilPage() {
             <p className="text-gray-300">Nom: {name}</p>
             <p className="text-gray-300">Email: {email}</p>
             <p className="text-gray-300">Solde: CA${balance.toFixed(2)}</p>
+            <Button 
+              onClick={handleResetBalance} 
+              className="mt-4 text-center bg-red-500 hover:bg-red-600 transition duration-300 "
+            >
+              Réinitialiser le Solde
+            </Button>
           </div>
         </motion.section>
+        
       </main>
     </motion.div>
   );

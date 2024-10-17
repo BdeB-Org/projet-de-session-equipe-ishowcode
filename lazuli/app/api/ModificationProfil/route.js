@@ -28,6 +28,7 @@ export async function GET(request) {
       return NextResponse.json({
         name: user.name,
         email: user.email,
+        balance: user.balance || 0,
         birthDate: user.birthDate,
         profilePic: user.profilePic,
       });
