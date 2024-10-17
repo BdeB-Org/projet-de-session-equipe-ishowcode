@@ -57,7 +57,7 @@ export default function DashboardPage() {
   const [priceHistory, setPriceHistory] = useState<PriceData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [balance, setBalance] = useState(172.03);
-  const [profilePic, setProfilePic] = useState('/default-avatar.png');
+  const [profilePic, setProfilePic] = useState('/images/default-avatar.png'); // Chemin mis à jour
 
   const router = useRouter();
 
@@ -79,7 +79,7 @@ export default function DashboardPage() {
     const data = await res.json();
 
     if (res.ok) {
-      setProfilePic(data.profilePic || '/default-avatar.png');
+      setProfilePic(data.profilePic || '/images/default-avatar.png');
     } else {
       console.error('Error fetching profile data:', data.error);
     }
@@ -268,6 +268,11 @@ export default function DashboardPage() {
     },
   };
 
+  // Ajout d'un console.log pour vérifier la valeur de profilePic
+  useEffect(() => {
+    console.log('Valeur de profilePic:', profilePic);
+  }, [profilePic]);
+
   return (
     <motion.div className="flex flex-col min-h-screen bg-[#f8f9fa] text-black">
       {/* Header */}
@@ -285,10 +290,10 @@ export default function DashboardPage() {
           {/* Photo de profil dans le header */}
           <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
             <Image
-              src={profilePic || '/default-avatar.png'}
+              src={profilePic}
               alt="Photo de Profil"
-              fill
-              style={{ objectFit: 'cover' }}
+              width={32}
+              height={32}
               className="rounded-full"
             />
           </Link>
@@ -319,7 +324,10 @@ export default function DashboardPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer" onClick={() => setShowExplore(true)}>
+              <span
+                className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer"
+                onClick={() => setShowExplore(true)}
+              >
                 🔎 Explorer
               </span>
             </div>
@@ -331,9 +339,7 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-2">
               <Image src={transactionLogoImg} alt="Transaction Icon" width={30} height={30} />
               <Link href="/Transactions">
-                <span className="text-lg font-semibold hover:text-[#5d3fd3]">
-                  Transactions
-                </span>
+                <span className="text-lg font-semibold hover:text-[#5d3fd3]">Transactions</span>
               </Link>
             </div>
           </nav>
@@ -342,14 +348,22 @@ export default function DashboardPage() {
         {/* Main Content */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-md">
           {!showExplore ? (
-            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            >
               <h1 className="text-2xl font-bold mb-4">Bienvenue sur Lazuli !</h1>
               <p className="text-gray-700">
                 Consultez les dernières informations sur vos cryptomonnaies préférées.
               </p>
             </motion.div>
           ) : selectedCrypto ? (
-            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold">
                   {cryptoData[selectedCrypto]?.name} - Prix Historique
@@ -370,18 +384,27 @@ export default function DashboardPage() {
               )}
             </motion.div>
           ) : (
-            <motion.div initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+            >
               <h2 className="text-2xl font-semibold mb-4">Explorer les Cryptomonnaies</h2>
 
               {/* Crypto List */}
               <ul className="space-y-4">
                 {Object.keys(cryptoData).map((crypto, index) => (
-                  <li key={index} className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+                  <li
+                    key={index}
+                    className="flex justify-between items-center bg-gray-100 p-4 rounded-lg"
+                  >
                     <span className="font-medium">{cryptoData[crypto]?.name}</span>
                     <span className="text-sm text-gray-600">{cryptoData[crypto]?.price}</span>
                     <span
                       className={`text-sm ${
-                        cryptoData[crypto]?.change.includes('-') ? 'text-red-500' : 'text-green-500'
+                        cryptoData[crypto]?.change.includes('-')
+                          ? 'text-red-500'
+                          : 'text-green-500'
                       }`}
                     >
                       {cryptoData[crypto]?.change}

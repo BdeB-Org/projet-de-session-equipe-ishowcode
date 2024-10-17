@@ -29,7 +29,7 @@ export async function POST(req) {
     }
 
     // Définir le chemin de l'image par défaut
-    const defaultProfilePic = '/public/images/default-avatar.png';
+    const defaultProfilePic = '/images/default-avatar.png';
 
     // Ajouter l'utilisateur dans la base de données avec la photo de profil par défaut
     const result = await users.insertOne({
