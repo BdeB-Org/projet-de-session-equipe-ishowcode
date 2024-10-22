@@ -1,14 +1,13 @@
-'use client'
+'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from 'next/image'; 
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from 'next/image';
 import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
-import { useRouter } from 'next/navigation'; 
-
-//page transactions du siteweb, c'est en quelque sortes le point central du site lazuli
+import { useRouter } from 'next/navigation';
 
 // Animation 
 const containerVariants = {
@@ -16,15 +15,38 @@ const containerVariants = {
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
 };
 
-//frontent du siteweb
 export default function TransactionsPage() {
-  const router = useRouter(); 
+  const [profilePic, setProfilePic] = useState('/images/default-avatar.png'); // Initialisation de profilePic
+  const router = useRouter();
 
   const handleLogout = () => {
     router.push('/');
   };
+
+  const fetchProfileData = async () => {
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      console.error('User ID is missing from localStorage');
+      return;
+    }
+
+    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setProfilePic(data.profilePic || '/images/default-avatar.png');
+    } else {
+      console.error('Error fetching profile data:', data.error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+  
   return (
-    <motion.div 
+    <motion.div
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
       initial="hidden"
       animate="visible"
@@ -34,15 +56,22 @@ export default function TransactionsPage() {
         <Link className="flex items-center justify-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
-        <nav className="ml-auto flex gap-6">
+        <nav className="ml-auto flex items-center gap-6">
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
             Dashboard
           </Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Profil">
-            Profil
+          {/* Photo de profil dans le header */}
+          <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
+            <Image
+              src={profilePic}
+              alt="Photo de Profil"
+              width={32}
+              height={32}
+              className="rounded-full"
+            />
           </Link>
         </nav>
         <Button
@@ -56,16 +85,16 @@ export default function TransactionsPage() {
       {/* Main */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
         {/* Sidebar */}
-        <motion.aside 
+        <motion.aside
           className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md"
           variants={containerVariants}
         >
           <nav className="space-y-4">
-          <div className="flex items-center space-x-2">
-          <Image src={accueilLogoImg.src} alt="Transaction Icon" width={30} height={30} />
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-              Accueil
-            </Link>
+            <div className="flex items-center space-x-2">
+              <Image src={accueilLogoImg.src} alt="Accueil Icon" width={30} height={30} />
+              <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
+                Accueil
+              </Link>
             </div>
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/explore">
               🔎 Explore
@@ -86,7 +115,7 @@ export default function TransactionsPage() {
         {/* Transaction*/}
         <section className="flex-1 space-y-6">
           {/* Title */}
-          <motion.div 
+          <motion.div
             className="bg-white p-6 rounded-lg shadow-md"
             variants={containerVariants}
           >
