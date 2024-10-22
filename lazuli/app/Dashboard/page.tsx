@@ -51,13 +51,11 @@ interface PriceData {
 export default function DashboardPage() {
   const [showExplore, setShowExplore] = useState(false);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
-  const [cryptoData, setCryptoData] = useState<{ [key: string]: CryptoInfo }>(
-    {}
-  );
+  const [cryptoData, setCryptoData] = useState<{ [key: string]: CryptoInfo }>({});
   const [priceHistory, setPriceHistory] = useState<PriceData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [balance, setBalance] = useState(172.03);
   const [profilePic, setProfilePic] = useState('/images/default-avatar.png'); // Chemin mis à jour
+  const [balance, setBalance] = useState<number>(0);
 
   const router = useRouter();
 
@@ -75,33 +73,22 @@ export default function DashboardPage() {
       return;
     }
 
-    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
-    const data = await res.json();
+    try {
+      const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
+      const data = await res.json();
 
-    if (res.ok) {
-      setProfilePic(data.profilePic || '/images/default-avatar.png');
-    } else {
-      console.error('Error fetching profile data:', data.error);
+      if (res.ok) {
+        setProfilePic(data.profilePic || '/images/default-avatar.png');
+        setBalance(data.balance);
+      } else {
+        console.error('Error fetching profile data:', data.error);
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
     }
   };
 
-  // Fonction pour récupérer le solde du compte (si nécessaire)
-  const fetchBalance = async () => {
-    const res = await fetch(`/api/balance`);
-    const data = await res.json();
-    if (res.ok) {
-      setBalance(data.balance);
-    } else {
-      console.error('Error fetching balance:', data.error);
-    }
-  };
 
-  useEffect(() => {
-    fetchProfileData();
-    fetchCryptoData();
-    // Si vous avez besoin de récupérer le solde du compte
-    // fetchBalance();
-  }, []);
 
   // Fonction pour récupérer les informations sur les cryptomonnaies
   const fetchCryptoData = async () => {
@@ -180,6 +167,11 @@ export default function DashboardPage() {
       console.error('Error fetching price history:', error);
     }
   };
+
+  useEffect(() => {
+    fetchProfileData();
+    fetchCryptoData();
+  }, []);
 
   useEffect(() => {
     if (selectedCrypto) {
@@ -345,7 +337,7 @@ export default function DashboardPage() {
           </nav>
         </motion.aside>
 
-        {/* Main Content */}
+        {/* Main Dashboard */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-md">
           {!showExplore ? (
             <motion.div
@@ -357,6 +349,14 @@ export default function DashboardPage() {
               <p className="text-gray-700">
                 Consultez les dernières informations sur vos cryptomonnaies préférées.
               </p>
+
+              {/* Balance */}
+              <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow">
+                <h2 className="text-xl font-semibold text-[#5d3fd3]">Votre Solde</h2>
+                <p className="text-2xl font-bold text-black">
+                  CA${balance.toFixed(2)}
+                </p>
+              </div>
             </motion.div>
           ) : selectedCrypto ? (
             <motion.div
