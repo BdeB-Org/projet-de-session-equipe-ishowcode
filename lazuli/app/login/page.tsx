@@ -85,20 +85,28 @@ export default function LoginPage() {
                   className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
                   placeholder="Mot de passe"
                 />
+                <div className="text-center slide-down-form3">
+                  <Link className="text-sm text-blue-300 hover:text-blue-200" href="/MDP">
+                    Mot de passe oublié ?
+                  </Link>
+                </div>
               </div>
             </div>
-
+                
+            
             <div>
-              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3">
+              <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form4">
                 Se connecter
               </Button>
-            </div>
-          </form>
-          <div className="text-center slide-down-form3">
-            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/MDP">
-              Mot de passe oublié ?
+            
+            <div className="text-center slide-down-form5">
+            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/login">
+              Vous n'avez pas un compte ? S'inscrire
             </Link>
           </div>
+          </div>
+          </form>
+          
         </div>
       </main>
       <footer className="py-6 px-4 md:px-6 border-t border-white-700">
@@ -134,6 +142,12 @@ export default function LoginPage() {
         }
         .slide-down-form3 {
           animation: slideUp 2s ease-in-out;
+        }
+          .slide-down-form4 {
+          animation: slideUp 2.2s ease-in-out;
+        }
+          .slide-down-form5 {
+          animation: slideUp 2.5s ease-in-out;
         }
 
         @keyframes fadeIn {

@@ -99,9 +99,9 @@ export default function TransactionsPage() {
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/explore">
               🔎 Explore
             </Link>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/transfer">
-              🔄 Transfer
-            </Link>
+            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer" href= "/Depot">
+                💸 Dépot
+              </Link>
             {/* Aligner l'image et le texte sur une seule ligne */}
             <div className="flex items-center space-x-2">
               <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />

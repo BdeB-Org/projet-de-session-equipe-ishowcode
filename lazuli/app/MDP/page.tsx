@@ -74,6 +74,9 @@ export default function RequestPasswordReset() {
                   placeholder="Adresse e-mail"
                 />
               </div>
+              <div className="text-center slide-down-form4 text-sm text-blue-300 hover:text-blue-200">
+              Vous recevrez un email pour réinitialiser votre mot de passe
+            </div>
             </div>
             <div>
               <Button 
@@ -83,13 +86,14 @@ export default function RequestPasswordReset() {
               >
                 {loading ? 'Envoi...' : 'Envoyer'}
               </Button>
+              <div  className="text-center slide-down-form4 text-sm text-blue-300 hover:text-blue-200">
+              <Link href="/login">Vous vous souvenez de votre mot de passe? Connectez vous</Link>
             </div>
+            </div>
+            
+            
           </form>
-          <div className="text-center slide-down-form3">
-            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/ReinitialisationMDP">
-              Vous recevrez un email pour réinitialiser votre mot de passe
-            </Link>
-          </div>
+          
         </div>
       </main>
       <footer className="py-6 px-4 md:px-6 border-t border-white-700">
@@ -124,6 +128,9 @@ export default function RequestPasswordReset() {
         }
         .slide-down-form3 {
           animation: slideUp 2s ease-in-out;
+        }
+          .slide-down-form4 {
+          animation: slideUp 2.2s ease-in-out;
         }
         @keyframes fadeIn {
           from {

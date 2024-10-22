@@ -322,9 +322,11 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="flex items-center space-x-2">
+              <Link href= "/Depot">
               <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
-                🔄 Transfer
+                💸 Dépot
               </span>
+              </Link>
             </div>
             <div className="flex items-center space-x-2">
               <Image src={transactionLogoImg} alt="Transaction Icon" width={30} height={30} />

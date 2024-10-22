@@ -54,7 +54,7 @@ export default function ProfilPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId, newBalance: 0 }), // Reset balance to 0
+        body: JSON.stringify({ userId, newBalance: 0 }), 
       });
   
       if (updateResponse.ok) {
@@ -134,6 +134,7 @@ export default function ProfilPage() {
           </div>
             <h5 className="text-4xl font-bold mb-3">Dépôt d'Argent</h5>
             <p className="text-lg">Ajoutez un montant à votre compte</p>
+            <p className="text-sm text-gray-400">Veuillez noter que les montants affichés ne sont pas réels.</p>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
             {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
           </div>
