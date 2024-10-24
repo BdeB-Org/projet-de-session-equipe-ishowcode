@@ -35,6 +35,7 @@ export async function GET(request) {
         balance: user.balance || 0,
         birthDate: user.birthDate,
         profilePic: user.profilePic,
+        currency: user.currency || 'cad', // Ajout de la devise
       });
     } else {
       return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
@@ -56,6 +57,7 @@ export async function POST(request) {
     const name = formData.get('name');
     const email = formData.get('email');
     const birthDate = formData.get('birthDate');
+    const currency = formData.get('currency'); // Récupérer la devise
 
     const oldPassword = formData.get('oldPassword');
     const newPassword = formData.get('newPassword');
@@ -76,6 +78,7 @@ export async function POST(request) {
       name,
       email,
       birthDate,
+      currency, // Ajouter la devise aux champs à mettre à jour
     };
 
     // Gestion de la photo de profil
