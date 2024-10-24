@@ -69,6 +69,7 @@ export default function DashboardPage() {
   // Fonction pour récupérer la photo de profil
   const fetchProfileData = async () => {
     const userId = localStorage.getItem('userId');
+    console.log('User ID:', userId);
 
     if (!userId) {
       console.error('User ID is missing from localStorage');
@@ -324,11 +325,11 @@ export default function DashboardPage() {
     <motion.div className="flex flex-col min-h-screen bg-[#f8f9fa] text-black">
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
-        <Link className="flex items-center justify-center" href="/Dashboard">
+        <Link className="flex items-center justify-center" href="/Dashboard" replace>
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
         <nav className="ml-auto flex items-center gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard" replace>
             Dashboard
           </Link>
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
@@ -363,7 +364,7 @@ export default function DashboardPage() {
           <nav className="space-y-4">
             <div className="flex items-center space-x-2">
               <Image src={accueilLogoImg} alt="Accueil Icon" width={30} height={30} />
-              <Link href="/Dashboard">
+              <Link href="/Dashboard" replace>
                 <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
                   Accueil
                 </span>

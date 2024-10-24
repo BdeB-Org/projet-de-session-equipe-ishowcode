@@ -53,7 +53,7 @@ export default function LoginPage() {
           <div className="text-center">
             <h2 className="mt-6 text-[3rem] font-bold slide-down">Succées</h2>
             <p className="mt-2 text-sm text-blue-300 slide-down">
-              Une courriel a été envoié. Suivez l'instruction das le courriel
+              Une courriel a été envoié. Suivez l'instruction dans le courriel
             </p>
           
             </div>

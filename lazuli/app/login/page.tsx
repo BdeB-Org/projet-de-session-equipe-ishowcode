@@ -100,7 +100,7 @@ export default function LoginPage() {
               </Button>
             
             <div className="text-center slide-down-form5">
-            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/login">
+            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/SignUp">
               Vous n'avez pas un compte ? S'inscrire
             </Link>
           </div>

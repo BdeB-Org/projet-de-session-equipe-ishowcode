@@ -104,7 +104,7 @@ export default function ChangePasswordPage() {
             <h2 className="mt-6 text-3xl font-bold slide-down">Changer votre mot de passe</h2>
             <p className="mt-2 text-sm slide-down">Écrivez votre nouveau mot de passe.</p>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-6 " onSubmit={handleSubmit}>
             <div className="space-y-4 rounded-md shadow-sm">
               <div className="slide-down-form1">
                 <Label htmlFor="password" className="sr-only">Mot de passe</Label>
