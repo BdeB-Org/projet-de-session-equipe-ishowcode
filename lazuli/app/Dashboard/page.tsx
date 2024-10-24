@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
-import BalanceChart from '@/components/balanceChart/page'; 
+import BalanceChart from '@/components/balanceChart/page';
 
 ChartJS.register(
   CategoryScale,
@@ -154,7 +154,55 @@ export default function DashboardPage() {
     }
   };
 
-  
+
+  // Frontend Transaction Handling
+  const handleTransaction = async (selectedCrypto: string) => {
+    console.log(balance)
+    if (!selectedCrypto || !transactionType || amount <= 0) {
+      console.error('Please select a crypto and enter a valid amount');
+      return;
+    }
+
+    const cryptoPrice = cryptoData[selectedCrypto].price;
+    const transactionValue = amount * parseFloat(cryptoPrice.replace('CA$', ''));
+
+    if (transactionType === 'buy') {
+      if (balance < transactionValue) {
+        console.error('Insufficient balance', balance, transactionValue); 
+        return;
+      }
+      setBalance((prevBalance) => prevBalance - transactionValue);
+    } else if (transactionType === 'sell') {
+      setBalance((prevBalance) => prevBalance + transactionValue);
+    }
+
+    try {
+      const userId = localStorage.getItem('userId');
+      console.log('User ID:', userId);
+      if (!userId) {
+        console.error('User ID is missing from localStorage');
+        return;
+      }
+      const transactionData = {
+        userId: userId,
+        type: transactionType,
+        crypto: selectedCrypto,
+        amount: amount,
+        value: transactionValue,
+        date: new Date(),
+      };
+
+      const response = await axios.post(`api/transactions`, transactionData);
+      console.log('Transaction successful', response.data);
+      setBalance(response.data.balance);
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+    }
+
+    
+    setAmount(0);
+    setTransactionType(null);
+  };
 
   // Fonction pour récupérer l'historique des prix
   const fetchPriceHistory = async (crypto: string) => {
@@ -283,7 +331,6 @@ export default function DashboardPage() {
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
-          {/* Photo de profil dans le header */}
           <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
             <Image
               src={profilePic}
@@ -301,7 +348,7 @@ export default function DashboardPage() {
           Déconnecter
         </Button>
       </header>
-
+  
       {/* Main content */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
         {/* Sidebar */}
@@ -328,10 +375,10 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="flex items-center space-x-2">
-              <Link href= "/Depot">
-              <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
-                💸 Dépot
-              </span>
+              <Link href="/Depot">
+                <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
+                  💸 Dépot
+                </span>
               </Link>
             </div>
             <div className="flex items-center space-x-2">
@@ -342,7 +389,7 @@ export default function DashboardPage() {
             </div>
           </nav>
         </motion.aside>
-
+  
         {/* Main Dashboard */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-md">
           {!showExplore ? (
@@ -355,13 +402,11 @@ export default function DashboardPage() {
               <p className="text-gray-700">
                 Consultez les dernières informations sur vos cryptomonnaies préférées.
               </p>
-
+  
               {/* Balance */}
               <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow">
                 <h2 className="text-xl font-semibold text-[#5d3fd3]">Votre Solde</h2>
-                <p className="text-2xl font-bold text-black">
-                  CA${balance.toFixed(2)}
-                </p>
+                <p className="text-2xl font-bold text-black">CA${balance.toFixed(2)}</p>
                 <BalanceChart />
               </div>
             </motion.div>
@@ -389,6 +434,39 @@ export default function DashboardPage() {
                   <Line data={chartData} options={chartOptions} />
                 </div>
               )}
+  
+              {/* Buy and Sell Buttons */}
+              <div className="mt-6 flex justify-around">
+                <Button
+                  onClick={() => {
+                    setTransactionType('buy');
+                  }}
+                  className={`p-2 rounded ${transactionType === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                >
+                  Acheter
+                </Button>
+                <Button
+                  onClick={() => {
+                    setTransactionType('sell');
+                  }}
+                  className={`p-2 rounded ${transactionType === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                >
+                  Vendre
+                </Button>
+
+                <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(parseFloat(e.target.value))}
+                placeholder={`Entrez le montant en ${selectedCrypto}`} 
+                className="p-2 border rounded"
+              />
+
+              {/* Confirmer Transaction*/}
+              <button onClick={() => handleTransaction(selectedCrypto!)} className="p-2 bg-blue-500 text-white rounded">
+                Confirmer Transaction
+              </button>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -397,7 +475,7 @@ export default function DashboardPage() {
               variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
             >
               <h2 className="text-2xl font-semibold mb-4">Explorer les Cryptomonnaies</h2>
-
+  
               {/* Crypto List */}
               <ul className="space-y-4">
                 {Object.keys(cryptoData).map((crypto, index) => (
@@ -409,9 +487,7 @@ export default function DashboardPage() {
                     <span className="text-sm text-gray-600">{cryptoData[crypto]?.price}</span>
                     <span
                       className={`text-sm ${
-                        cryptoData[crypto]?.change.includes('-')
-                          ? 'text-red-500'
-                          : 'text-green-500'
+                        cryptoData[crypto]?.change.includes('-') ? 'text-red-500' : 'text-green-500'
                       }`}
                     >
                       {cryptoData[crypto]?.change}
@@ -430,5 +506,5 @@ export default function DashboardPage() {
         </section>
       </main>
     </motion.div>
-  );
+  );  
 }
