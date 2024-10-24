@@ -1,3 +1,5 @@
+// /app/Dashboard/page.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -20,7 +22,8 @@ import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import BalanceChart from '@/components/balanceChart/page';
-//Enregistrement des composants de graphique
+
+// Enregistrement des composants de graphique
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,11 +56,11 @@ export default function DashboardPage() {
   const [cryptoData, setCryptoData] = useState<{ [key: string]: CryptoInfo }>({});
   const [priceHistory, setPriceHistory] = useState<PriceData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [profilePic, setProfilePic] = useState('/images/default-avatar.png'); // Chemin mis à jour
+  const [profilePic, setProfilePic] = useState('/images/default-avatar.png');
   const [balance, setBalance] = useState<number>(0);
+  const [currency, setCurrency] = useState('cad'); // Ajout de l'état pour la devise
   const [amount, setAmount] = useState<number>(0);
   const [transactionType, setTransactionType] = useState<'buy' | 'sell' | null>(null);
-
 
   const router = useRouter();
 
@@ -66,7 +69,7 @@ export default function DashboardPage() {
     router.push('/');
   };
 
-  // Fonction pour récupérer la photo de profil
+  // Fonction pour récupérer la photo de profil et la devise
   const fetchProfileData = async () => {
     const userId = localStorage.getItem('userId');
 
@@ -82,6 +85,7 @@ export default function DashboardPage() {
       if (res.ok) {
         setProfilePic(data.profilePic || '/images/default-avatar.png');
         setBalance(data.balance);
+        setCurrency(data.currency || 'cad'); // Récupérer la devise
       } else {
         console.error('Error fetching profile data:', data.error);
       }
@@ -90,61 +94,77 @@ export default function DashboardPage() {
     }
   };
 
-
+  // Fonction pour obtenir le symbole de la devise
+  const getCurrencySymbol = (currencyCode: string) => {
+    switch (currencyCode.toLowerCase()) {
+      case 'usd':
+        return '$';
+      case 'eur':
+        return '€';
+      case 'gbp':
+        return '£';
+      case 'cad':
+        return 'CA$';
+      case 'idr':
+        return 'Rp';
+      default:
+        return currencyCode.toUpperCase() + '$';
+    }
+  };
 
   // Fonction pour récupérer les informations sur les cryptomonnaies
   const fetchCryptoData = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,dogecoin,solana&vs_currencies=cad&include_market_cap=true&include_24hr_change=true&include_24hr_vol=true&include_24hr_low_high=true'
+        `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,dogecoin,solana&vs_currencies=${currency}&include_market_cap=true&include_24hr_change=true&include_24hr_vol=true&include_24hr_low_high=true`
       );
       // Stocker les informations sur les cryptomonnaies dans l'état
       setCryptoData({
         bitcoin: {
           name: 'Bitcoin (BTC)',
-          price: `CA$${response.data.bitcoin.cad}`,
-          change: `${response.data.bitcoin.cad_24h_change.toFixed(2)}%`,
-          marketCap: response.data.bitcoin.cad_market_cap,
-          volume: response.data.bitcoin.cad_24h_vol,
-          low24h: response.data.bitcoin.cad_24h_low,
-          high24h: response.data.bitcoin.cad_24h_high,
+          price: `${getCurrencySymbol(currency)}${response.data.bitcoin[currency]}`,
+          change: `${response.data.bitcoin[`${currency}_24h_change`].toFixed(2)}%`,
+          marketCap: response.data.bitcoin[`${currency}_market_cap`],
+          volume: response.data.bitcoin[`${currency}_24h_vol`],
+          low24h: response.data.bitcoin[`${currency}_24h_low`],
+          high24h: response.data.bitcoin[`${currency}_24h_high`],
         },
         ethereum: {
           name: 'Ethereum (ETH)',
-          price: `CA$${response.data.ethereum.cad}`,
-          change: `${response.data.ethereum.cad_24h_change.toFixed(2)}%`,
-          marketCap: response.data.ethereum.cad_market_cap,
-          volume: response.data.ethereum.cad_24h_vol,
-          low24h: response.data.ethereum.cad_24h_low,
-          high24h: response.data.ethereum.cad_24h_high,
+          price: `${getCurrencySymbol(currency)}${response.data.ethereum[currency]}`,
+          change: `${response.data.ethereum[`${currency}_24h_change`].toFixed(2)}%`,
+          marketCap: response.data.ethereum[`${currency}_market_cap`],
+          volume: response.data.ethereum[`${currency}_24h_vol`],
+          low24h: response.data.ethereum[`${currency}_24h_low`],
+          high24h: response.data.ethereum[`${currency}_24h_high`],
         },
         cardano: {
           name: 'Cardano (ADA)',
-          price: `CA$${response.data.cardano.cad}`,
-          change: `${response.data.cardano.cad_24h_change.toFixed(2)}%`,
-          marketCap: response.data.cardano.cad_market_cap,
-          volume: response.data.cardano.cad_24h_vol,
-          low24h: response.data.cardano.cad_24h_low,
-          high24h: response.data.cardano.cad_24h_high,
+          price: `${getCurrencySymbol(currency)}${response.data.cardano[currency]}`,
+          change: `${response.data.cardano[`${currency}_24h_change`].toFixed(2)}%`,
+          marketCap: response.data.cardano[`${currency}_market_cap`],
+          volume: response.data.cardano[`${currency}_24h_vol`],
+          low24h: response.data.cardano[`${currency}_24h_low`],
+          high24h: response.data.cardano[`${currency}_24h_high`],
         },
         dogecoin: {
           name: 'Dogecoin (DOGE)',
-          price: `CA$${response.data.dogecoin.cad}`,
-          change: `${response.data.dogecoin.cad_24h_change.toFixed(2)}%`,
-          marketCap: response.data.dogecoin.cad_market_cap,
-          volume: response.data.dogecoin.cad_24h_vol,
-          low24h: response.data.dogecoin.cad_24h_low,
-          high24h: response.data.dogecoin.cad_24h_high,
+          price: `${getCurrencySymbol(currency)}${response.data.dogecoin[currency]}`,
+          change: `${response.data.dogecoin[`${currency}_24h_change`].toFixed(2)}%`,
+          marketCap: response.data.dogecoin[`${currency}_market_cap`],
+          volume: response.data.dogecoin[`${currency}_24h_vol`],
+          low24h: response.data.dogecoin[`${currency}_24h_low`],
+          high24h: response.data.dogecoin[`${currency}_24h_high`],
         },
         solana: {
           name: 'Solana (SOL)',
-          price: `CA$${response.data.solana.cad}`,
-          change: `${response.data.solana.cad_24h_change.toFixed(2)}%`,
-          marketCap: response.data.solana.cad_market_cap,
-          volume: response.data.solana.cad_24h_vol,
-          low24h: response.data.solana.cad_24h_low,
-          high24h: response.data.solana.cad_24h_high,
+          price: `${getCurrencySymbol(currency)}${response.data.solana[currency]}`,
+          change: `${response.data.solana[`${currency}_24h_change`].toFixed(2)}%`,
+          marketCap: response.data.solana[`${currency}_market_cap`],
+          volume: response.data.solana[`${currency}_24h_vol`],
+          low24h: response.data.solana[`${currency}_24h_low`],
+          high24h: response.data.solana[`${currency}_24h_high`],
         },
       });
     } catch (error) {
@@ -154,27 +174,41 @@ export default function DashboardPage() {
     }
   };
 
+  // Fonction pour récupérer l'historique des prix
+  const fetchPriceHistory = async (crypto: string) => {
+    try {
+      const response = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${crypto}/market_chart?vs_currency=${currency}&days=7`
+      );
+      const prices = response.data.prices.map((price: any[]) => ({
+        x: new Date(price[0]).toLocaleDateString(),
+        y: price[1],
+      }));
+      setPriceHistory(prices);
+    } catch (error) {
+      console.error('Error fetching price history:', error);
+    }
+  };
 
-  // Frontend Transaction Handling
+  // Fonction pour gérer les transactions d'achat et de vente
   const handleTransaction = async (selectedCrypto: string) => {
-    console.log(balance)
+    console.log('Solde actuel:', balance);
     if (!selectedCrypto || !transactionType || amount <= 0) {
-      console.error('Please select a crypto and enter a valid amount');
+      console.error('Veuillez sélectionner une crypto et entrer un montant valide');
       return;
     }
 
-    const cryptoPrice = cryptoData[selectedCrypto].price;
-    const transactionValue = amount * parseFloat(cryptoPrice.replace('CA$', ''));
-// Vérifier si le solde est suffisant pour la transaction 
+    const cryptoPriceStr = cryptoData[selectedCrypto].price;
+    const cryptoPrice = parseFloat(cryptoPriceStr.replace(/[^\d.-]/g, ''));
+    const transactionValue = amount * cryptoPrice;
+
     if (transactionType === 'buy') {
       if (balance < transactionValue) {
-        console.error('Insufficient balance', balance, transactionValue); 
+        console.error('Solde insuffisant', balance, transactionValue);
         return;
       }
       setBalance((prevBalance) => prevBalance - transactionValue);
-    }
-    // Vérifier si le solde est suffisant pour la transaction
-    else if (transactionType === 'sell') {
+    } else if (transactionType === 'sell') {
       setBalance((prevBalance) => prevBalance + transactionValue);
     }
 
@@ -195,44 +229,32 @@ export default function DashboardPage() {
         date: new Date(),
       };
 
-      const response = await axios.post(`api/transactions`, transactionData);
-      console.log('Transaction successful', response.data);
+      const response = await axios.post(`/api/transactions`, transactionData);
+      console.log('Transaction réussie', response.data);
       setBalance(response.data.balance);
     } catch (error) {
-      console.error('Error saving transaction:', error);
+      console.error('Erreur lors de l\'enregistrement de la transaction:', error);
     }
 
-    
     setAmount(0);
     setTransactionType(null);
   };
 
-  // Fonction pour récupérer l'historique des prix
-  const fetchPriceHistory = async (crypto: string) => {
-    try {
-      const response = await axios.get(
-        `https://api.coingecko.com/api/v3/coins/${crypto}/market_chart?vs_currency=cad&days=7`
-      );
-      const prices = response.data.prices.map((price: any[]) => ({
-        x: new Date(price[0]).toLocaleDateString(),
-        y: price[1],
-      }));
-      setPriceHistory(prices);
-    } catch (error) {
-      console.error('Error fetching price history:', error);
-    }
-  };
-
   useEffect(() => {
     fetchProfileData();
-    fetchCryptoData();
   }, []);
+
+  useEffect(() => {
+    if (currency) {
+      fetchCryptoData();
+    }
+  }, [currency]);
 
   useEffect(() => {
     if (selectedCrypto) {
       fetchPriceHistory(selectedCrypto);
     }
-  }, [selectedCrypto]);
+  }, [selectedCrypto, currency]);
 
   const handleCryptoSelect = (crypto: string) => {
     setSelectedCrypto(crypto);
@@ -248,7 +270,7 @@ export default function DashboardPage() {
     labels: priceHistory.map((data) => data.x),
     datasets: [
       {
-        label: `${cryptoData[selectedCrypto || 'bitcoin']?.name} Price (CAD)`,
+        label: `${cryptoData[selectedCrypto || 'bitcoin']?.name} Prix (${getCurrencySymbol(currency)})`,
         data: priceHistory.map((data) => data.y),
         borderColor: '#5d3fd3',
         backgroundColor: (context: { chart: { ctx: CanvasRenderingContext2D } }) => {
@@ -290,7 +312,7 @@ export default function DashboardPage() {
           color: '#666',
           font: { size: 12 },
           callback: function (tickValue: string | number) {
-            return `CA$${tickValue}`;
+            return `${getCurrencySymbol(currency)}${tickValue}`;
           },
         },
       },
@@ -308,7 +330,7 @@ export default function DashboardPage() {
         cornerRadius: 4,
         callbacks: {
           label: function (context: any) {
-            return `Price: CA$${context.raw}`;
+            return `Prix: ${getCurrencySymbol(currency)}${context.raw}`;
           },
         },
       },
@@ -351,7 +373,7 @@ export default function DashboardPage() {
           Déconnecter
         </Button>
       </header>
-  
+
       {/* Main content */}
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
         {/* Sidebar */}
@@ -392,7 +414,7 @@ export default function DashboardPage() {
             </div>
           </nav>
         </motion.aside>
-  
+
         {/* Main Dashboard */}
         <section className="flex-1 bg-white p-6 rounded-lg shadow-md">
           {!showExplore ? (
@@ -405,12 +427,15 @@ export default function DashboardPage() {
               <p className="text-gray-700">
                 Consultez les dernières informations sur vos cryptomonnaies préférées.
               </p>
-  
+
               {/* Balance */}
               <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow">
                 <h2 className="text-xl font-semibold text-[#5d3fd3]">Votre Solde</h2>
-                <p className="text-2xl font-bold text-black">CA${balance.toFixed(2)}</p>
-                <BalanceChart />
+                <p className="text-2xl font-bold text-black">
+                  {getCurrencySymbol(currency)}
+                  {balance ? balance.toFixed(2) : '0.00'}
+                </p>
+                <BalanceChart/>
               </div>
             </motion.div>
           ) : selectedCrypto ? (
@@ -437,38 +462,43 @@ export default function DashboardPage() {
                   <Line data={chartData} options={chartOptions} />
                 </div>
               )}
-  
+
               {/* Buy and Sell Buttons */}
-              <div className="mt-6 flex justify-around">
-                <Button
-                  onClick={() => {
-                    setTransactionType('buy');
-                  }}
-                  className={`p-2 rounded ${transactionType === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
-                >
-                  Acheter
-                </Button>
-                <Button
-                  onClick={() => {
-                    setTransactionType('sell');
-                  }}
-                  className={`p-2 rounded ${transactionType === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
-                >
-                  Vendre
-                </Button>
+              <div className="mt-6 flex flex-col items-center">
+                <div className="flex justify-around w-full mb-4">
+                  <Button
+                    onClick={() => setTransactionType('buy')}
+                    className={`p-2 rounded ${
+                      transactionType === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-200'
+                    }`}
+                  >
+                    Acheter
+                  </Button>
+                  <Button
+                    onClick={() => setTransactionType('sell')}
+                    className={`p-2 rounded ${
+                      transactionType === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-200'
+                    }`}
+                  >
+                    Vendre
+                  </Button>
+                </div>
 
                 <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(parseFloat(e.target.value))}
-                placeholder={`Entrez le montant en ${selectedCrypto}`} 
-                className="p-2 border rounded"
-              />
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(parseFloat(e.target.value))}
+                  placeholder={`Entrez le montant en ${selectedCrypto}`}
+                  className="p-2 border rounded w-full mb-4"
+                />
 
-              {/* Confirmer Transaction*/}
-              <button onClick={() => handleTransaction(selectedCrypto!)} className="p-2 bg-blue-500 text-white rounded">
-                Confirmer Transaction
-              </button>
+                {/* Confirmer Transaction */}
+                <Button
+                  onClick={() => handleTransaction(selectedCrypto!)}
+                  className="p-2 bg-blue-500 text-white rounded"
+                >
+                  Confirmer Transaction
+                </Button>
               </div>
             </motion.div>
           ) : (
@@ -478,7 +508,7 @@ export default function DashboardPage() {
               variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
             >
               <h2 className="text-2xl font-semibold mb-4">Explorer les Cryptomonnaies</h2>
-  
+
               {/* Crypto List */}
               <ul className="space-y-4">
                 {Object.keys(cryptoData).map((crypto, index) => (
@@ -490,7 +520,9 @@ export default function DashboardPage() {
                     <span className="text-sm text-gray-600">{cryptoData[crypto]?.price}</span>
                     <span
                       className={`text-sm ${
-                        cryptoData[crypto]?.change.includes('-') ? 'text-red-500' : 'text-green-500'
+                        cryptoData[crypto]?.change.includes('-')
+                          ? 'text-red-500'
+                          : 'text-green-500'
                       }`}
                     >
                       {cryptoData[crypto]?.change}
@@ -509,5 +541,5 @@ export default function DashboardPage() {
         </section>
       </main>
     </motion.div>
-  );  
+  );
 }

@@ -1,13 +1,15 @@
+// /app/ModificationProfil/page.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 
-export default function ProfilPage() {
+export default function ModificationProfilPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [birthDate, setBirthDate] = useState('');
   const [profilePic, setProfilePic] = useState('/default-avatar.png');
@@ -18,6 +20,7 @@ export default function ProfilPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [currency, setCurrency] = useState('cad'); // Ajouter cet état pour la devise
 
   const router = useRouter();
 
@@ -30,20 +33,25 @@ export default function ProfilPage() {
     const userId = localStorage.getItem('userId');
 
     if (!userId) {
-      console.error("User ID is missing from localStorage");
+      console.error('User ID is missing from localStorage');
       return;
     }
 
-    const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
-    const data = await res.json();
+    try {
+      const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
+      const data = await res.json();
 
-    if (res.ok) {
-      setName(data.name || '');
-      setEmail(data.email || '');
-      setBirthDate(data.birthDate || '');
-      setProfilePic(data.profilePic || '/default-avatar.png');
-    } else {
-      console.error("Error fetching profile data:", data.error);
+      if (res.ok) {
+        setName(data.name || '');
+        setEmail(data.email || '');
+        setBirthDate(data.birthDate || '');
+        setProfilePic(data.profilePic || '/default-avatar.png');
+        setCurrency(data.currency || 'cad'); // Récupérer la devise
+      } else {
+        console.error('Error fetching profile data:', data.error);
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
     }
   };
 
@@ -69,10 +77,10 @@ export default function ProfilPage() {
 
   // Fonction pour soumettre les modifications
   const handleSubmit = async () => {
-    const userId = localStorage.getItem('userId'); 
+    const userId = localStorage.getItem('userId');
 
     if (!userId) {
-      console.error("User ID is missing from localStorage");
+      console.error('User ID is missing from localStorage');
       return;
     }
 
@@ -82,19 +90,21 @@ export default function ProfilPage() {
     // Valider les mots de passe si l'utilisateur a rempli les champs
     if (oldPassword || newPassword || confirmPassword) {
       if (!oldPassword || !newPassword || !confirmPassword) {
-        setErrorMessage("Veuillez remplir tous les champs de mot de passe.");
+        setErrorMessage('Veuillez remplir tous les champs de mot de passe.');
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        setErrorMessage("Les nouveaux mots de passe ne correspondent pas.");
+        setErrorMessage('Les nouveaux mots de passe ne correspondent pas.');
         return;
       }
 
       const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
 
       if (!passwordRegex.test(newPassword)) {
-        setErrorMessage("Le nouveau mot de passe doit comporter au moins 8 caractères, inclure au moins une lettre majuscule et un caractère spécial.");
+        setErrorMessage(
+          'Le nouveau mot de passe doit comporter au moins 8 caractères, inclure au moins une lettre majuscule et un caractère spécial.'
+        );
         return;
       }
     }
@@ -104,6 +114,7 @@ export default function ProfilPage() {
     formData.append('name', name);
     formData.append('email', email);
     formData.append('birthDate', birthDate);
+    formData.append('currency', currency); // Inclure la devise
     if (oldPassword && newPassword) {
       formData.append('oldPassword', oldPassword);
       formData.append('newPassword', newPassword);
@@ -112,17 +123,22 @@ export default function ProfilPage() {
       formData.append('profilePic', selectedImage);
     }
 
-    const response = await fetch('/api/ModificationProfil', {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      const response = await fetch('/api/ModificationProfil', {
+        method: 'POST',
+        body: formData,
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      alert(data.message); 
-      router.push('/Profil');
-    } else {
-      setErrorMessage(data.error || "Une erreur s'est produite.");
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+        router.push('/Profil');
+      } else {
+        setErrorMessage(data.error || "Une erreur s'est produite.");
+      }
+    } catch (error) {
+      console.error('Error submitting profile data:', error);
+      setErrorMessage("Une erreur s'est produite lors de la soumission.");
     }
   };
 
@@ -132,7 +148,7 @@ export default function ProfilPage() {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="flex flex-col min-h-screen bg-gradient-to-r from-[#0b0b3b] via-[#1e1e7f] to-[#1b1b2f] text-white"
       initial="hidden"
       animate="visible"
@@ -143,20 +159,33 @@ export default function ProfilPage() {
           <motion.span
             className="font-extrabold text-xl text-[#6a4fc3] tracking-wider"
             initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1, transition: { type: "spring", stiffness: 60, delay: 0.1 } }}
+            animate={{
+              y: 0,
+              opacity: 1,
+              transition: { type: 'spring', stiffness: 60, delay: 0.1 },
+            }}
           >
             Lazuli
           </motion.span>
         </Link>
         <nav className="ml-auto flex items-center gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
+          <Link
+            className="text-sm font-medium hover:text-[#5d3fd3]"
+            href="/Dashboard"
+          >
             Dashboard
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
+          <Link
+            className="text-sm font-medium hover:text-[#5d3fd3]"
+            href="/Transactions"
+          >
             Transactions
           </Link>
           {/* Photo de profil dans le header */}
-          <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
+          <Link
+            href="/Profil"
+            className="relative w-8 h-8 rounded-full overflow-hidden"
+          >
             <Image
               src={profilePic || '/default-avatar.png'}
               alt="Photo de Profil"
@@ -176,9 +205,7 @@ export default function ProfilPage() {
 
       {/* Main content */}
       <main className="flex-1 flex justify-center items-center p-6">
-        <motion.section 
-          className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl"
-        >
+        <motion.section className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl">
           <h2 className="text-2xl font-bold mb-6">Modifier Mon Profil</h2>
 
           {/* Afficher le message d'erreur s'il y en a */}
@@ -188,14 +215,20 @@ export default function ProfilPage() {
 
           {/* Profile Picture Upload */}
           <div className="flex justify-center items-center mb-6">
-            <motion.div 
+            <motion.div
               className="relative w-32 h-32 border-4 border-[#6a4fc3] rounded-full overflow-hidden"
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
-              <Image src={profilePic} alt="Profile Picture" fill style={{ objectFit: 'cover' }} className="rounded-full" />
-              <input 
-                type="file" 
-                accept="image/*" 
+              <Image
+                src={profilePic}
+                alt="Photo de Profil"
+                fill
+                style={{ objectFit: 'cover' }}
+                className="rounded-full"
+              />
+              <input
+                type="file"
+                accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={handleImageChange}
               />
@@ -236,6 +269,23 @@ export default function ProfilPage() {
               />
             </div>
 
+            {/* Currency Field */}
+            <div className="flex justify-between items-center">
+              <p className="text-lg font-semibold">Devise :</p>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                className="text-lg border border-gray-300 rounded px-2 text-black"
+              >
+                <option value="cad">CAD</option>
+                <option value="usd">USD</option>
+                <option value="eur">EUR</option>
+                <option value="gbp">GBP</option>
+                <option value="idr">IDR</option>
+                {/* Ajoutez d'autres devises si nécessaire */}
+              </select>
+            </div>
+
             {/* Ancien Mot de Passe */}
             <div className="flex justify-between items-center">
               <p className="text-lg font-semibold">Ancien mot de passe :</p>
@@ -260,7 +310,9 @@ export default function ProfilPage() {
 
             {/* Confirmer le Nouveau Mot de Passe */}
             <div className="flex justify-between items-center">
-              <p className="text-lg font-semibold">Confirmer le nouveau mot de passe :</p>
+              <p className="text-lg font-semibold">
+                Confirmer le nouveau mot de passe :
+              </p>
               <input
                 type="password"
                 value={confirmPassword}
@@ -272,7 +324,7 @@ export default function ProfilPage() {
             {/* Buttons */}
             <div className="flex gap-4 mt-6">
               <motion.div>
-                <Button 
+                <Button
                   className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
                   onClick={handleSubmit}
                 >
@@ -280,7 +332,7 @@ export default function ProfilPage() {
                 </Button>
               </motion.div>
               <motion.div>
-                <Button 
+                <Button
                   className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition"
                   onClick={handleCancel}
                 >
