@@ -91,7 +91,6 @@ export default function ChangePasswordPage() {
     }));
   };
   //frontend de la page
-
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white fade-in">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">

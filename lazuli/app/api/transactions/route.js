@@ -13,6 +13,7 @@ async function connectToDatabase() {
 
 export async function POST(req) {
   try {
+    
     const { userId, type, crypto, amount, value, date } = await req.json();
 
     if (!ObjectId.isValid(userId)) {
@@ -23,16 +24,16 @@ export async function POST(req) {
     const usersCollection = db.collection('utilisateur');
     const transactionsCollection = db.collection('transactions');
 
-    // Change find to findOne
+   // Recherche de l'utilisateur dans la base de données avec l'ID fourni.
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-
+    // Si l'utilisateur n'est pas trouvé, renvoyer une réponse message d'erreur.
     if (!user) {
       console.error('User not found for userId:', userId);
       return NextResponse.json({ message: 'User not found' }, { status: 404 ,  details: error.message });
     }
 
     let updatedBalance;
-
+    // Vérification qu'il a un solde suffisant pour l'achat
     if (type === 'buy') {
       if (user.balance < value) {
         return NextResponse.json({ message: 'Insufficient balance' }, { status: 400 });
@@ -43,13 +44,14 @@ export async function POST(req) {
     } else {
       return NextResponse.json({ message: 'Invalid transaction type' }, { status: 400 });
     }
-
+     // Mise à jour du solde de l'utilisateur dans la base de données.
     await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
       { $set: { balance: updatedBalance } }
     );
 
     try {
+      // Insertion de la transaction dans la collection des transactions.
       await transactionsCollection.insertOne({
         userId: new ObjectId(userId),
         transactionType: type,        

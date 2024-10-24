@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
   const router = useRouter();
+  //etat du formulaire
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -17,7 +18,7 @@ export default function SignupPage() {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-
+  
   const validatePassword = (password: string) => {
     const minLength = 8;
     const uppercasePattern = /[A-Z]/;
@@ -86,7 +87,7 @@ export default function SignupPage() {
       [e.target.name]: e.target.value
     });
   };
-
+//frontend de la page
   return (
     <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white fade-in">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">

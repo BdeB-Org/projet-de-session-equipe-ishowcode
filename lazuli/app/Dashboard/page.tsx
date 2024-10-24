@@ -20,7 +20,7 @@ import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import BalanceChart from '@/components/balanceChart/page';
-
+//Enregistrement des composants de graphique
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -165,14 +165,16 @@ export default function DashboardPage() {
 
     const cryptoPrice = cryptoData[selectedCrypto].price;
     const transactionValue = amount * parseFloat(cryptoPrice.replace('CA$', ''));
-
+// Vérifier si le solde est suffisant pour la transaction 
     if (transactionType === 'buy') {
       if (balance < transactionValue) {
         console.error('Insufficient balance', balance, transactionValue); 
         return;
       }
       setBalance((prevBalance) => prevBalance - transactionValue);
-    } else if (transactionType === 'sell') {
+    }
+    // Vérifier si le solde est suffisant pour la transaction
+    else if (transactionType === 'sell') {
       setBalance((prevBalance) => prevBalance + transactionValue);
     }
 
@@ -183,6 +185,7 @@ export default function DashboardPage() {
         console.error('User ID is missing from localStorage');
         return;
       }
+      // Enregistrer la transaction dans la base de données
       const transactionData = {
         userId: userId,
         type: transactionType,

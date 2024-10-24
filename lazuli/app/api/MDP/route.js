@@ -38,9 +38,10 @@ export async function POST(req) {
       subject: 'Réinitialisation de votre mot de passe',
       html: `<p>Cliquez sur ce lien pour réinitialiser votre mot de passe: <a href="${resetLink}">Réinitialiser le mot de passe</a></p>`,
     });
-
+    //Retour un message que l'email est envoyé
     return NextResponse.json({ message: "Un lien de réinitialisation a été envoyé à votre adresse e-mail." });
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Erreur lors de l'envoi de l'email :", error);
     return NextResponse.json({ error: "Erreur lors de l'envoi de l'email." }, { status: 500 });
   }
