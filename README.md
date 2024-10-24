@@ -3,8 +3,7 @@ Lazuli est un simulateur de cryptomonnaies conçu pour reproduire les dynamiques
 
 
 
-<img width="959" alt="Page accueil" src="https://github.com/user-attachments/assets/36cdde8f-ea5f-4823-9fb4-dd7da7586ce6">
-
+<img width="959" alt="Page accueil" src="https://github.com/user-attachments/assets/94f78532-40e2-4e16-8a6a-cea0580b0db3">
 
 
 Pour exécuter **Lazuli**, voici les étapes générales à suivre :
@@ -109,7 +108,7 @@ Dans le page aide, vous pouvez cherchez des informations sur les fonctionnalité
 
 Dans le page du dashboard l'utilisateur peut voir l'argent qu'il a et il a des options pour acheter,vendre,convertir et dépot. De plus, vous avez l'option de voir votre page de transaction et votre page de profile et vous pouvez déconnecter votre compte.
 
-<img width="959" alt="Page Dashboard" src="https://github.com/user-attachments/assets/f654b992-a6d4-4a35-b66b-5a30e3a096be">
+<img width="959" alt="Page Dashboard" src="https://github.com/user-attachments/assets/c2999268-591c-4376-bd7e-f3a09d3ef56e">
 
 
 
@@ -126,6 +125,25 @@ Dans le page de transaction, utilisateur pouvez voir les achats que vous avez fa
 Dans le page de profil, l'utilisateur peut voir ses informations personnels et il a l'option de modifier son profil ou supprimer son compte.
 
 <img width="959" alt="Page Profil" src="https://github.com/user-attachments/assets/b43579e2-8fa1-4aed-bd73-7dd79674de1a">
+
+
+
+
+**Présentation du Page Explorer les cryptos :**
+
+Dans le page de explorer les crytos, l'utilisateur peut voir les cryptos monnaies qu'il peut acheter (l'unite d'achat est en crypto et non en dollars).
+
+<img width="959" alt="Explorer Crypto" src="https://github.com/user-attachments/assets/20413c7e-5662-473f-95a9-43bb30eb90f5">
+
+Lorsque l'utilisateur choisi un cryto monnaie, il peut l'acheter et vendre son crypto monnaie et il peut voir le prix historique.
+
+<img width="959" alt="Acheter Crypto" src="https://github.com/user-attachments/assets/6d877ac7-6668-46c9-88b5-8d1de13bad21">
+
+**Présentation du Page Dépôt d'Argent :**
+
+Dans le page dépôt d'argent, l'utilisateur peut ajoutez un montant de son choix. De plus, il peut voir son solde et réinitialser le solde.
+
+<img width="959" alt="Dépôt d'Argent" src="https://github.com/user-attachments/assets/f36fe410-dce8-4409-9c11-d88822067bb1">
 
 
 
