@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
+import BalanceChart from '@/components/balanceChart/page'; 
 
 ChartJS.register(
   CategoryScale,
@@ -54,6 +55,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [profilePic, setProfilePic] = useState('/images/default-avatar.png'); // Chemin mis à jour
   const [balance, setBalance] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
+  const [transactionType, setTransactionType] = useState<'buy' | 'sell' | null>(null);
+
 
   const router = useRouter();
 
@@ -149,6 +153,8 @@ export default function DashboardPage() {
       setLoading(false);
     }
   };
+
+  
 
   // Fonction pour récupérer l'historique des prix
   const fetchPriceHistory = async (crypto: string) => {
@@ -356,6 +362,7 @@ export default function DashboardPage() {
                 <p className="text-2xl font-bold text-black">
                   CA${balance.toFixed(2)}
                 </p>
+                <BalanceChart />
               </div>
             </motion.div>
           ) : selectedCrypto ? (
