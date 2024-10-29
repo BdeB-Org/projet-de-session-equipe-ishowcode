@@ -4,11 +4,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { motion } from 'framer-motion';
-import { useTheme } from "@/app/api/ThemeContext/route"; // Adjust path if needed
-
-const SomeComponent = () => {
-  const { isDarkMode } = useTheme();
-
 
 const Explore = () => {
   // etat pour stocker la liste des cryptomonnaies
