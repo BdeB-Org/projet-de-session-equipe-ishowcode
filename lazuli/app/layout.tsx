@@ -1,7 +1,12 @@
+// app/layout.js
+ // Mark this as a client component
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-//  Ce composant est le composant de mise en page racine de notre application. Il enveloppe tous les composants de notre application et définit les métadonnées de la page.
+import { ThemeProvider } from './api/ThemeContext/route'; // Adjust path as needed
+import './globals.css'; // Your global styles if needed
+
+// Ce composant est le composant de mise en page racine de notre application.
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -15,8 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <ThemeProvider>
+      <html lang="en">
+        <body className={inter.className}>{children}</body>
+      </html>
+    </ThemeProvider>
   );
 }

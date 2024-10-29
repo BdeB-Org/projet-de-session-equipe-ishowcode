@@ -23,6 +23,7 @@ import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import BalanceChart from '@/components/balanceChart/page';
 
+
 // Enregistrement des composants de graphique
 ChartJS.register(
   CategoryScale,
