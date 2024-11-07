@@ -11,6 +11,30 @@ async function connectToDatabase() {
   return client.db();
 }
 
+export async function GET(req) {
+  try {
+    const { userId } = req.nextUrl.searchParams;
+
+    if (!userId || !ObjectId.isValid(userId)) {
+      return NextResponse.json({ error: "Invalid or missing user ID" }, { status: 400 });
+    }
+
+    const db = await connectToDatabase();
+    const transactionsCollection = db.collection('transactions');
+
+    // Fetch transactions for the given userId, sorted by date (most recent first).
+    const transactions = await transactionsCollection
+      .find({ userId: new ObjectId(userId) })
+      .sort({ date: -1 })
+      .toArray();
+
+    return NextResponse.json({ transactions }, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching transaction history:', error.message, error.stack);
+    return NextResponse.json({ message: 'Internal server error', details: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(req) {
   try {
     
