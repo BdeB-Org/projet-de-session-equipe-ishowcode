@@ -43,6 +43,8 @@ interface CryptoInfo {
   volume: number;
   low24h: number;
   high24h: number;
+  circulatingSupply: number;
+  totalSupply: number;
 }
 
 // Interface pour les données de prix dans le graphique
@@ -131,6 +133,8 @@ export default function DashboardPage() {
           volume: response.data.bitcoin[`${currency}_24h_vol`],
           low24h: response.data.bitcoin[`${currency}_24h_low`],
           high24h: response.data.bitcoin[`${currency}_24h_high`],
+          circulatingSupply: response.data.bitcoin.circulating_supply,
+          totalSupply: response.data.bitcoin.total_supply,
         },
         ethereum: {
           name: 'Ethereum (ETH)',
@@ -140,6 +144,8 @@ export default function DashboardPage() {
           volume: response.data.ethereum[`${currency}_24h_vol`],
           low24h: response.data.ethereum[`${currency}_24h_low`],
           high24h: response.data.ethereum[`${currency}_24h_high`],
+          circulatingSupply: response.data.ethereum.circulating_supply,
+          totalSupply: response.data.ethereum.total_supply,
         },
         cardano: {
           name: 'Cardano (ADA)',
@@ -149,6 +155,8 @@ export default function DashboardPage() {
           volume: response.data.cardano[`${currency}_24h_vol`],
           low24h: response.data.cardano[`${currency}_24h_low`],
           high24h: response.data.cardano[`${currency}_24h_high`],
+          circulatingSupply: response.data.cardano.circulating_supply,
+          totalSupply: response.data.cardano.total_supply
         },
         dogecoin: {
           name: 'Dogecoin (DOGE)',
@@ -158,6 +166,8 @@ export default function DashboardPage() {
           volume: response.data.dogecoin[`${currency}_24h_vol`],
           low24h: response.data.dogecoin[`${currency}_24h_low`],
           high24h: response.data.dogecoin[`${currency}_24h_high`],
+          circulatingSupply: response.data.dogecoin.circulating_supply,
+          totalSupply: response.data.dogecoin.total_supply
         },
         solana: {
           name: 'Solana (SOL)',
@@ -167,6 +177,8 @@ export default function DashboardPage() {
           volume: response.data.solana[`${currency}_24h_vol`],
           low24h: response.data.solana[`${currency}_24h_low`],
           high24h: response.data.solana[`${currency}_24h_high`],
+          circulatingSupply: response.data.solana.circulating_supply,
+          totalSupply: response.data.solana.total_supply
         },
       });
     } catch (error) {
@@ -437,7 +449,7 @@ export default function DashboardPage() {
                   {getCurrencySymbol(currency)}
                   {balance ? balance.toFixed(2) : '0.00'}
                 </p>
-                <BalanceChart/>
+                <BalanceChart />
               </div>
             </motion.div>
           ) : selectedCrypto ? (
@@ -465,22 +477,32 @@ export default function DashboardPage() {
                 </div>
               )}
 
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-2 text-[#5d3fd3]">Informations supplémentaires</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <p><strong>Market Cap:</strong> {getCurrencySymbol(currency)}{cryptoData[selectedCrypto]?.marketCap?.toLocaleString() || 'N/A'}</p>
+                  <p><strong>Volume:</strong> {getCurrencySymbol(currency)}{cryptoData[selectedCrypto]?.volume?.toLocaleString() || 'N/A'}</p>
+                  <p><strong>Low 24h:</strong> {getCurrencySymbol(currency)}{cryptoData[selectedCrypto]?.low24h?.toFixed(2) || 'N/A'}</p>
+                  <p><strong>High 24h:</strong> {getCurrencySymbol(currency)}{cryptoData[selectedCrypto]?.high24h?.toFixed(2) || 'N/A'}</p>
+                  <p><strong>Circulating Supply:</strong> {cryptoData[selectedCrypto]?.circulatingSupply?.toLocaleString() || 'N/A'}</p>
+                  <p><strong>Total Supply:</strong> {cryptoData[selectedCrypto]?.totalSupply?.toLocaleString() || 'N/A'}</p>
+                </div>
+              </div>
+
               {/* Buy and Sell Buttons */}
               <div className="mt-6 flex flex-col items-center">
                 <div className="flex justify-around w-full mb-4">
                   <Button
                     onClick={() => setTransactionType('buy')}
-                    className={`p-2 rounded ${
-                      transactionType === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-200'
-                    }`}
+                    className={`p-2 rounded ${transactionType === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-200'
+                      }`}
                   >
                     Acheter
                   </Button>
                   <Button
                     onClick={() => setTransactionType('sell')}
-                    className={`p-2 rounded ${
-                      transactionType === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-200'
-                    }`}
+                    className={`p-2 rounded ${transactionType === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-200'
+                      }`}
                   >
                     Vendre
                   </Button>
@@ -521,11 +543,10 @@ export default function DashboardPage() {
                     <span className="font-medium">{cryptoData[crypto]?.name}</span>
                     <span className="text-sm text-gray-600">{cryptoData[crypto]?.price}</span>
                     <span
-                      className={`text-sm ${
-                        cryptoData[crypto]?.change.includes('-')
-                          ? 'text-red-500'
-                          : 'text-green-500'
-                      }`}
+                      className={`text-sm ${cryptoData[crypto]?.change.includes('-')
+                        ? 'text-red-500'
+                        : 'text-green-500'
+                        }`}
                     >
                       {cryptoData[crypto]?.change}
                     </span>
