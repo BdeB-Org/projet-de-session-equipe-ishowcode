@@ -5,16 +5,44 @@ import { MongoClient, ObjectId } from 'mongodb';
 import { join } from 'path';
 import { promises as fs } from 'fs';
 import bcrypt from 'bcrypt';
+import axios from 'axios';
 
-// Assurez-vous que MONGODB_URI est défini dans vos variables d'environnement
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI; 
 const client = new MongoClient(uri);
 let db;
 
 async function connectToDatabase() {
   if (!db) {
     await client.connect();
-    db = client.db("lazulibd"); // Remplacez "lazulibd" par le nom de votre base de données
+    db = client.db("lazulibd"); 
+  }
+}
+
+async function getExchangeRate(fromCurrency, toCurrency) {
+  try {
+    const apiKey = process.env.EXCHANGE_RATE_API_KEY;
+    const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+    console.log('Fetching exchange rate with URL:', url);
+
+    const response = await axios.get(url);
+    console.log('API response data:', response.data);
+
+    if (response.data && response.data.result === 'success') {
+      const conversionRates = response.data.conversion_rates;
+      const rate = conversionRates[toCurrency];
+      if (rate) {
+        return rate;
+      } else {
+        console.error(`La devise cible ${toCurrency} n'est pas disponible.`);
+        return null;
+      }
+    } else {
+      console.error('Erreur lors de la récupération du taux de change:', response.data['error-type'] || 'Unknown error');
+      return null;
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération du taux de change:', error);
+    return null;
   }
 }
 
@@ -35,7 +63,7 @@ export async function GET(request) {
         balance: user.balance || 0,
         birthDate: user.birthDate,
         profilePic: user.profilePic,
-        currency: user.currency || 'cad', // Ajout de la devise
+        currency: user.currency || 'cad', 
       });
     } else {
       return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
@@ -57,7 +85,7 @@ export async function POST(request) {
     const name = formData.get('name');
     const email = formData.get('email');
     const birthDate = formData.get('birthDate');
-    const currency = formData.get('currency'); // Récupérer la devise
+    const newCurrency = formData.get('currency');
 
     const oldPassword = formData.get('oldPassword');
     const newPassword = formData.get('newPassword');
@@ -66,11 +94,25 @@ export async function POST(request) {
 
     const users = db.collection('utilisateur');
 
-    // Vérifier si l'utilisateur existe
+    // Récupérer l'utilisateur actuel
     const user = await users.findOne({ _id: new ObjectId(userId) });
 
     if (!user) {
       return NextResponse.json({ error: "Utilisateur non trouvé." }, { status: 404 });
+    }
+
+    let updatedBalance = user.balance || 0; // Solde actuel
+    const currentCurrency = user.currency || 'CAD'; // Devise actuelle 
+
+    // Si la devise a changé, convertir le solde
+    if (newCurrency && newCurrency.toUpperCase() !== currentCurrency.toUpperCase()) {
+      console.log('Conversion de la devise:', currentCurrency, '->', newCurrency);
+      const rate = await getExchangeRate(currentCurrency.toUpperCase(), newCurrency.toUpperCase());
+      if (rate) {
+        updatedBalance = updatedBalance * rate;
+      } else {
+        return NextResponse.json({ error: "Erreur lors de la conversion du solde." }, { status: 500 });
+      }
     }
 
     // Mise à jour des champs de profil
@@ -78,7 +120,8 @@ export async function POST(request) {
       name,
       email,
       birthDate,
-      currency, // Ajouter la devise aux champs à mettre à jour
+      currency: newCurrency.toUpperCase(),
+      balance: updatedBalance,
     };
 
     // Gestion de la photo de profil
@@ -111,7 +154,6 @@ export async function POST(request) {
 
     // Gestion du changement de mot de passe
     if (oldPassword && newPassword) {
-      // Vérifier l'ancien mot de passe
       const isMatch = await bcrypt.compare(oldPassword, user.password);
 
       if (!isMatch) {

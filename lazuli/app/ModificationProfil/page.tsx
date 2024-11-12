@@ -10,7 +10,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function ModificationProfilPage() {
-  const [isOpen, setIsOpen] = useState(false);
   const [birthDate, setBirthDate] = useState('');
   const [profilePic, setProfilePic] = useState('/default-avatar.png');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -20,10 +19,14 @@ export default function ModificationProfilPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [currency, setCurrency] = useState('cad'); // Ajouter cet état pour la devise
+  const [currency, setCurrency] = useState('CAD'); // Devise sélectionnée
+  const [balance, setBalance] = useState(0); // Solde actuel
+  const [displayBalance, setDisplayBalance] = useState(0); // Solde affiché
+  const [userCurrency, setUserCurrency] = useState('CAD'); // Devise initiale
 
   const router = useRouter();
 
+  // Fonction pour gérer la déconnexion
   const handleLogout = () => {
     router.push('/');
   };
@@ -33,7 +36,7 @@ export default function ModificationProfilPage() {
     const userId = localStorage.getItem('userId');
 
     if (!userId) {
-      console.error('User ID is missing from localStorage');
+      console.error("User ID is missing from localStorage");
       return;
     }
 
@@ -46,18 +49,88 @@ export default function ModificationProfilPage() {
         setEmail(data.email || '');
         setBirthDate(data.birthDate || '');
         setProfilePic(data.profilePic || '/default-avatar.png');
-        setCurrency(data.currency || 'cad'); // Récupérer la devise
+        setCurrency(data.currency || 'CAD'); // Devise actuelle
+        setUserCurrency(data.currency || 'CAD'); // Devise initiale
+        setBalance(data.balance || 0); // Solde actuel
+        setDisplayBalance(data.balance || 0); // Initialiser le solde affiché
       } else {
-        console.error('Error fetching profile data:', data.error);
+        console.error("Error fetching profile data:", data.error);
       }
     } catch (error) {
-      console.error('Error fetching profile data:', error);
+      console.error("Error fetching profile data:", error);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Fonction pour obtenir le symbole de la devise
+  const getCurrencySymbol = (currencyCode: string) => {
+    switch (currencyCode.toUpperCase()) {
+      case 'USD':
+        return '$';
+      case 'EUR':
+        return '€';
+      case 'GBP':
+        return '£';
+      case 'CAD':
+        return 'CA$';
+      case 'IDR':
+        return 'Rp';
+      default:
+        return currencyCode.toUpperCase() + '$';
+    }
+  };
+
+  // Fonction pour obtenir le taux de change
+  const getExchangeRate = async (fromCurrency: string, toCurrency: string) => {
+    try {
+      const apiKey = process.env.NEXT_PUBLIC_EXCHANGE_RATE_API_KEY;
+      const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data && data.result === 'success') {
+        const conversionRates = data.conversion_rates;
+        const rate = conversionRates[toCurrency];
+        if (rate) {
+          return rate;
+        } else {
+          console.error(`La devise cible ${toCurrency} n'est pas disponible.`);
+          return null;
+        }
+      } else {
+        console.error('Erreur lors de la récupération du taux de change:', data['error-type'] || 'Unknown error');
+        return null;
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération du taux de change:', error);
+      return null;
+    }
+  };
+
+  // Effet pour détecter le changement de devise et convertir le solde
+  useEffect(() => {
+    const convertBalance = async () => {
+      if (currency && balance !== null) {
+        if (userCurrency !== currency) {
+          const rate = await getExchangeRate(userCurrency.toUpperCase(), currency.toUpperCase());
+          if (rate) {
+            const newBalance = balance * rate;
+            setDisplayBalance(newBalance);
+          } else {
+            console.error('Impossible de récupérer le taux de change');
+          }
+        } else {
+          setDisplayBalance(balance);
+        }
+      }
+    };
+
+    convertBalance();
+  
+  }, [currency]);
 
   // Fonction pour gérer le changement d'image
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +153,7 @@ export default function ModificationProfilPage() {
     const userId = localStorage.getItem('userId');
 
     if (!userId) {
-      console.error('User ID is missing from localStorage');
+      console.error("User ID is missing from localStorage");
       return;
     }
 
@@ -114,7 +187,8 @@ export default function ModificationProfilPage() {
     formData.append('name', name);
     formData.append('email', email);
     formData.append('birthDate', birthDate);
-    formData.append('currency', currency); // Inclure la devise
+    formData.append('currency', currency);
+
     if (oldPassword && newPassword) {
       formData.append('oldPassword', oldPassword);
       formData.append('newPassword', newPassword);
@@ -169,23 +243,14 @@ export default function ModificationProfilPage() {
           </motion.span>
         </Link>
         <nav className="ml-auto flex items-center gap-6">
-          <Link
-            className="text-sm font-medium hover:text-[#5d3fd3]"
-            href="/Dashboard"
-          >
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
             Dashboard
           </Link>
-          <Link
-            className="text-sm font-medium hover:text-[#5d3fd3]"
-            href="/Transactions"
-          >
+          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
           {/* Photo de profil dans le header */}
-          <Link
-            href="/Profil"
-            className="relative w-8 h-8 rounded-full overflow-hidden"
-          >
+          <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
             <Image
               src={profilePic || '/default-avatar.png'}
               alt="Photo de Profil"
@@ -209,9 +274,7 @@ export default function ModificationProfilPage() {
           <h2 className="text-2xl font-bold mb-6">Modifier Mon Profil</h2>
 
           {/* Afficher le message d'erreur s'il y en a */}
-          {errorMessage && (
-            <div className="text-red-500 mb-4">{errorMessage}</div>
-          )}
+          {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
 
           {/* Profile Picture Upload */}
           <div className="flex justify-center items-center mb-6">
@@ -269,6 +332,15 @@ export default function ModificationProfilPage() {
               />
             </div>
 
+            {/* Balance Field */}
+            <div className="flex justify-between items-center">
+              <p className="text-lg font-semibold">Solde :</p>
+              <p className="text-lg">
+                {getCurrencySymbol(currency)}
+                {displayBalance.toFixed(2)}
+              </p>
+            </div>
+
             {/* Currency Field */}
             <div className="flex justify-between items-center">
               <p className="text-lg font-semibold">Devise :</p>
@@ -277,12 +349,11 @@ export default function ModificationProfilPage() {
                 onChange={(e) => setCurrency(e.target.value)}
                 className="text-lg border border-gray-300 rounded px-2 text-black"
               >
-                <option value="cad">CAD</option>
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="gbp">GBP</option>
-                <option value="idr">IDR</option>
-                {/* Ajoutez d'autres devises si nécessaire */}
+                <option value="CAD">CAD</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="IDR">IDR</option>
               </select>
             </div>
 
@@ -310,9 +381,7 @@ export default function ModificationProfilPage() {
 
             {/* Confirmer le Nouveau Mot de Passe */}
             <div className="flex justify-between items-center">
-              <p className="text-lg font-semibold">
-                Confirmer le nouveau mot de passe :
-              </p>
+              <p className="text-lg font-semibold">Confirmer le nouveau mot de passe :</p>
               <input
                 type="password"
                 value={confirmPassword}
