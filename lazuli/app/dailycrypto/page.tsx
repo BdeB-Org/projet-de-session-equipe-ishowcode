@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 
+// Interface pour les formes de données d'une cryptomonnaie
 interface CryptoInfo {
   name: string;
   price: string;
@@ -13,13 +14,13 @@ interface CryptoInfo {
   circulatingSupply: number;
   totalSupply: number;
 }
-
+//Interface pour les propriétés de CryptoOfTheDay
 interface CryptoOfTheDayProps {
   cryptoData: {
     [key: string]: CryptoInfo;
   };
 }
-
+//Fonction CryptoOfTheDay, affiche la crypto avec la plus grande hausse
 const CryptoOfTheDay = ({ cryptoData }: CryptoOfTheDayProps) => {
   const getCryptoOfTheDay = () => {
     return Object.entries(cryptoData).reduce<{ id: string } & CryptoInfo | null>((highest, [key, crypto]) => {
@@ -30,13 +31,13 @@ const CryptoOfTheDay = ({ cryptoData }: CryptoOfTheDayProps) => {
       return highest;
     }, null);
   };
-
+  //Obtenir la cryptomonnaie avec la plus grande hausse du jour
   const topCrypto = getCryptoOfTheDay();
 
   if (!topCrypto) {
     return null;
   }
-
+  //Affichage de la cryptomonnaie avec la plus grande hausse du jour
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -44,6 +45,7 @@ const CryptoOfTheDay = ({ cryptoData }: CryptoOfTheDayProps) => {
       transition={{ duration: 0.5 }}
       className="mb-6 p-6 bg-gradient-to-r from-purple-600 to-blue-500 rounded-xl shadow-lg"
     >
+      
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-bold text-white mb-1">Crypto du Jour 🏆</h3>

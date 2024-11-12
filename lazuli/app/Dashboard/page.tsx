@@ -35,7 +35,7 @@ ChartJS.register(
   Tooltip
 );
 
-// Interface pour les informations sur les cryptomonnaies
+// Interface pour les informations sur les cryptomonnaies et dans le graphique
 interface CryptoInfo {
   name: string;
   price: string;
@@ -54,6 +54,7 @@ interface PriceData {
   y: number;
 }
 
+//Composant principal 
 export default function DashboardPage() {
   const [showExplore, setShowExplore] = useState(false);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
@@ -117,7 +118,7 @@ export default function DashboardPage() {
     }
   };
 
-  // Fonction pour récupérer les informations sur les cryptomonnaies
+  // Fonction pour récupérer les informations sur les cryptomonnaies avec l'API Coin Gecko
   const fetchCryptoData = async () => {
     setLoading(true);
     try {
@@ -243,7 +244,7 @@ export default function DashboardPage() {
         value: transactionValue,
         date: new Date(),
       };
-
+      
       const response = await axios.post(`/api/transactions`, transactionData);
       console.log('Transaction réussie', response.data);
       setBalance(response.data.balance);

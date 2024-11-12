@@ -114,24 +114,19 @@ export function Page() {
             Expérimentez le trading de crypto-monnaies sans risque avec notre plateforme de simulation. Perfectionnez vos stratégies sans utiliser de vraie monnaie.
           </p>
           <Link href="/login">
-            <Button className={`rounded-full mb-4 hover:animate-bounce transition duration-300 ease-in-out 
-      ${isDarkMode ? 'bg-[#4c4c96] text-white hover:bg-[#3b3b82] !important' : 'bg-[#000012] text-white hover:bg-[#03034d] !important'}`}>
+            <Button className="bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full mb-4 hover:scale-105 transition-transform duration-300 ease-in-out">
               Démarrer la Simulation
             </Button>
           </Link>
-          <br />
+          <br></br>
           <Link href="/SignUp">
-            <Button className={`rounded-full hover:animate-bounce transition duration-300 ease-in-out 
-      ${isDarkMode ? 'bg-[#4c4c96] text-white hover:bg-[#3b3b82] !important' : 'bg-[#000012] text-white hover:bg-[#03034d] !important'}`}>
+            <Button className="bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full hover:scale-105 transition-transform duration-300 ease-in-out">
               Devenir un membre
             </Button>
           </Link>
-
-          <div className={`mt-8 p-4 ${isDarkMode ? 'bg-[#3b3b82]' : 'bg-gray-200'} rounded-lg`}>
-            <h2 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Mode Simulation Actif</h2>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-              Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.
-            </p>
+          <div className="mt-8 p-4 bg-[#3b3b82] rounded-lg">
+            <h2 className="text-lg font-semibold mb-2 text-white">Mode Simulation Actif</h2>
+            <p className="text-sm text-gray-200">Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.</p>
           </div>
         </div>
       </main>
