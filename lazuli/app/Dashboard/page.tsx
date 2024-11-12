@@ -36,6 +36,7 @@ ChartJS.register(
 
 // Interface pour les informations sur les cryptomonnaies
 interface CryptoInfo {
+  id: string;
   name: string;
   price: string;
   change: string;
@@ -65,6 +66,8 @@ export default function DashboardPage() {
   const [currency, setCurrency] = useState('cad'); // État pour la devise
   const [amount, setAmount] = useState<number>(0);
   const [transactionType, setTransactionType] = useState<'buy' | 'sell' | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const router = useRouter();
 
@@ -134,11 +137,23 @@ export default function DashboardPage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,cardano,dogecoin,solana&vs_currencies=${currency}&include_market_cap=true&include_24hr_change=true&include_24hr_vol=true&include_24hr_low_high=true`
+        `https://api.coingecko.com/api/v3/simple/price`,
+        {
+          params: {
+            ids: 'bitcoin,ethereum,cardano,dogecoin,solana',
+            vs_currencies: currency,
+            include_market_cap: true,
+            include_24hr_change: true,
+            include_24hr_vol: true,
+            include_24hr_low_high: true,
+          },
+        }
       );
+
       // Stocker les informations sur les cryptomonnaies dans l'état
       setCryptoData({
         bitcoin: {
+          id: 'bitcoin',
           name: 'Bitcoin (BTC)',
           price: `${getCurrencySymbol(currency)}${response.data.bitcoin[currency]}`,
           change: `${response.data.bitcoin[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
@@ -150,6 +165,7 @@ export default function DashboardPage() {
           totalSupply: response.data.bitcoin.total_supply,
         },
         ethereum: {
+          id: 'ethereum',
           name: 'Ethereum (ETH)',
           price: `${getCurrencySymbol(currency)}${response.data.ethereum[currency]}`,
           change: `${response.data.ethereum[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
@@ -161,6 +177,7 @@ export default function DashboardPage() {
           totalSupply: response.data.ethereum.total_supply,
         },
         cardano: {
+          id: 'cardano',
           name: 'Cardano (ADA)',
           price: `${getCurrencySymbol(currency)}${response.data.cardano[currency]}`,
           change: `${response.data.cardano[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
@@ -172,6 +189,7 @@ export default function DashboardPage() {
           totalSupply: response.data.cardano.total_supply,
         },
         dogecoin: {
+          id: 'dogecoin',
           name: 'Dogecoin (DOGE)',
           price: `${getCurrencySymbol(currency)}${response.data.dogecoin[currency]}`,
           change: `${response.data.dogecoin[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
@@ -183,6 +201,7 @@ export default function DashboardPage() {
           totalSupply: response.data.dogecoin.total_supply,
         },
         solana: {
+          id: 'solana',
           name: 'Solana (SOL)',
           price: `${getCurrencySymbol(currency)}${response.data.solana[currency]}`,
           change: `${response.data.solana[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
@@ -201,11 +220,86 @@ export default function DashboardPage() {
     }
   };
 
-  // Fonction pour récupérer l'historique des prix
-  const fetchPriceHistory = async (crypto: string) => {
+  // Fonction pour rechercher des cryptomonnaies
+  const handleSearch = async () => {
+    if (!searchQuery) {
+      setSearchResults([]);
+      return;
+    }
+
     try {
       const response = await axios.get(
-        `https://api.coingecko.com/api/v3/coins/${crypto}/market_chart?vs_currency=${currency}&days=7`
+        `https://api.coingecko.com/api/v3/search`,
+        {
+          params: {
+            query: searchQuery,
+          },
+        }
+      );
+      setSearchResults(response.data.coins);
+    } catch (error) {
+      console.error('Erreur lors de la recherche de cryptomonnaies:', error);
+    }
+  };
+
+  // Utiliser un debounce pour la recherche
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      handleSearch();
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  // Fonction pour récupérer les données de la cryptomonnaie sélectionnée
+  const fetchSelectedCryptoData = async (cryptoId: string) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/markets`,
+        {
+          params: {
+            vs_currency: currency,
+            ids: cryptoId,
+          },
+        }
+      );
+      if (response.data && response.data.length > 0) {
+        const cryptoInfo = response.data[0];
+        setCryptoData((prevData) => ({
+          ...prevData,
+          [cryptoId]: {
+            id: cryptoId,
+            name: `${cryptoInfo.name} (${cryptoInfo.symbol.toUpperCase()})`,
+            price: `${getCurrencySymbol(currency)}${cryptoInfo.current_price}`,
+            change: `${cryptoInfo.price_change_percentage_24h?.toFixed(2) || '0.00'}%`,
+            marketCap: cryptoInfo.market_cap,
+            volume: cryptoInfo.total_volume,
+            low24h: cryptoInfo.low_24h,
+            high24h: cryptoInfo.high_24h,
+            circulatingSupply: cryptoInfo.circulating_supply,
+            totalSupply: cryptoInfo.total_supply,
+          },
+        }));
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données de la cryptomonnaie:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fonction pour récupérer l'historique des prix
+  const fetchPriceHistory = async (cryptoId: string) => {
+    try {
+      const response = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart`,
+        {
+          params: {
+            vs_currency: currency,
+            days: 7,
+          },
+        }
       );
       const prices = response.data.prices.map((price: any[]) => ({
         x: new Date(price[0]).toLocaleDateString(),
@@ -213,19 +307,19 @@ export default function DashboardPage() {
       }));
       setPriceHistory(prices);
     } catch (error) {
-      console.error('Error fetching price history:', error);
+      console.error('Erreur lors de la récupération de l\'historique des prix:', error);
     }
   };
 
   // Fonction pour gérer les transactions d'achat et de vente
-  const handleTransaction = async (selectedCrypto: string) => {
+  const handleTransaction = async (cryptoId: string) => {
     console.log('Solde actuel:', balance);
-    if (!selectedCrypto || !transactionType || amount <= 0) {
+    if (!cryptoId || !transactionType || amount <= 0) {
       console.error('Veuillez sélectionner une crypto et entrer un montant valide');
       return;
     }
 
-    const cryptoPriceStr = cryptoData[selectedCrypto].price;
+    const cryptoPriceStr = cryptoData[cryptoId].price;
     const cryptoPrice = parseFloat(cryptoPriceStr.replace(/[^\d.-]/g, ''));
     const transactionValue = amount * cryptoPrice;
 
@@ -250,7 +344,7 @@ export default function DashboardPage() {
       const transactionData = {
         userId: userId,
         type: transactionType,
-        crypto: selectedCrypto,
+        crypto: cryptoId,
         amount: amount,
         value: transactionValue,
         date: new Date(),
@@ -302,9 +396,10 @@ export default function DashboardPage() {
     };
   }, [currency]);
 
-  const handleCryptoSelect = (crypto: string) => {
-    setSelectedCrypto(crypto);
+  const handleCryptoSelect = (cryptoId: string) => {
+    setSelectedCrypto(cryptoId);
     setPriceHistory([]);
+    fetchSelectedCryptoData(cryptoId);
   };
 
   const handleReturn = () => {
@@ -382,11 +477,6 @@ export default function DashboardPage() {
       },
     },
   };
-
-  // Ajout d'un console.log pour vérifier la valeur de profilePic
-  useEffect(() => {
-    console.log('Valeur de profilePic:', profilePic);
-  }, [profilePic]);
 
   return (
     <motion.div className="flex flex-col min-h-screen bg-[#f8f9fa] text-black">
@@ -566,7 +656,38 @@ export default function DashboardPage() {
               <h2 className="text-2xl font-semibold mb-4">Explorer les Cryptomonnaies</h2>
               <CryptoOfTheDay cryptoData={cryptoData} />
 
-              {/* Crypto List */}
+              {/* Barre de recherche */}
+              <div className="mb-6">
+                <input
+                  type="text"
+                  placeholder="Rechercher une cryptomonnaie..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="p-2 border rounded w-full"
+                />
+              </div>
+
+              {/* Résultats de la recherche */}
+              {searchResults.length > 0 && (
+                <ul className="space-y-4">
+                  {searchResults.map((crypto) => (
+                    <li
+                      key={crypto.id}
+                      className="flex justify-between items-center bg-gray-100 p-4 rounded-lg"
+                    >
+                      <span className="font-medium">{crypto.name} ({crypto.symbol.toUpperCase()})</span>
+                      <Button
+                        onClick={() => handleCryptoSelect(crypto.id)}
+                        className="ml-4 text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6]"
+                      >
+                        Sélectionner
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Liste des cryptomonnaies prédéfinies */}
               <ul className="space-y-4">
                 {Object.keys(cryptoData).map((crypto, index) => (
                   <li
