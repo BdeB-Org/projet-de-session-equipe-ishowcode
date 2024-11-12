@@ -22,6 +22,7 @@ import Image from 'next/image';
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import BalanceChart from '@/components/balanceChart/page';
+import CryptoOfTheDay from '../dailycrypto/page';
 
 
 // Enregistrement des composants de graphique
@@ -532,6 +533,7 @@ export default function DashboardPage() {
               variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
             >
               <h2 className="text-2xl font-semibold mb-4">Explorer les Cryptomonnaies</h2>
+              <CryptoOfTheDay cryptoData={cryptoData} />
 
               {/* Crypto List */}
               <ul className="space-y-4">
