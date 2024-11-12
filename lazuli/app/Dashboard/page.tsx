@@ -24,7 +24,6 @@ import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import BalanceChart from '@/components/balanceChart/page';
 import CryptoOfTheDay from '../dailycrypto/page';
 
-
 // Enregistrement des composants de graphique
 ChartJS.register(
   CategoryScale,
@@ -35,7 +34,7 @@ ChartJS.register(
   Tooltip
 );
 
-// Interface pour les informations sur les cryptomonnaies et dans le graphique
+// Interface pour les informations sur les cryptomonnaies
 interface CryptoInfo {
   name: string;
   price: string;
@@ -54,7 +53,7 @@ interface PriceData {
   y: number;
 }
 
-//Composant principal 
+// Composant principal
 export default function DashboardPage() {
   const [showExplore, setShowExplore] = useState(false);
   const [selectedCrypto, setSelectedCrypto] = useState<string | null>(null);
@@ -63,7 +62,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [profilePic, setProfilePic] = useState('/images/default-avatar.png');
   const [balance, setBalance] = useState<number>(0);
-  const [currency, setCurrency] = useState('cad'); // Ajout de l'état pour la devise
+  const [currency, setCurrency] = useState('cad'); // État pour la devise
   const [amount, setAmount] = useState<number>(0);
   const [transactionType, setTransactionType] = useState<'buy' | 'sell' | null>(null);
 
@@ -85,13 +84,25 @@ export default function DashboardPage() {
     }
 
     try {
+      // Lire la devise depuis localStorage
+      const storedCurrency = localStorage.getItem('currency');
+      if (storedCurrency) {
+        setCurrency(storedCurrency.toLowerCase());
+      }
+
       const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
       const data = await res.json();
 
       if (res.ok) {
         setProfilePic(data.profilePic || '/images/default-avatar.png');
         setBalance(data.balance);
-        setCurrency(data.currency || 'cad'); // Récupérer la devise
+
+        // Mettre à jour la devise si différente
+        if (data.currency && data.currency.toLowerCase() !== storedCurrency?.toLowerCase()) {
+          setCurrency(data.currency.toLowerCase());
+          // Mettre à jour localStorage
+          localStorage.setItem('currency', data.currency.toLowerCase());
+        }
       } else {
         console.error('Error fetching profile data:', data.error);
       }
@@ -118,7 +129,7 @@ export default function DashboardPage() {
     }
   };
 
-  // Fonction pour récupérer les informations sur les cryptomonnaies avec l'API Coin Gecko
+  // Fonction pour récupérer les informations sur les cryptomonnaies avec l'API CoinGecko
   const fetchCryptoData = async () => {
     setLoading(true);
     try {
@@ -130,7 +141,7 @@ export default function DashboardPage() {
         bitcoin: {
           name: 'Bitcoin (BTC)',
           price: `${getCurrencySymbol(currency)}${response.data.bitcoin[currency]}`,
-          change: `${response.data.bitcoin[`${currency}_24h_change`].toFixed(2)}%`,
+          change: `${response.data.bitcoin[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
           marketCap: response.data.bitcoin[`${currency}_market_cap`],
           volume: response.data.bitcoin[`${currency}_24h_vol`],
           low24h: response.data.bitcoin[`${currency}_24h_low`],
@@ -141,7 +152,7 @@ export default function DashboardPage() {
         ethereum: {
           name: 'Ethereum (ETH)',
           price: `${getCurrencySymbol(currency)}${response.data.ethereum[currency]}`,
-          change: `${response.data.ethereum[`${currency}_24h_change`].toFixed(2)}%`,
+          change: `${response.data.ethereum[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
           marketCap: response.data.ethereum[`${currency}_market_cap`],
           volume: response.data.ethereum[`${currency}_24h_vol`],
           low24h: response.data.ethereum[`${currency}_24h_low`],
@@ -152,35 +163,35 @@ export default function DashboardPage() {
         cardano: {
           name: 'Cardano (ADA)',
           price: `${getCurrencySymbol(currency)}${response.data.cardano[currency]}`,
-          change: `${response.data.cardano[`${currency}_24h_change`].toFixed(2)}%`,
+          change: `${response.data.cardano[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
           marketCap: response.data.cardano[`${currency}_market_cap`],
           volume: response.data.cardano[`${currency}_24h_vol`],
           low24h: response.data.cardano[`${currency}_24h_low`],
           high24h: response.data.cardano[`${currency}_24h_high`],
           circulatingSupply: response.data.cardano.circulating_supply,
-          totalSupply: response.data.cardano.total_supply
+          totalSupply: response.data.cardano.total_supply,
         },
         dogecoin: {
           name: 'Dogecoin (DOGE)',
           price: `${getCurrencySymbol(currency)}${response.data.dogecoin[currency]}`,
-          change: `${response.data.dogecoin[`${currency}_24h_change`].toFixed(2)}%`,
+          change: `${response.data.dogecoin[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
           marketCap: response.data.dogecoin[`${currency}_market_cap`],
           volume: response.data.dogecoin[`${currency}_24h_vol`],
           low24h: response.data.dogecoin[`${currency}_24h_low`],
           high24h: response.data.dogecoin[`${currency}_24h_high`],
           circulatingSupply: response.data.dogecoin.circulating_supply,
-          totalSupply: response.data.dogecoin.total_supply
+          totalSupply: response.data.dogecoin.total_supply,
         },
         solana: {
           name: 'Solana (SOL)',
           price: `${getCurrencySymbol(currency)}${response.data.solana[currency]}`,
-          change: `${response.data.solana[`${currency}_24h_change`].toFixed(2)}%`,
+          change: `${response.data.solana[`${currency}_24h_change`]?.toFixed(2) || '0.00'}%`,
           marketCap: response.data.solana[`${currency}_market_cap`],
           volume: response.data.solana[`${currency}_24h_vol`],
           low24h: response.data.solana[`${currency}_24h_low`],
           high24h: response.data.solana[`${currency}_24h_high`],
           circulatingSupply: response.data.solana.circulating_supply,
-          totalSupply: response.data.solana.total_supply
+          totalSupply: response.data.solana.total_supply,
         },
       });
     } catch (error) {
@@ -244,7 +255,7 @@ export default function DashboardPage() {
         value: transactionValue,
         date: new Date(),
       };
-      
+
       const response = await axios.post(`/api/transactions`, transactionData);
       console.log('Transaction réussie', response.data);
       setBalance(response.data.balance);
@@ -256,21 +267,40 @@ export default function DashboardPage() {
     setTransactionType(null);
   };
 
+  // Effet pour récupérer les données du profil
   useEffect(() => {
     fetchProfileData();
   }, []);
 
+  // Effet pour récupérer les données des cryptomonnaies lorsque la devise change
   useEffect(() => {
     if (currency) {
       fetchCryptoData();
     }
   }, [currency]);
 
+  // Effet pour récupérer l'historique des prix lorsque la crypto ou la devise change
   useEffect(() => {
     if (selectedCrypto) {
       fetchPriceHistory(selectedCrypto);
     }
   }, [selectedCrypto, currency]);
+
+  // Effet pour mettre à jour la devise lorsque la fenêtre reçoit le focus
+  useEffect(() => {
+    const handleWindowFocus = () => {
+      const storedCurrency = localStorage.getItem('currency');
+      if (storedCurrency && storedCurrency !== currency) {
+        setCurrency(storedCurrency.toLowerCase());
+      }
+    };
+
+    window.addEventListener('focus', handleWindowFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleWindowFocus);
+    };
+  }, [currency]);
 
   const handleCryptoSelect = (crypto: string) => {
     setSelectedCrypto(crypto);
@@ -418,7 +448,7 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-2">
               <Link href="/Depot">
                 <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
-                  💸 Dépot
+                  💸 Dépôt
                 </span>
               </Link>
             </div>
