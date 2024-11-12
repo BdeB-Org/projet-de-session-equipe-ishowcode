@@ -3,7 +3,8 @@ Lazuli est un simulateur de cryptomonnaies conçu pour reproduire les dynamiques
 
 
 
-<img width="959" alt="Page accueil" src="https://github.com/user-attachments/assets/94f78532-40e2-4e16-8a6a-cea0580b0db3">
+<img width="959" alt="Page accueil" src="https://github.com/user-attachments/assets/b0a3bc51-9395-45a7-ae47-52ea782ae0ba">
+
 
 
 Pour exécuter **Lazuli**, voici les étapes générales à suivre :
@@ -65,10 +66,11 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
 
  **Présentation du page Page Accueil :**
 
- Dans la page d'acceuil, vous pouvez créer un compte si vous etes un nouveau utilisateur, sinon si vous êtes déja un membre vous pouvez vous connecter. De plus, il y a un bouton d'assistance où vous pouvez demander des questions à Gemini et il y a option de voir la page a propos ou d'avoir de l'aide.
+ Dans la page d'acceuil, vous pouvez créer un compte si vous etes un nouveau utilisateur, sinon si vous êtes déja un membre vous pouvez vous connecter. Vous pouvez modifier l'apparence du site avec le mode sombre ou mode clair. De plus, il y a un bouton d'assistance où vous pouvez demander des questions à Gemini et il y a option de voir la page a propos ou d'avoir de l'aide.
 
 
-<img width="1503" alt="image" src="https://github.com/user-attachments/assets/59fa4ada-7cbe-4596-b8a2-f5fb196b594a">
+<img width="959" alt="Page D'accueil" src="https://github.com/user-attachments/assets/d3a7d52b-a435-4d3b-a86d-9e228652d57a">
+
 
 
 
@@ -131,13 +133,15 @@ Dans la page de profil, l'utilisateur peut voir ses informations personnels et i
 
 **Présentation du Page Explorer les cryptos :**
 
-Dans la page de explorer les crytos, l'utilisateur peut voir les cryptos monnaies qu'il peut acheter (l'unite d'achat est en crypto et non en dollars).
+Dans la page de explorer les crytos, l'utilisateur peut voir les cryptos monnaies qu'il peut acheter (l'unite d'achat est en crypto et non en dollars). De plus, il y a aussi l'affichage de la cryptomonnaie avec la plus grande hausse du jour.
 
-<img width="959" alt="Explorer Crypto" src="https://github.com/user-attachments/assets/20413c7e-5662-473f-95a9-43bb30eb90f5">
+<img width="959" alt="Explorer Crypto"  src="https://github.com/user-attachments/assets/687b11d0-4c29-46b8-bf88-0c09bfcc14db">
 
-Lorsque l'utilisateur choisi un cryto monnaie, il peut l'acheter et vendre son crypto monnaie et il peut voir le prix historique.
 
-<img width="959" alt="Acheter Crypto" src="https://github.com/user-attachments/assets/6d877ac7-6668-46c9-88b5-8d1de13bad21">
+Lorsque l'utilisateur choisi un cryto monnaie, il peut l'acheter et vendre son crypto monnaie et il peut voir les informations supplémenataires sur le crypto sélectionné.
+
+<img width="959" alt="Acheter Crypto"  src="https://github.com/user-attachments/assets/a149e91e-c726-475e-8f89-ca9648a7a6c8">
+
 
 **Présentation du Page Dépôt d'Argent :**
 
@@ -149,9 +153,10 @@ Dans la page dépôt d'argent, l'utilisateur peut ajoutez un montant de son choi
 
 **Présentation du Page Modification Profil :**
 
-Dans la page modification profil, l'utilisateur peut changer ses informations personnelles comme son nom et il a l'option d'ajouter son date de naissance et l'utilisateur peut modifier son mot de passe.
+Dans la page modification profil, l'utilisateur peut changer ses informations personnelles comme son nom,l'option d'ajouter son date de naissance, changer sa devise (CAD,USD,EUR,GBP,IDR) et l'utilisateur peut modifier son mot de passe.
 
-<img width="959" alt="image" src="https://github.com/user-attachments/assets/5e64f2db-ad61-4471-8997-77224d7da907">
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/0e7a8f67-05d2-404f-a362-b7b19c46811e">
+
 
 **Présentation du Page Réinitialiser votre mot de passe :**
 
