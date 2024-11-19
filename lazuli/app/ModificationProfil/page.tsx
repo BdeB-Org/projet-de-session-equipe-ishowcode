@@ -28,7 +28,11 @@ export default function ModificationProfilPage() {
 
   // Fonction pour gérer la déconnexion
   const handleLogout = () => {
-    router.push('/');
+ 
+    localStorage.removeItem('userId'); 
+    localStorage.removeItem('authToken'); 
+  
+    router.push('/'); 
   };
 
   // Fonction pour récupérer les données du profil

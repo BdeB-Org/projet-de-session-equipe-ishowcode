@@ -73,7 +73,11 @@ export default function DashboardPage() {
 
   // Fonction pour gérer la déconnexion
   const handleLogout = () => {
-    router.push('/');
+ 
+    localStorage.removeItem('userId'); 
+    localStorage.removeItem('authToken'); 
+  
+    router.push('/'); 
   };
 
   // Fonction pour récupérer la photo de profil et la devise
@@ -365,6 +369,7 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchProfileData();
   }, []);
+  
 
   // Effet pour récupérer les données des cryptomonnaies lorsque la devise change
   useEffect(() => {

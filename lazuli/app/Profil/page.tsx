@@ -37,7 +37,11 @@ export default function ProfilPage() {
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push('/');
+ 
+    localStorage.removeItem('userId'); 
+    localStorage.removeItem('authToken'); 
+  
+    router.push('/'); 
   };
 
   const handleDeleteAccount = async () => {

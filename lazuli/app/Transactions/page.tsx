@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,11 @@ export default function TransactionsPage() {
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push('/');
+ 
+    localStorage.removeItem('userId'); 
+    localStorage.removeItem('authToken'); 
+  
+    router.replace('/'); 
   };
 
   const fetchProfileData = async () => {
@@ -68,15 +71,14 @@ export default function TransactionsPage() {
     fetchProfileData();
     fetchTransactions();
   }, []);
-  
+
   return (
     <motion.div
       className="flex flex-col min-h-screen bg-[#f8f9fa] text-black"
       initial="hidden"
       animate="visible"
     >
-    
-      <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md">
+      <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md border-b">
         <Link className="flex items-center justify-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
         </Link>
@@ -87,7 +89,6 @@ export default function TransactionsPage() {
           <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
             Transactions
           </Link>
-     
           <Link href="/Profil" className="relative w-8 h-8 rounded-full overflow-hidden">
             <Image
               src={profilePic}
@@ -106,11 +107,10 @@ export default function TransactionsPage() {
         </Button>
       </header>
 
-  
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
 
         <motion.aside
-          className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md"
+          className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md space-y-6"
           variants={containerVariants}
         >
           <nav className="space-y-4">
@@ -123,7 +123,7 @@ export default function TransactionsPage() {
             <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
               🔎 Explore
             </Link>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer" href= "/Depot">
+            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer" href="/Depot">
                 💸 Dépot
             </Link>
             <div className="flex items-center space-x-2">
@@ -140,38 +140,41 @@ export default function TransactionsPage() {
             className="bg-white p-6 rounded-lg shadow-md"
             variants={containerVariants}
           >
-            <h2 className="text-xl font-semibold">Historique des transactions</h2>
+            <h2 className="text-2xl font-semibold text-[#333] mb-4">Historique des transactions</h2>
 
             {transactions.length === 0 ? (
-              <p className="text-gray-600 mt-4">Aucune transaction à afficher pour le moment.</p>
-            ) : (
-              <table className="min-w-full mt-4 table-auto border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="py-2 px-4 border">Type</th>
-                    <th className="py-2 px-4 border">Crypto</th>
-                    <th className="py-2 px-4 border">Montant</th>
-                    <th className="py-2 px-4 border">Valeur</th>
-                    <th className="py-2 px-4 border">Date</th>
-                  </tr>
-                </thead>
-                {/* Decomment apres la foncionnalite d'acaht et vendre de crypto */}
+  <p className="text-gray-600 mt-4">Aucune transaction à afficher pour le moment.</p>
+) : (
+  <div className="overflow-x-auto mt-4">
+    <table className="min-w-full table-auto border-collapse border border-gray-300 rounded-lg shadow-sm">
+      <thead className="bg-gray-100 text-sm text-gray-700">
+        <tr>
+          <th className="py-2 px-4 border">Type</th>
+          <th className="py-2 px-4 border">Crypto</th>
+          <th className="py-2 px-4 border">Montant</th>
+          <th className="py-2 px-4 border">Valeur</th>
+          <th className="py-2 px-4 border">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* 
+        {transactions.map((transaction, index) => (
+          <tr key={index} className={`border-b ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+            <td className="py-2 px-4">{transaction. || 'N/A'}</td>
+            <td className="py-2 px-4">{transaction.selectedCrypto || 'N/A'}</td>
+            <td className="py-2 px-4">{transaction.amount || 'N/A'}</td>
+            <td className="py-2 px-4">{transaction.transactionValue ? `${transaction.transactionValue} €` : 'N/A'}</td>
+            <td className="py-2 px-4">
+              {transaction.date ? new Date(transaction.date).toLocaleString() : 'N/A'}
+            </td>
+          </tr>
+        ))}*/}
+      </tbody>
+    </table>
+  </div>
+)}
 
-                {/* 
-                <tbody>
-                  {transactions.map((transaction, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="py-2 px-4">{transaction.transactionType}</td>
-                      <td className="py-2 px-4">{transaction.selectedCrypto}</td>
-                      <td className="py-2 px-4">{transaction.amount}</td>
-                      <td className="py-2 px-4">{transaction.transactionValue}</td>
-                      <td className="py-2 px-4">{new Date(transaction.date).toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                */}
-              </table>
-            )}
+            
           </motion.div>
         </section>
       </main>
