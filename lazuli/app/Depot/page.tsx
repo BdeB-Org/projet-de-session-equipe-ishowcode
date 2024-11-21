@@ -13,6 +13,7 @@ export default function ProfilPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [balance, setBalance] = useState(0); 
+  const [currency, setCurrency ] = useState('');
   const router = useRouter();
 
   const handleLogout = () => {
@@ -41,6 +42,7 @@ export default function ProfilPage() {
         setName(data.name || '');
         setEmail(data.email || '');
         setBalance(data.balance || 0);  
+        setCurrency(data.currency || '')
       } else {
         console.error("Error fetching profile data:", data.error);
       }
@@ -104,7 +106,7 @@ export default function ProfilPage() {
         }
   
         setDepositAmount('');
-        setSuccessMessage(`Déposé avec succès: CA$${amount.toFixed(2)}`);
+        setSuccessMessage(`Déposé avec succès: ${amount.toLocaleString(undefined, {maximumFractionDigits:2})}`);
         setErrorMessage('');
       } catch (error) {
         console.error("Error updating balance:", error);
@@ -113,6 +115,23 @@ export default function ProfilPage() {
     } else {
       setErrorMessage("Veuillez entrer un montant valide.");
       setSuccessMessage('');
+    }
+  };
+
+  const getCurrencySymbol = (currencyCode: string) => {
+    switch (currencyCode.toUpperCase()) {
+      case 'USD':
+        return '$';
+      case 'EUR':
+        return '€';
+      case 'GBP':
+        return '£';
+      case 'CAD':
+        return 'CA$';
+      case 'IDR':
+        return 'Rp';
+      default:
+        return currencyCode.toUpperCase() + '$';
     }
   };
 
@@ -140,7 +159,7 @@ export default function ProfilPage() {
             <p className="text-lg">Ajoutez un montant à votre compte</p>
             <p className="text-sm text-gray-400">Veuillez noter que les montants affichés ne sont pas réels.</p>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-            {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
+            {successMessage && <p className="text-green-500 mb-4">{successMessage} {getCurrencySymbol(currency)}</p>}
           </div>
 
           <div className="flex flex-col items-center">
@@ -163,7 +182,7 @@ export default function ProfilPage() {
             <h2 className="text-2xl font-bold mb-2">Informations du Compte</h2>
             <p className="text-gray-300">Nom: {name}</p>
             <p className="text-gray-300">Email: {email}</p>
-            <p className="text-gray-300">Solde: CA${balance.toFixed(2)}</p>
+            <p className="text-gray-300">Solde: {balance.toLocaleString(undefined, {maximumFractionDigits:2})} {getCurrencySymbol(currency)} ({currency})</p>
             <Button 
               onClick={handleResetBalance} 
               className="mt-4 text-center bg-red-500 hover:bg-red-600 transition duration-300 "

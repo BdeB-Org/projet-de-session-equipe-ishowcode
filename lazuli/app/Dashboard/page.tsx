@@ -79,6 +79,16 @@ export default function DashboardPage() {
   
     router.push('/'); 
   };
+  const fetchBalance = async () => {
+    try {
+      const response = await axios.get(`/api/getBalance?userId=your_user_id`);
+      if (response.data) {
+        setBalance(response.data.balance);
+      }
+    } catch (error) {
+      console.error('Error fetching balance:', error);
+    }
+  };
 
   // Fonction pour récupérer la photo de profil et la devise
   const fetchProfileData = async () => {
@@ -370,6 +380,9 @@ export default function DashboardPage() {
     fetchProfileData();
   }, []);
   
+  useEffect(() => {
+    fetchBalance();
+  }, []);
 
   // Effet pour récupérer les données des cryptomonnaies lorsque la devise change
   useEffect(() => {
@@ -574,7 +587,7 @@ export default function DashboardPage() {
                 <h2 className="text-xl font-semibold text-[#5d3fd3]">Votre Solde</h2>
                 <p className="text-2xl font-bold text-black">
                   {getCurrencySymbol(currency)}
-                  {balance ? balance.toFixed(2) : '0.00'}
+                  {balance ? balance.toLocaleString(undefined, {maximumFractionDigits:2}) : '0.00'}
                 </p>
                 <BalanceChart />
               </div>

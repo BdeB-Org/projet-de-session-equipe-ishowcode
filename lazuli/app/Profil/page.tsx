@@ -221,7 +221,7 @@ export default function ProfilPage() {
                 <p className="text-lg font-medium">Montant Argent :</p>
                 <p className="text-lg">
                   {getCurrencySymbol(currency)}
-                  {balance.toFixed(2)}
+                  {balance.toLocaleString(undefined, {maximumFractionDigits:2})}
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row justify-between">

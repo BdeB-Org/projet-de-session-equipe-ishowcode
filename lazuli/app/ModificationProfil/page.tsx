@@ -341,7 +341,7 @@ export default function ModificationProfilPage() {
               <p className="text-lg font-semibold">Solde :</p>
               <p className="text-lg">
                 {getCurrencySymbol(currency)}
-                {displayBalance.toFixed(2)}
+                {displayBalance.toLocaleString(undefined, {maximumFractionDigits:2})}
               </p>
             </div>
 
