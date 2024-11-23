@@ -170,8 +170,6 @@ export default function QuizPage() {
           )}
         </section>
       </main>
-
-      
       <ChatIcon/>
     </motion.div>
   );
