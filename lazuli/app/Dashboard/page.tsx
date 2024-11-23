@@ -23,6 +23,10 @@ import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import BalanceChart from '@/components/balanceChart/page';
 import CryptoOfTheDay from '../dailycrypto/page';
+import searchLogoImg from '../Images/search.png';
+import depotLogoImg from '../Images/money.png'
+import quizLogoImg from '../Images/quiz_logo.png'
+import ChatIcon from '@/components/chatIcon';
 
 // Enregistrement des composants de graphique
 ChartJS.register(
@@ -546,17 +550,19 @@ export default function DashboardPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
+            <Image src={searchLogoImg} alt="Transaction Icon" width={30} height={30} />
               <span
                 className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer"
                 onClick={() => setShowExplore(true)}
               >
-                🔎 Explorer
+                Explorer
               </span>
             </div>
             <div className="flex items-center space-x-2">
+            <Image src={depotLogoImg} alt="Transaction Icon" width={30} height={30} />
               <Link href="/Depot">
                 <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
-                  💸 Dépôt
+                  Dépôt
                 </span>
               </Link>
             </div>
@@ -564,6 +570,12 @@ export default function DashboardPage() {
               <Image src={transactionLogoImg} alt="Transaction Icon" width={30} height={30} />
               <Link href="/Transactions">
                 <span className="text-lg font-semibold hover:text-[#5d3fd3]">Transactions</span>
+              </Link>
+            </div>
+            <div className="flex items-center space-x-2">
+            <Image src={quizLogoImg.src} alt="Transaction Icon" width={30} height={30} />
+              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Quiz">
+                Quiz d'Investissement
               </Link>
             </div>
           </nav>
@@ -735,6 +747,7 @@ export default function DashboardPage() {
           )}
         </section>
       </main>
+      <ChatIcon />
     </motion.div>
   );
 }

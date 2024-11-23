@@ -5,9 +5,12 @@ import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from 'next/image';
-import myImage from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import { useRouter } from 'next/navigation';
+import depotLogoImg from '../Images/money.png'
+import quizLogoImg from '../Images/quiz_logo.png'
+import transactionLogoImg from '../Images/transaction_logo.webp';
+import ChatIcon from '@/components/chatIcon';
 
 // Animation 
 const containerVariants = {
@@ -115,21 +118,31 @@ export default function TransactionsPage() {
         >
           <nav className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Image src={accueilLogoImg.src} alt="Accueil Icon" width={30} height={30} />
-              <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-                Accueil
+              <Image src={accueilLogoImg} alt="Accueil Icon" width={30} height={30} />
+              <Link href="/Dashboard" replace>
+                <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
+                  Accueil
+                </span>
               </Link>
             </div>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3]" href="/Dashboard">
-              🔎 Explore
-            </Link>
-            <Link className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer" href="/Depot">
-                💸 Dépot
-            </Link>
             <div className="flex items-center space-x-2">
-              <Image src={myImage.src} alt="Transaction Icon" width={30} height={30} />
-              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Transactions">
-                Transactions
+            <Image src={depotLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Link href="/Depot">
+                <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
+                  Dépôt
+                </span>
+              </Link>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Image src={transactionLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Link href="/Transactions">
+                <span className="text-lg font-semibold hover:text-[#5d3fd3]">Transactions</span>
+              </Link>
+            </div>
+            <div className="flex items-center space-x-2">
+            <Image src={quizLogoImg.src} alt="Transaction Icon" width={30} height={30} />
+              <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Quiz">
+                Quiz d'Investissement
               </Link>
             </div>
           </nav>
@@ -172,12 +185,11 @@ export default function TransactionsPage() {
       </tbody>
     </table>
   </div>
-)}
-
-            
+)}  
           </motion.div>
         </section>
       </main>
+      <ChatIcon/>
     </motion.div>
   );
 }
