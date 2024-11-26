@@ -545,16 +545,21 @@ export default function DashboardPage() {
           <nav className="space-y-4">
             <div className="flex items-center space-x-2">
               <Image src={accueilLogoImg} alt="Accueil Icon" width={30} height={30} />
-              <Link href="/Dashboard" replace>
-                <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
-                  Accueil
-                </span>
-              </Link>
+              <span
+                className={`block py-2 text-lg font-semibold cursor-pointer ${
+                  !showExplore ? 'text-[#5d3fd3]' : 'hover:text-[#5d3fd3] text-black'
+                }`}
+                onClick={() => setShowExplore(false)}
+              >
+                Accueil
+              </span>
             </div>
             <div className="flex items-center space-x-2">
-              <Image src={searchLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Image src={searchLogoImg} alt="Explorer Icon" width={30} height={30} />
               <span
-                className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer"
+                className={`block py-2 text-lg font-semibold cursor-pointer ${
+                  showExplore ? 'text-[#5d3fd3]' : 'hover:text-[#5d3fd3] text-black'
+                }`}
                 onClick={() => setShowExplore(true)}
               >
                 Explorer
