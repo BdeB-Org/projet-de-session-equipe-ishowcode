@@ -1,14 +1,16 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from "next/navigation";
 
-export default function SignupPage() {
+export default function SignUpPage() {
   const router = useRouter();
-  //etat du formulaire
+
+  // État du formulaire
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -18,7 +20,7 @@ export default function SignupPage() {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-  
+
   const validatePassword = (password: string) => {
     const minLength = 8;
     const uppercasePattern = /[A-Z]/;
@@ -47,7 +49,7 @@ export default function SignupPage() {
       return;
     }
 
-    //Valider le mot de passe
+    // Valider le mot de passe
     const passwordError = validatePassword(formData.password);
     if (passwordError) {
       setErrorMessage(passwordError);
@@ -57,9 +59,7 @@ export default function SignupPage() {
     try {
       const res = await fetch('/api/signup', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: `${formData.name} ${formData.lastName}`,
           email: formData.email,
@@ -87,36 +87,34 @@ export default function SignupPage() {
       [e.target.name]: e.target.value
     });
   };
-//frontend de la page
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white fade-in">
-      <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">
-        <Link className="flex items-center justify-center" href="/">
-          <span className="font-bold text-xl slide-down">Lazuli</span>
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
+      <header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-700 shadow-md">
+        <Link href="/" className="text-2xl font-extrabold text-blue-300 hover:text-purple-400 transition-all">
+          Lazuli 🌟
         </Link>
       </header>
       <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h2 className="mt-6 text-3xl font-bold slide-down">Créer un compte</h2>
-            <p className="mt-2 text-sm slide-down">
-              Remplissez les informations ci-dessous pour créer votre compte.
-            </p>
+        <div className="w-full max-w-lg bg-gradient-to-r from-purple-700 to-blue-700 p-8 rounded-xl shadow-xl">
+          <div className="text-center mb-6">
+            <h2 className="text-4xl font-extrabold tracking-wide mb-2 slide-down">Bienvenue à bord!</h2>
+            <p className="text-lg text-gray-200 fade-in">Créez votre compte et commencez à pratiquer.</p>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4 rounded-md shadow-sm">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-4">
               <div className="slide-down-form1">
                 <Label htmlFor="name" className="sr-only">Prénom</Label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
-                  autoComplete="name"
+                  autoComplete="given-name"
                   required
                   onChange={handleInputChange}
                   value={formData.name}
-                  className="bg-white text-blue-900 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Prénom"
+                  className="w-full bg-white text-gray-900 placeholder-gray-500 rounded-lg px-4 py-3 shadow-inner"
                 />
               </div>
               <div className="slide-down-form2">
@@ -125,12 +123,12 @@ export default function SignupPage() {
                   id="lastName"
                   name="lastName"
                   type="text"
-                  autoComplete="name"
+                  autoComplete="family-name"
                   required
                   onChange={handleInputChange}
                   value={formData.lastName}
-                  className="bg-white text-blue-900 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Nom"
+                  className="w-full bg-white text-gray-900 placeholder-gray-500 rounded-lg px-4 py-3 shadow-inner"
                 />
               </div>
               <div className="slide-down-form3">
@@ -143,8 +141,8 @@ export default function SignupPage() {
                   required
                   onChange={handleInputChange}
                   value={formData.email}
-                  className="bg-white text-blue-900 placeholder-blue-400 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Adresse e-mail"
+                  className="w-full bg-white text-gray-900 placeholder-gray-500 rounded-lg px-4 py-3 shadow-inner"
                 />
               </div>
               <div className="slide-down-form4">
@@ -157,8 +155,8 @@ export default function SignupPage() {
                   required
                   onChange={handleInputChange}
                   value={formData.password}
-                  className="bg-white text-blue-900 placeholder-blue-150 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Mot de passe"
+                  className="w-full bg-white text-gray-900 placeholder-gray-500 rounded-lg px-4 py-3 shadow-inner"
                 />
               </div>
               <div className="slide-down-form5">
@@ -171,46 +169,38 @@ export default function SignupPage() {
                   required
                   onChange={handleInputChange}
                   value={formData.confirmPassword}
-                  className="bg-white text-blue-900 placeholder-blue-150 focus:ring rounded-full text-lg py-3 px-4"
                   placeholder="Confirmez le mot de passe"
+                  className="w-full bg-white text-gray-900 placeholder-gray-500 rounded-lg px-4 py-3 shadow-inner"
                 />
               </div>
             </div>
 
             {/* Afficher le message d'erreur s'il existe */}
             {errorMessage && (
-              <div className="text-red-500 text-sm mt-2">
+              <div className="text-red-500 text-sm mt-2 fade-in">
                 {errorMessage}
               </div>
             )}
 
-            <div className="slide-down-form6">
-              <div className="hover:animate-pulse">
-                <Button type="submit" className="w-full bg-[#3b3b82] text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full">
-                  S'inscrire
-                </Button>
-              </div>
-            </div>
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform slide-down-form6"
+            >
+              S'inscrire
+            </Button>
           </form>
-          <div className="text-center slide-down-form7">
-            <Link className="text-sm text-blue-300 hover:text-blue-200" href="/login">
-              Vous avez déjà un compte ? Connectez-vous
-            </Link>
+          <div className="mt-6 text-center slide-down-form7">
+            <p className="text-sm text-gray-300">
+              Vous avez déjà un compte ?{' '}
+              <Link href="/login" className="text-purple-200 hover:text-purple-400 transition-all font-semibold">
+                Se connecter
+              </Link>
+            </p>
           </div>
         </div>
       </main>
-      <footer className="py-6 px-4 md:px-6 border-t border-white-700">
-        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-white-400">© 2024 Lazuli. Tous droits réservés.</p>
-          <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
-            <Link className="text-sm text-white-400 hover:text-blue-300" href="#">
-              Conditions d'utilisation
-            </Link>
-            <Link className="text-sm text-white-400 hover:text-blue-300" href="#">
-              Politique de confidentialité
-            </Link>
-          </nav>
-        </div>
+      <footer className="py-6 px-4 border-t border-gray-700 text-center text-sm text-gray-400">
+        © 2024 Lazuli. Créé pour des stars comme vous !
       </footer>
       <style jsx global>{`
         @tailwind base;
@@ -227,24 +217,25 @@ export default function SignupPage() {
         .slide-down-form1 {
           animation: slideDown 1.8s ease-in-out;
         }
-          .slide-down-form2 {
-          animation: slideDown 2.2s ease-in-out;
+        .slide-down-form2 {
+          animation: slideDown 2.1s ease-in-out;
         }
-          .slide-down-form3 {
-          animation: slideDown 2.6s ease-in-out;
+        .slide-down-form3 {
+          animation: slideDown 2.4s ease-in-out;
         }
-          .slide-down-form4 {
-          animation: slideDown 3.0s ease-in-out;
+        .slide-down-form4 {
+          animation: slideDown 2.7s ease-in-out;
         }
-          .slide-down-form5 {
-          animation: slideDown 3.4s ease-in-out;
+        .slide-down-form5 {
+          animation: slideDown 3s ease-in-out;
         }
         .slide-down-form6 {
-          animation: slideUp 1.5s ease-in-out;
+          animation: slideUp 2.4s ease-in-out;
         }
-          .slide-down-form7 {
-          animation: slideUp 2s ease-in-out;
+        .slide-down-form7 {
+          animation: slideUp 2.6s ease-in-out;
         }
+
         @keyframes fadeIn {
           from {
             opacity: 0.5;
@@ -264,7 +255,7 @@ export default function SignupPage() {
             opacity: 1;
           }
         }
-          @keyframes slideUp {
+        @keyframes slideUp {
           from {
             transform: translateY(100px);
             opacity: 0;
