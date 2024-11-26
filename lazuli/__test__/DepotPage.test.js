@@ -1,6 +1,12 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ProfilPage from './ProfilPage'; // Adjust the import as necessary
+import ProfilPage from './SignupPage.test';
 import { useRouter } from 'next/navigation';
+
+//Test pour la page depot
+/**
+ * Test de depot, retirer et deconnecter
+ */
+
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
@@ -16,10 +22,8 @@ describe('ProfilPage Component', () => {
   });
 
   it('should render correctly and display user data', async () => {
-    // Mock localStorage data
     localStorage.setItem('userId', 'mockUserId');
 
-    // Mock fetch response for profile data
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -35,7 +39,7 @@ describe('ProfilPage Component', () => {
     await waitFor(() => screen.getByText('era n'));
     await waitFor(() => screen.getByText('era@gmail.com'));
 
-    // check de afficages
+    // verification d'affichages
     expect(screen.getByText('Nom: era n')).toBeInTheDocument();
     expect(screen.getByText('Email: john@example.com')).toBeInTheDocument();
     expect(screen.getByText('Solde: 1,000.00 $ (USD)')).toBeInTheDocument();
