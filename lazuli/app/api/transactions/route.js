@@ -8,14 +8,14 @@ async function connectToDatabase() {
   }
   const client = new MongoClient(uri);
   await client.connect();
-  return client.db();
+
+  const dbName = 'lazulibd'; 
+  const db = client.db(dbName);
+  return db;
 }
 
 export async function GET(req) {
-  
   try {
-
-    
     const { userId } = req.nextUrl.searchParams;
 
     if (!userId || !ObjectId.isValid(userId)) {
@@ -25,18 +25,12 @@ export async function GET(req) {
     const db = await connectToDatabase();
     const transactionsCollection = db.collection('transactions');
 
-          const transactions = await transactionsCollection
-        .find({ userId: new ObjectId(userId) })
-        .sort({ date: -1 })
-        .toArray();
+    const transactions = await transactionsCollection
+      .find({ userId: new ObjectId(userId) })
+      .sort({ date: -1 })
+      .toArray();
 
-      // Validate data format if necessary
-      if (!Array.isArray(transactions)) {
-        return NextResponse.json({ error: "Invalid data format for transactions" }, { status: 500 });
-      }
-
-      return NextResponse.json({ transactions }, { status: 200 });
-
+    return NextResponse.json({ transactions }, { status: 200 });
   } catch (error) {
     console.error('Error fetching transaction history:', error.message, error.stack);
     return NextResponse.json({ message: 'Internal server error', details: error.message }, { status: 500 });
@@ -45,7 +39,6 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    
     const { userId, type, crypto, amount, value, date } = await req.json();
 
     if (!ObjectId.isValid(userId)) {
@@ -53,51 +46,67 @@ export async function POST(req) {
     }
 
     const db = await connectToDatabase();
-    const usersCollection = db.collection('utilisateur');
+    const usersCollection = db.collection('utilisateur'); 
     const transactionsCollection = db.collection('transactions');
 
-   // Recherche de l'utilisateur dans la base de données avec l'ID fourni.
+    // Recherche de l'utilisateur dans la base de données avec l'ID fourni.
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-    // Si l'utilisateur n'est pas trouvé, renvoyer une réponse message d'erreur.
     if (!user) {
       console.error('User not found for userId:', userId);
-      return NextResponse.json({ message: 'User not found' }, { status: 404 ,  details: error.message });
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
+    
+    // Conversion des valeurs en nombres
+    const numericValue = Number(value);
+    const numericAmount = Number(amount);
+    const userBalance = Number(user.balance);
 
     let updatedBalance;
-    // Vérification qu'il a un solde suffisant pour l'achat
+    let updatedPortfolio = user.portfolio || {};
+
+    // Vérification du type de transaction et mise à jour du solde et du portefeuille
     if (type === 'buy') {
-      if (user.balance < value) {
+      if (userBalance < numericValue) {
         return NextResponse.json({ message: 'Insufficient balance' }, { status: 400 });
       }
-      updatedBalance = user.balance - value;
+      updatedBalance = userBalance - numericValue;
+      updatedPortfolio[crypto] = (updatedPortfolio[crypto] || 0) + numericAmount;
     } else if (type === 'sell') {
-      updatedBalance = user.balance + value;
+      if (!updatedPortfolio[crypto] || updatedPortfolio[crypto] < numericAmount) {
+        return NextResponse.json({ message: 'Insufficient crypto balance' }, { status: 400 });
+      }
+      updatedBalance = userBalance + numericValue;
+      updatedPortfolio[crypto] -= numericAmount;
+      if (updatedPortfolio[crypto] <= 0) {
+        delete updatedPortfolio[crypto];
+      }
     } else {
       return NextResponse.json({ message: 'Invalid transaction type' }, { status: 400 });
     }
-     // Mise à jour du solde de l'utilisateur dans la base de données.
-    await usersCollection.updateOne(
+
+    // Mise à jour du solde et du portefeuille de l'utilisateur dans la base de données.
+    const updateResult = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
-      { $set: { balance: updatedBalance } }
+      { $set: { balance: updatedBalance, portfolio: updatedPortfolio } }
     );
 
-    try {
-      // Insertion de la transaction dans la collection des transactions.
-      await transactionsCollection.insertOne({
-        userId: new ObjectId(userId),
-        transactionType: type,        
-        selectedCrypto: crypto,      
-        amount: amount,
-        transactionValue: value,
-        date: new Date(date),         
-      });
-      console.log("Transaction inserted successfully");
-    } catch (error) {
-      return NextResponse.json({ message: 'Cant access database', details: error.message }, { status: 500 });
+    if (updateResult.modifiedCount === 0) {
+      console.error('Failed to update user data for userId:', userId);
+      return NextResponse.json({ message: 'Failed to update user data' }, { status: 500 });
     }
 
-    return NextResponse.json({ balance: updatedBalance }, { status: 200 });
+    // Insertion de la transaction dans la collection des transactions.
+    await transactionsCollection.insertOne({
+      userId: new ObjectId(userId),
+      transactionType: type,
+      selectedCrypto: crypto,
+      amount: numericAmount,
+      transactionValue: numericValue,
+      date: new Date(date),
+    });
+    console.log("Transaction inserted successfully");
+
+    return NextResponse.json({ balance: updatedBalance, portfolio: updatedPortfolio }, { status: 200 });
   } catch (error) {
     console.error('Error processing transaction:', error.message, error.stack);
     return NextResponse.json({ message: 'Internal server error', details: error.message }, { status: 500 });
