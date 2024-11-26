@@ -27,6 +27,8 @@ import searchLogoImg from '../Images/search.png';
 import depotLogoImg from '../Images/money.png'
 import quizLogoImg from '../Images/quiz_logo.png'
 import ChatIcon from '@/components/chatIcon';
+import CryptoConverter from '../CryptoConverter/page';
+import InfoDuJour from '../InfoDuJour/page';
 
 // Enregistrement des composants de graphique
 ChartJS.register(
@@ -77,11 +79,11 @@ export default function DashboardPage() {
 
   // Fonction pour gérer la déconnexion
   const handleLogout = () => {
- 
-    localStorage.removeItem('userId'); 
-    localStorage.removeItem('authToken'); 
-  
-    router.push('/'); 
+
+    localStorage.removeItem('userId');
+    localStorage.removeItem('authToken');
+
+    router.push('/');
   };
   const fetchBalance = async () => {
     try {
@@ -383,7 +385,7 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchProfileData();
   }, []);
-  
+
   useEffect(() => {
     fetchBalance();
   }, []);
@@ -550,7 +552,7 @@ export default function DashboardPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-            <Image src={searchLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Image src={searchLogoImg} alt="Transaction Icon" width={30} height={30} />
               <span
                 className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer"
                 onClick={() => setShowExplore(true)}
@@ -559,7 +561,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="flex items-center space-x-2">
-            <Image src={depotLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Image src={depotLogoImg} alt="Transaction Icon" width={30} height={30} />
               <Link href="/Depot">
                 <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
                   Dépôt
@@ -573,7 +575,7 @@ export default function DashboardPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-            <Image src={quizLogoImg.src} alt="Transaction Icon" width={30} height={30} />
+              <Image src={quizLogoImg.src} alt="Transaction Icon" width={30} height={30} />
               <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Quiz">
                 Quiz d'Investissement
               </Link>
@@ -599,9 +601,15 @@ export default function DashboardPage() {
                 <h2 className="text-xl font-semibold text-[#5d3fd3]">Votre Solde</h2>
                 <p className="text-2xl font-bold text-black">
                   {getCurrencySymbol(currency)}
-                  {balance ? balance.toLocaleString(undefined, {maximumFractionDigits:2}) : '0.00'}
+                  {balance ? balance.toLocaleString(undefined, { maximumFractionDigits: 2 }) : '0.00'}
                 </p>
                 <BalanceChart />
+              </div>
+              <div className="mt-4"> 
+                <CryptoConverter />
+              </div>
+              <div className="mt-4"> 
+                <InfoDuJour />
               </div>
             </motion.div>
           ) : selectedCrypto ? (
