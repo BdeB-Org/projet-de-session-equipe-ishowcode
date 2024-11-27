@@ -79,7 +79,8 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
 Dans la page creation un compte, l'utilisateur peut créer un compte sur Lazuli en remplir le formulaire. Dans le formulaire, vous devez inclure votre Prénom,Nom,Adresse courriel, un mot de passe avec un minimum de 8 caractères, un lettre majuscule, un caractère speciale, un chiffre. De plus, vous devez récrir le mot passe pour assurer la création du compte. Si l'utilisateur a déja un compte , il peut aller dans le lien pour se connecter.
 
 
-<img width="959" alt="Page Devenir un membre" src="https://github.com/user-attachments/assets/d7c59df8-f79e-49a9-a48e-28f63f048060">
+<img width="959" alt="Page Devenir un membre" src="https://github.com/user-attachments/assets/fe83eb52-dd3a-4be1-9864-c8af80a9d4a0">
+
 
 
 
@@ -87,14 +88,16 @@ Dans la page creation un compte, l'utilisateur peut créer un compte sur Lazuli 
 
 Dans la page se connecter, l'utilisateur doit rentrer son courriel et son mot de passe pour accéder à son compte de Lazuli. Si l'utilisateur à oublier son mot de passe alors il peut le réinitialiser avec le lien mot passe oublié.
 
-<img width="959" alt="Page Se Connecte" src="https://github.com/user-attachments/assets/51f42f24-ca8a-4adf-9ab3-f5a15b9beca5">
+<img width="959" alt="Page Se Connecte" src="https://github.com/user-attachments/assets/317d8f83-9527-4f55-aa13-f181f5c42339">
+
 
 
  **Présentation du Page À propos :**
 
 Dans la page à propos, on explique qui nous sommes et c'est quoi notre but.
 
-<img width="959" alt="Page À propos" src="https://github.com/user-attachments/assets/a2bf4469-4491-460e-8b01-df9a2b0be3f9">
+<img width="959" alt="Page À propos" src="https://github.com/user-attachments/assets/d2f3bc0e-1c41-4d7f-a91b-b946a9f7b89c">
+
 
 
 
@@ -110,7 +113,8 @@ Dans la page aide, vous pouvez cherchez des informations sur les fonctionnalité
 
 Dans la page du dashboard, l'utilisateur peut voir l'argent qu'il a et il a des options pour acheter,vendre,convertir et dépot. De plus, vous avez l'option de voir votre page de transaction et votre page de profile et vous pouvez déconnecter votre compte.
 
-<img width="959" alt="Page Dashboard" src="https://github.com/user-attachments/assets/c2999268-591c-4376-bd7e-f3a09d3ef56e">
+<img width="959" alt="Page Dashboard" src="https://github.com/user-attachments/assets/e8a45fc8-dbf9-4148-863d-26818b704d77">
+
 
 
 
@@ -118,7 +122,7 @@ Dans la page du dashboard, l'utilisateur peut voir l'argent qu'il a et il a des 
 
 Dans la page de transaction, l'utilisateur pouvez voir les achats que vous avez faites.
 
-<img width="959" alt="Page Transaction" src="https://github.com/user-attachments/assets/167c5fc8-db8c-4cc9-a740-4970f26ecbeb">
+<img width="959" alt="Page Transaction" src="https://github.com/user-attachments/assets/1496f0af-5193-4dca-9bed-8c764ac6e8fc">
 
 
 
@@ -126,7 +130,8 @@ Dans la page de transaction, l'utilisateur pouvez voir les achats que vous avez 
 
 Dans la page de profil, l'utilisateur peut voir ses informations personnels et il a l'option de modifier son profil ou supprimer son compte.
 
-<img width="959" alt="Page Profil" src="https://github.com/user-attachments/assets/b43579e2-8fa1-4aed-bd73-7dd79674de1a">
+<img width="959" alt="Page Profil"  src="https://github.com/user-attachments/assets/49b561cf-00a0-427f-af69-655ef63c4400">
+
 
 
 
@@ -135,19 +140,28 @@ Dans la page de profil, l'utilisateur peut voir ses informations personnels et i
 
 Dans la page de explorer les crytos, l'utilisateur peut voir les cryptos monnaies qu'il peut acheter (l'unite d'achat est en crypto et non en dollars). De plus, il y a aussi l'affichage de la cryptomonnaie avec la plus grande hausse du jour.
 
-<img width="959" alt="Explorer Crypto"  src="https://github.com/user-attachments/assets/687b11d0-4c29-46b8-bf88-0c09bfcc14db">
+<img width="959" alt="Explorer Crypto"  src="https://github.com/user-attachments/assets/d33b4c50-4cda-4291-9509-398b2ee93cc5">
 
 
 Lorsque l'utilisateur choisi un cryto monnaie, il peut l'acheter et vendre son crypto monnaie et il peut voir les informations supplémenataires sur le crypto sélectionné.
 
-<img width="959" alt="Acheter Crypto"  src="https://github.com/user-attachments/assets/a149e91e-c726-475e-8f89-ca9648a7a6c8">
+<img width="959" alt="Acheter Crypto"  src="https://github.com/user-attachments/assets/277c570a-e8cd-4720-b857-b422b2a80e7d">
+
+
 
 
 **Présentation du Page Dépôt d'Argent :**
 
 Dans la page dépôt d'argent, l'utilisateur peut ajoutez un montant de son choix. De plus, il peut voir son solde et réinitialser le solde.
 
-<img width="959" alt="Dépôt d'Argent" src="https://github.com/user-attachments/assets/f36fe410-dce8-4409-9c11-d88822067bb1">
+<img width="959" alt="Dépôt d'Argent"  src="https://github.com/user-attachments/assets/2367a5eb-c760-4786-a9dd-4d12fac4765b">
+
+
+**Présentation du Page Dépôt d'Argent :**
+
+Dans le page Quiz d'Investissement, ce quiz permet à l'utilisateur de déterminer son profil d'investisseur en répondant aux questions du quiz puis en recevant sa réponse par Gemini
+
+<img width="959" alt="Quiz d'Investissement" src="https://github.com/user-attachments/assets/61e8ee96-bdcb-4dd9-be21-f75bd316775e">
 
 
 
