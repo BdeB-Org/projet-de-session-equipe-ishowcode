@@ -4,12 +4,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from './LoginPage';
 import { useRouter } from 'next/navigation';
 
-// Mock the useRouter hook from Next.js
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }));
 
-// Mock the fetch API
 global.fetch = jest.fn();
 
 describe('LoginPage Component', () => {
@@ -27,16 +25,16 @@ describe('LoginPage Component', () => {
   it('renders the login form correctly', () => {
     render(<LoginPage />);
 
-    // Check for email input
+    // Vérifier la saisie de l'email
     expect(screen.getByPlaceholderText('Adresse e-mail')).toBeInTheDocument();
 
-    // Check for password input
+    // Vérifier la saisie du mot de passe
     expect(screen.getByPlaceholderText('Mot de passe')).toBeInTheDocument();
 
-    // Check for submit button
+    // Vérifier le bouton de soumission
     expect(screen.getByRole('button', { name: /Se connecter/i })).toBeInTheDocument();
 
-    // Check for signup link
+    // Vérifier le lien d'inscription
     expect(screen.getByText(/S'inscrire/i)).toBeInTheDocument();
   });
 
@@ -173,16 +171,10 @@ describe('LoginPage Component', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      // Since the form has required fields, the browser should handle it,
-      // but React Testing Library doesn't trigger browser validations.
-      // Alternatively, you can simulate the form submission and check for alerts or state.
-      // Here, assuming you have custom validation, you can check for alert.
-      // If not, this test might not be necessary.
+     
     });
 
-    // Depending on your implementation, assert accordingly
-    // For example:
-    // expect(window.alert).toHaveBeenCalledWith('Please fill in all fields.');
+  
   });
 
   it('navigates to password reset page when "Mot de passe oublié ?" is clicked', () => {
