@@ -16,7 +16,7 @@ async function connectToDatabase() {
 
 export async function GET(req) {
   try {
-    const { userId } = req.nextUrl.searchParams;
+    const userId = req.nextUrl.searchParams.get('userId');
 
     if (!userId || !ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Invalid or missing user ID" }, { status: 400 });

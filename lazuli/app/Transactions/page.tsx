@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from 'next/image';
+import Image from "next/image";
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import { useRouter } from 'next/navigation';
 import depotLogoImg from '../Images/money.png'
@@ -12,7 +12,14 @@ import quizLogoImg from '../Images/quiz_logo.png'
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import ChatIcon from '@/components/chatIcon';
 
-// Animation 
+interface Transaction {
+  transactionType: string;
+  selectedCrypto: string;
+  amount: number;
+  transactionValue: number;
+  date: string;
+}
+
 const containerVariants = {
   hidden: { opacity: 0, x: -50 },
   visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 60 } },
@@ -20,20 +27,17 @@ const containerVariants = {
 
 export default function TransactionsPage() {
   const [profilePic, setProfilePic] = useState('/images/default-avatar.png');
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const router = useRouter();
 
   const handleLogout = () => {
- 
-    localStorage.removeItem('userId'); 
-    localStorage.removeItem('authToken'); 
-  
-    router.replace('/'); 
+    localStorage.removeItem('userId');
+    localStorage.removeItem('authToken');
+    router.replace('/');
   };
 
   const fetchProfileData = async () => {
     const userId = localStorage.getItem('userId');
-
     if (!userId) {
       console.error('User ID is missing from localStorage');
       return;
@@ -81,6 +85,7 @@ export default function TransactionsPage() {
       initial="hidden"
       animate="visible"
     >
+      {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-white shadow-md border-b">
         <Link className="flex items-center justify-center" href="/Dashboard">
           <span className="font-bold text-xl text-[#5d3fd3]">Lazuli</span>
@@ -111,7 +116,7 @@ export default function TransactionsPage() {
       </header>
 
       <main className="flex-1 flex flex-col lg:flex-row p-6 gap-6">
-
+        {/* Sidebar */}
         <motion.aside
           className="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md space-y-6"
           variants={containerVariants}
@@ -126,7 +131,7 @@ export default function TransactionsPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-            <Image src={depotLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Image src={depotLogoImg} alt="Dépôt Icon" width={30} height={30} />
               <Link href="/Depot">
                 <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
                   Dépôt
@@ -140,7 +145,7 @@ export default function TransactionsPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-            <Image src={quizLogoImg.src} alt="Transaction Icon" width={30} height={30} />
+              <Image src={quizLogoImg.src} alt="Quiz Icon" width={30} height={30} />
               <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Quiz">
                 Quiz d'Investissement
               </Link>
@@ -156,40 +161,53 @@ export default function TransactionsPage() {
             <h2 className="text-2xl font-semibold text-[#333] mb-4">Historique des transactions</h2>
 
             {transactions.length === 0 ? (
-  <p className="text-gray-600 mt-4">Aucune transaction à afficher pour le moment.</p>
-) : (
-  <div className="overflow-x-auto mt-4">
-    <table className="min-w-full table-auto border-collapse border border-gray-300 rounded-lg shadow-sm">
-      <thead className="bg-gray-100 text-sm text-gray-700">
-        <tr>
-          <th className="py-2 px-4 border">Type</th>
-          <th className="py-2 px-4 border">Crypto</th>
-          <th className="py-2 px-4 border">Montant</th>
-          <th className="py-2 px-4 border">Valeur</th>
-          <th className="py-2 px-4 border">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {/* 
-        {transactions.map((transaction, index) => (
-          <tr key={index} className={`border-b ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-            <td className="py-2 px-4">{transaction. || 'N/A'}</td>
-            <td className="py-2 px-4">{transaction.selectedCrypto || 'N/A'}</td>
-            <td className="py-2 px-4">{transaction.amount || 'N/A'}</td>
-            <td className="py-2 px-4">{transaction.transactionValue ? `${transaction.transactionValue} €` : 'N/A'}</td>
-            <td className="py-2 px-4">
-              {transaction.date ? new Date(transaction.date).toLocaleString() : 'N/A'}
-            </td>
-          </tr>
-        ))}*/}
-      </tbody>
-    </table>
-  </div>
-)}  
+              <p className="text-gray-600 mt-4">Aucune transaction à afficher pour le moment.</p>
+            ) : (
+              <div className="overflow-x-auto mt-4">
+                <table className="min-w-full border-collapse rounded-lg overflow-hidden shadow-sm">
+                  <thead>
+                    <tr className="bg-[#7e5dfc] text-gray-900 text-sm font-semibold uppercase tracking-wider">
+                      <th className="py-3 px-4 border-b border-gray-300 text-left">Type</th>
+                      <th className="py-3 px-4 border-b border-gray-300 text-left">Crypto</th>
+                      <th className="py-3 px-4 border-b border-gray-300 text-left">Montant</th>
+                      <th className="py-3 px-4 border-b border-gray-300 text-left">Valeur</th>
+                      <th className="py-3 px-4 border-b border-gray-300 text-left">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {transactions.map((transaction, index) => {
+                      const isBuy = transaction.transactionType === 'buy';
+                      const rowClass = `border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200 ${
+                        index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                      }`;
+
+                      return (
+                        <tr key={index} className={rowClass}>
+                          <td className={`py-3 px-4 text-sm font-medium ${isBuy ? 'text-green-600' : 'text-red-600'}`}>
+                            {transaction.transactionType || 'N/A'}
+                          </td>
+                          <td className="py-3 px-4 text-sm">{transaction.selectedCrypto || 'N/A'}</td>
+                          <td className="py-3 px-4 text-sm">{transaction.amount || 'N/A'}</td>
+                          <td className="py-3 px-4 text-sm">
+                            {transaction.transactionValue 
+                              ? `${transaction.transactionValue.toLocaleString(undefined, {maximumFractionDigits:2})} €`
+                              : 'N/A'
+                            }
+                          </td>
+                          <td className="py-3 px-4 text-sm">
+                            {transaction.date ? new Date(transaction.date).toLocaleString() : 'N/A'}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </motion.div>
         </section>
       </main>
-      <ChatIcon/>
+      <ChatIcon />
     </motion.div>
   );
 }
