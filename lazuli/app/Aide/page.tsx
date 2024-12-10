@@ -13,7 +13,7 @@ export default function Support() {
     {
       question: "Qu'est-ce que Lazuli ?",
       answer:
-        "La Lazuli est une technologie décentralisée utilisée pour stocker des informations de manière sécurisée sur plusieurs ordinateurs. Elle garantit l'intégrité des données et permet l'utilisation de cryptomonnaies telles que le Bitcoin.",
+        "Lazuli est une plateforme de simulation de trading en cryptomonnaies qui vous permet d'expérimenter et de développer vos stratégies de trading sans risque financier réel. Notre objectif est de fournir un environnement sécurisé et réaliste pour que les utilisateurs puissent apprendre et maîtriser le trading de cryptomonnaies avant de s'engager dans des transactions réelles.",
     },
     {
       question: "Comment sécuriser mon portefeuille ?",
@@ -37,7 +37,7 @@ export default function Support() {
   );
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-[#0f0f1a] text-white lazuli-background">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
       {/* Animation de Fond */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-800 to-purple-800 opacity-60 z-10 beat-animation"></div>
 
@@ -123,23 +123,19 @@ export default function Support() {
         </div>
       </main>
 
-      {/* Pied de Page */}
-      <footer className="py-8 px-4 md:px-6 border-t border-gray-700 bg-[#14142B] relative lazuli-footer z-20">
-        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-gray-400">
-            © 2024 Lazuli. Tous droits réservés. Il s'agit d'une plateforme simulée.
-          </p>
-          <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
-            <Link className="text-sm text-gray-400 hover:text-blue-300 transition-all duration-300" href="#">
-              Conditions d'utilisation
-            </Link>
-            <Link className="text-sm text-gray-400 hover:text-blue-300 transition-all duration-300" href="#">
-              Politique de confidentialité
-            </Link>
-          </nav>
-        </div>
+       {/* Footer */}
+       <footer className="py-6 px-8 border-t border-gray-700 text-center text-sm text-gray-400">
+        <p className="mb-4">© 2024 Lazuli. Tous droits réservés. Ceci est une plateforme de simulation.</p>
+        <nav className="space-x-6">
+          <Link href="#" className="hover:text-[#00FF91] transition-all duration-300 ease-in-out transform hover:scale-110">
+            Conditions d'utilisation
+          </Link>
+          <Link href="#" className="hover:text-[#00FF91] transition-all duration-300 ease-in-out transform hover:scale-110">
+            Politique de confidentialité
+          </Link>
+        </nav>
       </footer>
-
+      
       <style jsx global>{`
         @tailwind base;
         @tailwind components;

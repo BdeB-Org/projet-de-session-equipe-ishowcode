@@ -43,7 +43,7 @@ export default function LoginPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
       <header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-700 shadow-md">
         <Link href="/" className="text-2xl font-extrabold text-blue-300 hover:text-purple-400 transition-all">
-          Lazuli 🌟
+          Lazuli
         </Link>
       </header>
       <main className="flex-1 flex items-center justify-center p-4">

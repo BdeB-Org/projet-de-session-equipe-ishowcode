@@ -2,34 +2,30 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import ChatIcon from "@/components/chatIcon"; 
-import { useTheme } from "@/app/api/ThemeContext/route"; // Adjust path if needed
+import ChatIcon from "@/components/chatIcon";
 
 export function Page() {
-  const { isDarkMode, toggleTheme } = useTheme();
-
   return (
-    <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-[#1a1a40] text-gray-200' : 'bg-white text-black'}`}>
-      <header className={`px-4 lg:px-6 h-14 flex items-center border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-400'}`}>
-        <Link className="flex items-center justify-center" href="/">
-          <span className="font-bold text-2xl">Lazuli</span>
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
+      <header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-700 shadow-md">
+        <Link href="/" className="text-2xl font-extrabold text-blue-300 hover:text-purple-400 transition-all">
+          Lazuli
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:text-gray-300" href="/APropos">À propos</Link>
-          <Link className="text-sm font-medium hover:text-gray-300" href="/Aide">Aide</Link>
+          <Link className="text-sm font-medium text-gray-300 hover:text-purple-200 transition-all" href="/APropos">À propos</Link>
+          <Link className="text-sm font-medium text-gray-300 hover:text-purple-200 transition-all" href="/Aide">Aide</Link>
         </nav>
-        <Button onClick={toggleTheme} className={`ml-4 ${isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-gray-200 text-black'} text-sm p-2 rounded`}>
-          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-        </Button>
       </header>
-      <main className="flex-1 flex flex-col items-center justify-center p-4">
-        <div className="text-center max-w-2xl mb-8">
-          <div className="flex justify-center mb-8 animate-spin-planet">
-          <svg
+      <main className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-3xl bg-gradient-to-r from-purple-700 to-blue-700 p-8 rounded-xl shadow-xl text-center">
+          <div className="flex justify-center mb-8 fade-in">
+            {/* Planète en rotation */}
+            <svg
+              className="animate-spin-planet"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 500 500"
-              width="500"
-              height="500"
+              width="300"
+              height="300"
             >
               <defs>
                 <radialGradient id="planetGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
@@ -57,7 +53,6 @@ export function Page() {
                 </radialGradient>
               </defs>
 
-              {/* Planet Shape */}
               <circle
                 cx="250"
                 cy="250"
@@ -65,8 +60,6 @@ export function Page() {
                 fill="url(#planetGradient)"
                 filter="url(#glowEffect)"
               />
-
-              {/* Shadow of the Planet */}
               <ellipse
                 cx="250"
                 cy="290"
@@ -75,8 +68,6 @@ export function Page() {
                 fill="rgba(0, 0, 0, 0.5)"
                 filter="url(#shadow)"
               />
-
-              {/* Lazuli Gem Stone */}
               <circle
                 cx="250"
                 cy="220"
@@ -84,8 +75,6 @@ export function Page() {
                 fill="url(#gemGradient)"
                 filter="url(#glowEffect)"
               />
-
-              {/* Shadow of the Stone */}
               <ellipse
                 cx="250"
                 cy="280"
@@ -94,8 +83,6 @@ export function Page() {
                 fill="rgba(0, 0, 0, 0.5)"
                 filter="url(#glowEffect)"
               />
-
-              {/* Static Stars */}
               <g className="orbiting-stars">
                 <circle cx="250" cy="50" r="5" fill="url(#starGradient)" opacity="0.8" />
                 <circle cx="450" cy="250" r="5" fill="url(#starGradient)" opacity="0.8" />
@@ -104,42 +91,85 @@ export function Page() {
               </g>
             </svg>
           </div>
-          <h1 className={`text-5xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'} `} style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)' }}>
-            Bienvenue sur Lazuli
-          </h1>
-          <p className={`text-2xl font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-black'} fade-in`} style={{ textShadow: '1px 1px 3px rgba(0, 0, 0, 0.5)' }}>
-            Simulateur de Trading Crypto
-          </p>
-          <p className={`text-lg mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} fade-in`}>
+          <h1 className="text-5xl font-extrabold mb-2 slide-down">Bienvenue sur Lazuli</h1>
+          <p className="text-2xl font-semibold mb-4 fade-in">Simulateur de Trading Crypto</p>
+          <p className="text-lg text-gray-200 fade-in mb-8">
             Expérimentez le trading de crypto-monnaies sans risque avec notre plateforme de simulation. Perfectionnez vos stratégies sans utiliser de vraie monnaie.
           </p>
           <Link href="/login">
-            <Button className="bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full mb-4 hover:scale-105 transition-transform duration-300 ease-in-out">
+            <Button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-full shadow-lg hover:scale-105 transition-transform mb-4 slide-down-form4">
               Démarrer la Simulation
             </Button>
           </Link>
-          <br></br>
+          <br />
           <Link href="/SignUp">
-            <Button className="bg-[#3b3b82] text-white hover:bg-[#4c4c96] rounded-full hover:scale-105 transition-transform duration-300 ease-in-out">
+            <Button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-full shadow-lg hover:scale-105 transition-transform slide-down-form4">
               Devenir un membre
             </Button>
           </Link>
-          <div className="mt-8 p-4 bg-[#3b3b82] rounded-lg">
+          <div className="mt-8 p-4 bg-blue-800 bg-opacity-60 rounded-lg slide-down-form5">
             <h2 className="text-lg font-semibold mb-2 text-white">Mode Simulation Actif</h2>
-            <p className="text-sm text-gray-200">Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.</p>
+            <p className="text-sm text-gray-200">
+              Tous les échanges et soldes sur cette plateforme sont simulés. Aucune crypto-monnaie réelle n'est utilisée ou mise en risque.
+            </p>
           </div>
         </div>
       </main>
-      <footer className={`py-6 px-4 md:px-6 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-400'}`}>
-        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>© 2024 Lazuli. Tous droits réservés. Ceci est une plateforme de simulation.</p>
-          <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
-            <Link className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'} hover:text-gray-300`} href="#">Conditions d'utilisation</Link>
-            <Link className={`text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'} hover:text-gray-300`} href="#">Politique de confidentialité</Link>
-          </nav>
-        </div>
+      <footer className="py-6 px-4 border-t border-gray-700 text-center text-sm text-gray-400">
+        © 2024 Lazuli. Tous droits réservés. Ceci est une plateforme de simulation.
       </footer>
       <ChatIcon />
+
+      <style jsx global>{`
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        .fade-in {
+          animation: fadeIn 1.5s ease-in-out;
+        }
+        .slide-down {
+          animation: slideDown 1.5s ease-in-out;
+        }
+        .slide-down-form4 {
+          animation: slideUp 2.4s ease-in-out;
+        }
+        .slide-down-form5 {
+          animation: slideUp 2.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0.5; }
+          to { opacity: 1; }
+        }
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slideUp {
+          from {
+            transform: translateY(100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes spin-planet {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .animate-spin-planet {
+          animation: spin-planet 20s linear infinite;
+        }
+      `}</style>
     </div>
   );
 }
