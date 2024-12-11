@@ -63,7 +63,7 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
 
 <h2>Présentation des pages de Lazuli</h2>
 
- **Présentation du page Page Accueil :**
+ **Présentation de la page Page Accueil :**
 
  Sur la page d'accueil, les nouveaux utilisateurs peuvent créer un compte, tandis que les membres existants peuvent se connecter. De plus, un bouton d'assistance vous permet de poser des questions à Gemini, et vous pouvez accéder à la page "À propos" ou "Aide".
 
@@ -73,7 +73,7 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
 
 
 
- **Présentation du page Creation un Compte :**
+ **Présentation de la page Création d'un Compte :**
 
 Sur la page de création de compte, l'utilisateur peut créer un compte sur Lazuli en remplissant le formulaire. Dans ce formulaire, vous devez inclure votre prénom, nom, adresse courriel, ainsi qu'un mot de passe comportant au moins 8 caractères, incluant une lettre majuscule, un caractère spécial et un chiffre. De plus, vous devez confirmer le mot de passe pour valider la création du compte. Si l'utilisateur possède déjà un compte, il peut cliquer sur le lien pour se connecter.
 
@@ -84,7 +84,7 @@ Sur la page de création de compte, l'utilisateur peut créer un compte sur Lazu
 
 
 
-  **Présentation du Page Se Connecter :**
+  **Présentation de la Page Se Connecter :**
 
 Sur la page de connexion, l'utilisateur doit saisir son adresse courriel et son mot de passe pour accéder à son compte Lazuli. Si l'utilisateur a oublié son mot de passe, il peut le réinitialiser en cliquant sur le lien "Mot de passe oublié".
 
@@ -92,7 +92,7 @@ Sur la page de connexion, l'utilisateur doit saisir son adresse courriel et son 
 
 
 
- **Présentation du Page À propos :**
+ **Présentation de la Page À propos :**
 
 Sur la page "À propos", nous expliquons qui nous sommes et quels sont nos objectifs.
 
@@ -101,14 +101,14 @@ Sur la page "À propos", nous expliquons qui nous sommes et quels sont nos objec
 
 
 
- **Présentation du Page Aide :**
+ **Présentation de la Page Aide :**
 
 Dans la page aide, vous pouvez cherchez des informations sur les fonctionnalités sur le site.
 
 <img width="959" alt="page Aide" src="https://github.com/user-attachments/assets/7bf765c3-1657-4478-b809-baf7a6f367a2">
 
 
-**Présentation du Page Dashboard :**
+**Présentation de la Page Dashboard :**
 
 Sur la page dashboard, l'utilisateur peut consulter son solde et accéder à diverses options telles qu'acheter, vendre, convertir des cryptomonnaies, effectuer un dépôt et encore. De plus, l'utilisateur peut accéder à sa page de transactions, à son profil, ou se déconnecter de son compte.
 
@@ -117,7 +117,7 @@ Sur la page dashboard, l'utilisateur peut consulter son solde et accéder à div
 
 
 
-**Présentation du Page Transaction :**
+**Présentation de la Page Transaction :**
 
 Sur la page des transactions, l'utilisateur peut consulter l'historique de ses achats et ventes de crytpo.
 
@@ -125,7 +125,7 @@ Sur la page des transactions, l'utilisateur peut consulter l'historique de ses a
 
 
 
-**Présentation du Page Profil :**
+**Présentation de la Page Profil :**
 
 Sur la page de profil, l'utilisateur peut consulter ses informations personnelles, avec la possibilité de modifier son profil ou de supprimer son compte.
 
@@ -133,7 +133,7 @@ Sur la page de profil, l'utilisateur peut consulter ses informations personnelle
 
 
 
-**Présentation du Page Explorer les cryptos :**
+**Présentation de la Page Explorer :**
 
 Sur la page Explorer, l'utilisateur peut consulter les cryptomonnaies disponibles à l'achat (les transactions se font en unités de cryptomonnaie, et non en dollars). De plus, la cryptomonnaie ayant enregistré la plus grande hausse de la journée est également mise en avant.
 
@@ -145,14 +145,14 @@ Lorsqu'un utilisateur sélectionne une cryptomonnaie, il a la possibilité de l'
 <img width="959" alt="Acheter Crypto"  src="https://github.com/user-attachments/assets/277c570a-e8cd-4720-b857-b422b2a80e7d">
 
 
-**Présentation du Page Dépôt d'Argent :**
+**Présentation du Page Dépôt :**
 
-Dans la page de dépôt d'argent, l'utilisateur peut ajouter un montant de son choix à son solde. De plus, il a la possibilité de consulter son solde actuel et de le réinitialiser si nécessaire.
+Dans la page de dépôt, l'utilisateur peut ajouter un montant de son choix à son solde. De plus, il a la possibilité de consulter son solde actuel et de le réinitialiser si nécessaire.
 
 <img width="959" alt="Dépôt d'Argent" src="https://github.com/user-attachments/assets/e42e0789-3079-48a2-8c9b-ee58bf875f02">
 
 
-**Présentation du Page Dépôt d'Argent :**
+**Présentation de la page Quiz d'Investissement :**
 
 Dans la page Quiz d'Investissement, l'utilisateur peut déterminer son profil d'investisseur en répondant à un ensemble de questions. Une fois le quiz terminé, la réponse est générée et communiquée par Gemini.
 
@@ -160,14 +160,14 @@ Dans la page Quiz d'Investissement, l'utilisateur peut déterminer son profil d'
 
 
 
-**Présentation du Page Modification Profil :**
+**Présentation de la Page Modification Profil :**
 
 Dans la page de modification du profil, l'utilisateur peut mettre à jour ses informations personnelles, telles que son nom, sa date de naissance, sa devise (CAD, USD, EUR, GBP, IDR) et son mot de passe.
 
 <img width="959" alt="Page Modification Profil" src="https://github.com/user-attachments/assets/bfaf542d-9ec2-408a-8670-aea229790046">
 
 
-**Présentation du Page Réinitialiser votre mot de passe :**
+**Présentation de la Page Réinitialiser votre Mot de Passe :**
 
 Dans la page de réinitialisation du mot de passe, si l'utilisateur a oublié le mot de passe de son compte, il peut entrer son adresse courriel pour recevoir un lien permettant de le modifier.
 
