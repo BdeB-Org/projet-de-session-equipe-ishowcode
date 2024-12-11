@@ -1,9 +1,6 @@
-// /app/ModificationProfil/page.tsx
-
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -28,10 +25,8 @@ export default function ModificationProfilPage() {
 
   // Fonction pour gérer la déconnexion
   const handleLogout = () => {
- 
     localStorage.removeItem('userId'); 
     localStorage.removeItem('authToken'); 
-  
     router.push('/'); 
   };
 
@@ -226,31 +221,21 @@ export default function ModificationProfilPage() {
   };
 
   return (
-    <motion.div
-      className="flex flex-col min-h-screen bg-gradient-to-r from-[#0b0b3b] via-[#1e1e7f] to-[#1b1b2f] text-white"
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
       {/* Header */}
-      <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-gray-900 shadow-lg">
-        <Link className="flex items-center" href="/Dashboard">
-          <motion.span
-            className="font-extrabold text-xl text-[#6a4fc3] tracking-wider"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{
-              y: 0,
-              opacity: 1,
-              transition: { type: 'spring', stiffness: 60, delay: 0.1 },
-            }}
-          >
+      <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-transparent shadow-md">
+        <Link className="flex items-center justify-center" href="/Dashboard">
+          <span className="font-bold text-2xl text-blue-300 hover:text-purple-400 transition-all">
             Lazuli
-          </motion.span>
+          </span>
         </Link>
         <nav className="ml-auto flex items-center gap-6">
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Dashboard">
+          <Link className="text-sm font
+
+      medium hover:text-purple-400 transition-all" href="/Dashboard">
             Dashboard
           </Link>
-          <Link className="text-sm font-medium hover:text-[#5d3fd3]" href="/Transactions">
+          <Link className="text-sm font-medium hover:text-purple-400 transition-all" href="/Transactions">
             Transactions
           </Link>
           {/* Photo de profil dans le header */}
@@ -274,18 +259,15 @@ export default function ModificationProfilPage() {
 
       {/* Main content */}
       <main className="flex-1 flex justify-center items-center p-6">
-        <motion.section className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-4xl">
-          <h2 className="text-2xl font-bold mb-6">Modifier Mon Profil</h2>
+        <section className="bg-gradient-to-r from-purple-700 to-blue-700 p-8 rounded-xl shadow-xl w-full max-w-4xl">
+          <h2 className="text-3xl font-extrabold mb-6">Modifier Mon Profil</h2>
 
           {/* Afficher le message d'erreur s'il y en a */}
           {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
 
           {/* Profile Picture Upload */}
           <div className="flex justify-center items-center mb-6">
-            <motion.div
-              className="relative w-32 h-32 border-4 border-[#6a4fc3] rounded-full overflow-hidden"
-              whileHover={{ scale: 1.05, rotate: 5 }}
-            >
+            <div className="relative w-32 h-32 border-4 border-blue-300 rounded-full overflow-hidden">
               <Image
                 src={profilePic}
                 alt="Photo de Profil"
@@ -299,7 +281,7 @@ export default function ModificationProfilPage() {
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={handleImageChange}
               />
-            </motion.div>
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -310,7 +292,8 @@ export default function ModificationProfilPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                placeholder="Votre nom complet"
               />
             </div>
 
@@ -321,7 +304,8 @@ export default function ModificationProfilPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                placeholder="Votre adresse e-mail"
               />
             </div>
 
@@ -332,7 +316,7 @@ export default function ModificationProfilPage() {
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
               />
             </div>
 
@@ -341,7 +325,7 @@ export default function ModificationProfilPage() {
               <p className="text-lg font-semibold">Solde :</p>
               <p className="text-lg">
                 {getCurrencySymbol(currency)}
-                {displayBalance.toLocaleString(undefined, {maximumFractionDigits:2})}
+                {displayBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </p>
             </div>
 
@@ -351,7 +335,7 @@ export default function ModificationProfilPage() {
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
               >
                 <option value="CAD">CAD</option>
                 <option value="USD">USD</option>
@@ -368,7 +352,8 @@ export default function ModificationProfilPage() {
                 type="password"
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                placeholder="Ancien mot de passe"
               />
             </div>
 
@@ -379,7 +364,8 @@ export default function ModificationProfilPage() {
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                placeholder="Nouveau mot de passe"
               />
             </div>
 
@@ -390,32 +376,108 @@ export default function ModificationProfilPage() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="text-lg border border-gray-300 rounded px-2 text-black"
+                className="text-lg border border-gray-300 rounded px-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
+                placeholder="Confirmer le nouveau mot de passe"
               />
             </div>
 
             {/* Buttons */}
             <div className="flex gap-4 mt-6">
-              <motion.div>
+              <div className="flex-1">
                 <Button
-                  className="bg-[#6a4fc3] text-white px-4 py-2 rounded-full hover:bg-[#5330a9] transition"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform duration-200"
                   onClick={handleSubmit}
                 >
                   Sauvegarder
                 </Button>
-              </motion.div>
-              <motion.div>
+              </div>
+              <div className="flex-1">
                 <Button
-                  className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition"
+                  className="w-full bg-gray-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform duration-200"
                   onClick={handleCancel}
                 >
                   Annuler
                 </Button>
-              </motion.div>
+              </div>
             </div>
           </div>
-        </motion.section>
+        </section>
       </main>
-    </motion.div>
+
+      {/* Footer */}
+      <footer className="py-6 px-4 md:px-6 border-t border-gray-700 text-center text-sm text-gray-400">
+        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-sm text-gray-400">© 2024 Lazuli. Tous droits réservés.</p>
+          <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
+            <Link className="text-sm text-gray-400 hover:text-blue-300" href="#">
+              Conditions d'utilisation
+            </Link>
+            <Link className="text-sm text-gray-400 hover:text-blue-300" href="#">
+              Politique de confidentialité
+            </Link>
+          </nav>
+        </div>
+      </footer>
+
+      {/* Styles Globaux */}
+      <style jsx global>{`
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        /* Vous pouvez supprimer les classes d'animation globales si elles ne sont plus nécessaires */
+        .fade-in {
+          animation: fadeIn 1.5s ease-in-out;
+        }
+        .slide-down {
+          animation: slideDown 1.5s ease-in-out;
+        }
+        .slide-down-form1 {
+          animation: slideDown 1.8s ease-in-out;
+        }
+        .slide-down-form2 {
+          animation: slideDown 2.2s ease-in-out;
+        }
+        .slide-down-form3 {
+          animation: slideUp 2s ease-in-out;
+        }
+        .slide-down-form4 {
+          animation: slideUp 2.2s ease-in-out;
+        }
+        .slide-down-form5 {
+          animation: slideUp 2.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0.5;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes slideUp {
+          from {
+            transform: translateY(100px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </div>
   );
 }
