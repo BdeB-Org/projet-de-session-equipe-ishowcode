@@ -61,7 +61,7 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
    http://localhost:3000
    ```
 
-##Présentation des pages de Lazuli
+<h2>Présentation des pages de Lazuli</h2>
 
  **Présentation du page Page Accueil :**
 
