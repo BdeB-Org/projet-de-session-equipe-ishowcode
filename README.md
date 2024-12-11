@@ -3,8 +3,7 @@ Lazuli est un simulateur de cryptomonnaies conçu pour reproduire les dynamiques
 
 
 
-<img width="959" alt="Page accueil" src="https://github.com/user-attachments/assets/b0a3bc51-9395-45a7-ae47-52ea782ae0ba">
-
+<img width="959" alt="Page D'accueil"  src="https://github.com/user-attachments/assets/1a83d4b2-6801-49af-ad2a-cc7d4dc940e2">
 
 
 Pour exécuter **Lazuli**, voici les étapes générales à suivre :
@@ -69,7 +68,7 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
  Dans la page d'acceuil, vous pouvez créer un compte si vous etes un nouveau utilisateur, sinon si vous êtes déja un membre vous pouvez vous connecter. Vous pouvez modifier l'apparence du site avec le mode sombre ou mode clair. De plus, il y a un bouton d'assistance où vous pouvez demander des questions à Gemini et il y a option de voir la page a propos ou d'avoir de l'aide.
 
 
-<img width="959" alt="Page D'accueil" src="https://github.com/user-attachments/assets/d3a7d52b-a435-4d3b-a86d-9e228652d57a">
+<img width="959" alt="Page D'accueil"  src="https://github.com/user-attachments/assets/1a83d4b2-6801-49af-ad2a-cc7d4dc940e2">
 
 
 
@@ -79,7 +78,7 @@ Pour exécuter **Lazuli**, voici les étapes générales à suivre :
 Dans la page creation un compte, l'utilisateur peut créer un compte sur Lazuli en remplir le formulaire. Dans le formulaire, vous devez inclure votre Prénom,Nom,Adresse courriel, un mot de passe avec un minimum de 8 caractères, un lettre majuscule, un caractère speciale, un chiffre. De plus, vous devez récrir le mot passe pour assurer la création du compte. Si l'utilisateur a déja un compte , il peut aller dans le lien pour se connecter.
 
 
-<img width="959" alt="Page Devenir un membre" src="https://github.com/user-attachments/assets/fe83eb52-dd3a-4be1-9864-c8af80a9d4a0">
+<img width="959" alt="Page Devenir un membre" src="https://github.com/user-attachments/assets/19658067-bbde-4a8b-929c-df5904502d80">
 
 
 
@@ -96,8 +95,8 @@ Dans la page se connecter, l'utilisateur doit rentrer son courriel et son mot de
 
 Dans la page à propos, on explique qui nous sommes et c'est quoi notre but.
 
-<img width="959" alt="Page À propos" src="https://github.com/user-attachments/assets/d2f3bc0e-1c41-4d7f-a91b-b946a9f7b89c">
 
+<img width="959" alt="Page À propos" src="https://github.com/user-attachments/assets/7abb5166-e88b-4636-b346-52e4135a5655">
 
 
 
@@ -105,15 +104,14 @@ Dans la page à propos, on explique qui nous sommes et c'est quoi notre but.
 
 Dans la page aide, vous pouvez cherchez des informations sur les fonctionnalités sur le site.
 
-<img width="959" alt="page Aide" src="https://github.com/user-attachments/assets/11f58c0a-f9f5-4753-9330-7a4081324617">
-
+<img width="959" alt="page Aide" src="https://github.com/user-attachments/assets/7bf765c3-1657-4478-b809-baf7a6f367a2">
 
 
 **Présentation du Page Dashboard :**
 
 Dans la page du dashboard, l'utilisateur peut voir l'argent qu'il a et il a des options pour acheter,vendre,convertir et dépot. De plus, vous avez l'option de voir votre page de transaction et votre page de profile et vous pouvez déconnecter votre compte.
 
-<img width="959" alt="Page Dashboard" src="https://github.com/user-attachments/assets/e8a45fc8-dbf9-4148-863d-26818b704d77">
+<img width="959" alt="Page Dashboard"  src="https://github.com/user-attachments/assets/41d6758f-85a6-4cbb-9d16-26d53f853ad0">
 
 
 
@@ -122,7 +120,7 @@ Dans la page du dashboard, l'utilisateur peut voir l'argent qu'il a et il a des 
 
 Dans la page de transaction, l'utilisateur pouvez voir les achats que vous avez faites.
 
-<img width="959" alt="Page Transaction" src="https://github.com/user-attachments/assets/1496f0af-5193-4dca-9bed-8c764ac6e8fc">
+<img width="959" alt="Page Transaction"  src="https://github.com/user-attachments/assets/f00052b0-7fd5-4045-9172-fa53b12b11e8">
 
 
 
@@ -130,9 +128,7 @@ Dans la page de transaction, l'utilisateur pouvez voir les achats que vous avez 
 
 Dans la page de profil, l'utilisateur peut voir ses informations personnels et il a l'option de modifier son profil ou supprimer son compte.
 
-<img width="959" alt="Page Profil"  src="https://github.com/user-attachments/assets/49b561cf-00a0-427f-af69-655ef63c4400">
-
-
+<img width="959" alt="Page Profil"  src="https://github.com/user-attachments/assets/e6834ba6-4df4-4e4f-8c63-05d0835526b6">
 
 
 
@@ -148,13 +144,11 @@ Lorsque l'utilisateur choisi un cryto monnaie, il peut l'acheter et vendre son c
 <img width="959" alt="Acheter Crypto"  src="https://github.com/user-attachments/assets/277c570a-e8cd-4720-b857-b422b2a80e7d">
 
 
-
-
 **Présentation du Page Dépôt d'Argent :**
 
 Dans la page dépôt d'argent, l'utilisateur peut ajoutez un montant de son choix. De plus, il peut voir son solde et réinitialser le solde.
 
-<img width="959" alt="Dépôt d'Argent"  src="https://github.com/user-attachments/assets/2367a5eb-c760-4786-a9dd-4d12fac4765b">
+<img width="959" alt="Dépôt d'Argent" src="https://github.com/user-attachments/assets/e42e0789-3079-48a2-8c9b-ee58bf875f02">
 
 
 **Présentation du Page Dépôt d'Argent :**
@@ -169,12 +163,15 @@ Dans le page Quiz d'Investissement, ce quiz permet à l'utilisateur de détermin
 
 Dans la page modification profil, l'utilisateur peut changer ses informations personnelles comme son nom,l'option d'ajouter son date de naissance, changer sa devise (CAD,USD,EUR,GBP,IDR) et l'utilisateur peut modifier son mot de passe.
 
-<img width="959" alt="image" src="https://github.com/user-attachments/assets/0e7a8f67-05d2-404f-a362-b7b19c46811e">
+<img width="959" alt="Page Modification Profil" src="https://github.com/user-attachments/assets/aded0c5d-c549-4365-a088-63e147c4ad83">
 
 
 **Présentation du Page Réinitialiser votre mot de passe :**
 
 Dans la page réinitialiser votre mot passe, si l'utilisateur a oublié le mot de passe de son compte, il peut mettre son courriel pour qu'on l'envoit un courriel pour lui permettre de changer son mot de passe.
 
-<img width="959" alt=" Page Réinitialiser votre mot de passe" src="https://github.com/user-attachments/assets/52b50c8e-0e02-4574-b2cf-ddbab34e3c82">
+<img width="959" alt=" Page Réinitialiser votre mot de passe" src="https://github.com/user-attachments/assets/380ca364-f537-4c46-964f-08c47e792910">
+
+<img width="959" alt="Changer MDP" src="https://github.com/user-attachments/assets/dca5e856-b007-4cdd-a979-6d051ae27ec1">
+
 
