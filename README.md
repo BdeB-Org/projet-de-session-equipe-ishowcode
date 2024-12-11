@@ -163,7 +163,7 @@ Dans le page Quiz d'Investissement, ce quiz permet à l'utilisateur de détermin
 
 Dans la page modification profil, l'utilisateur peut changer ses informations personnelles comme son nom,l'option d'ajouter son date de naissance, changer sa devise (CAD,USD,EUR,GBP,IDR) et l'utilisateur peut modifier son mot de passe.
 
-<img width="959" alt="Page Modification Profil" src="https://github.com/user-attachments/assets/aded0c5d-c549-4365-a088-63e147c4ad83">
+<img width="959" alt="Page Modification Profil" src="https://github.com/user-attachments/assets/bfaf542d-9ec2-408a-8670-aea229790046">
 
 
 **Présentation du Page Réinitialiser votre mot de passe :**
