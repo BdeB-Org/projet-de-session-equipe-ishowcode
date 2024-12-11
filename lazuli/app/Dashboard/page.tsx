@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { CategoryScale } from 'chart.js';
@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { FaShoppingCart, FaDollarSign } from 'react-icons/fa'; // Import des icônes
 import transactionLogoImg from '../Images/transaction_logo.webp';
 import accueilLogoImg from '../Images/home_logo-removebg-preview.png';
 import CryptoOfTheDay from '../dailycrypto/page';
@@ -75,6 +76,7 @@ export default function DashboardPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [portfolio, setPortfolio] = useState<{ [cryptoId: string]: number }>({});
   const [balanceHistory, setBalanceHistory] = useState<{ date: string; balance: number }[]>([]);
+  const [isPortfolioLoading, setIsPortfolioLoading] = useState<boolean>(false); // Nouvel état
 
   const router = useRouter();
 
@@ -86,6 +88,7 @@ export default function DashboardPage() {
     router.push('/');
   };
 
+  // Fonction pour récupérer le solde de l'utilisateur
   const fetchBalance = async () => {
     try {
       const userId = localStorage.getItem('userId');
@@ -94,11 +97,13 @@ export default function DashboardPage() {
         return;
       }
       const response = await axios.get(`/api/getBalance?userId=${userId}`);
+      console.log('Balance fetched:', response.data);
       if (response.data) {
         setBalance(response.data.balance);
       }
     } catch (error) {
       console.error('Error fetching balance:', error);
+      setErrorMessage('Erreur lors de la récupération du solde');
     }
   };
 
@@ -122,8 +127,14 @@ export default function DashboardPage() {
       const res = await fetch(`/api/ModificationProfil?userId=${userId}`);
       const data = await res.json();
 
+      console.log('Profile Data:', data);
+
       if (res.ok) {
-        setProfilePic(data.profilePic || '/images/default-avatar.png');
+        // Correction du chemin de l'image
+        const correctedProfilePic = data.profilePic.startsWith('/public')
+          ? data.profilePic.replace('/public', '')
+          : data.profilePic;
+        setProfilePic(correctedProfilePic || '/images/default-avatar.png');
         setBalance(data.balance);
 
         // Mettre à jour la devise si différente
@@ -137,23 +148,31 @@ export default function DashboardPage() {
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
+      setErrorMessage('Erreur lors de la récupération des données du profil');
     }
   };
 
   // Fonction pour récupérer le portefeuille de l'utilisateur
   const fetchPortfolio = async () => {
     try {
+      setIsPortfolioLoading(true);
       const userId = localStorage.getItem('userId');
+      console.log('Fetched userId:', userId);
       if (!userId) {
         console.error('User ID is missing from localStorage');
+        setIsPortfolioLoading(false);
         return;
       }
       const response = await axios.get(`/api/getPortfolio?userId=${userId}`);
+      console.log('Response from /api/getPortfolio:', response.data);
       if (response.data) {
         setPortfolio(response.data.portfolio);
       }
     } catch (error) {
       console.error('Error fetching portfolio:', error);
+      setErrorMessage('Erreur lors de la récupération du portefeuille');
+    } finally {
+      setIsPortfolioLoading(false);
     }
   };
 
@@ -166,11 +185,14 @@ export default function DashboardPage() {
         return;
       }
       const response = await axios.get(`/api/getBalanceHistory?userId=${userId}`);
+      console.log('Balance History fetched:', response.data);
       if (response.data) {
         setBalanceHistory(response.data.history);
+        console.log('Balance History state updated:', response.data.history);
       }
     } catch (error) {
       console.error('Error fetching balance history:', error);
+      setErrorMessage('Erreur lors de la récupération de l\'historique du solde');
     }
   };
 
@@ -209,6 +231,8 @@ export default function DashboardPage() {
           },
         }
       );
+
+      console.log('Crypto Data fetched:', response.data);
 
       // Stocker les informations sur les cryptomonnaies dans l'état
       setCryptoData({
@@ -275,6 +299,7 @@ export default function DashboardPage() {
       });
     } catch (error) {
       console.error('Error fetching crypto data:', error);
+      setErrorMessage('Erreur lors de la récupération des données des cryptomonnaies');
     } finally {
       setLoading(false);
     }
@@ -299,6 +324,7 @@ export default function DashboardPage() {
       setSearchResults(response.data.coins);
     } catch (error) {
       console.error('Erreur lors de la recherche de cryptomonnaies:', error);
+      setErrorMessage('Erreur lors de la recherche de cryptomonnaies');
     }
   };
 
@@ -344,6 +370,7 @@ export default function DashboardPage() {
       }
     } catch (error) {
       console.error('Erreur lors de la récupération des données de la cryptomonnaie:', error);
+      setErrorMessage('Erreur lors de la récupération des données de la cryptomonnaie');
     } finally {
       setLoading(false);
     }
@@ -368,77 +395,82 @@ export default function DashboardPage() {
       setPriceHistory(prices);
     } catch (error) {
       console.error('Erreur lors de la récupération de l\'historique des prix:', error);
+      setErrorMessage('Erreur lors de la récupération de l\'historique des prix');
     }
   };
 
+  // Fonction pour gérer les transactions
   const handleTransaction = async (cryptoId: string) => {
-  if (!cryptoId || !transactionType || amount <= 0 || isNaN(amount)) {
-    setErrorMessage('Veuillez sélectionner une transaction et entrer un montant valide');
-    setSuccessMessage(null);
-    return;
-  }
-
-  const cryptoPriceStr = cryptoData[cryptoId].price;
-  const cryptoPrice = parseFloat(cryptoPriceStr.replace(/[^\d.-]/g, ''));
-  const transactionValue = amount * cryptoPrice;
-
-  // Ne pas mettre à jour le solde ici
-  if (transactionType === 'buy') {
-    if (balance < transactionValue) {
-      setErrorMessage('Solde insuffisant');
+    if (!cryptoId || !transactionType || amount <= 0 || isNaN(amount)) {
+      setErrorMessage('Veuillez sélectionner une transaction et entrer un montant valide');
       setSuccessMessage(null);
       return;
     }
-    // Ne pas modifier le solde ici
-  } else if (transactionType === 'sell') {
-    // Ne pas modifier le solde ici
-  }
 
-  try {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      setErrorMessage('Utilisateur non identifié');
-      setSuccessMessage(null);
-      return;
+    const cryptoPriceStr = cryptoData[cryptoId].price;
+    const cryptoPrice = parseFloat(cryptoPriceStr.replace(/[^\d.-]/g, ''));
+    const transactionValue = amount * cryptoPrice;
+
+    // Ne pas mettre à jour le solde ici
+    if (transactionType === 'buy') {
+      if (balance < transactionValue) {
+        setErrorMessage('Solde insuffisant');
+        setSuccessMessage(null);
+        return;
+      }
+      // Ne pas modifier le solde ici
+    } else if (transactionType === 'sell') {
+      // Ne pas modifier le solde ici
     }
-    // Enregistrer la transaction dans la base de données
-    const transactionData = {
-      userId: userId,
-      type: transactionType,
-      crypto: cryptoId,
-      amount: amount,
-      value: transactionValue,
-      date: new Date(),
-    };
 
-    const response = await axios.post(`/api/transactions`, transactionData);
-    console.log('Transaction réussie', response.data);
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        setErrorMessage('Utilisateur non identifié');
+        setSuccessMessage(null);
+        return;
+      }
+      // Enregistrer la transaction dans la base de données
+      const transactionData = {
+        userId: userId,
+        type: transactionType,
+        crypto: cryptoId,
+        amount: amount,
+        value: transactionValue,
+        date: new Date(),
+      };
 
-    // Mettre à jour le solde et le portefeuille avec les données du serveur
-    setBalance(response.data.balance);
-    setPortfolio(response.data.portfolio);
-    setSuccessMessage(
-      `Transaction réussie ! Nouveau solde : ${getCurrencySymbol(currency)}${response.data.balance.toFixed(2)}`
-    );
-    setErrorMessage(null);
-  } catch (error) {
-    console.error("Erreur lors de l'enregistrement de la transaction:", error);
-    setErrorMessage("Erreur lors de l'enregistrement de la transaction");
-    setSuccessMessage(null);
-  }
+      const response = await axios.post(`/api/transactions`, transactionData);
+      console.log('Transaction réussie', response.data);
 
-  setAmount(0);
-  setTransactionType(null);
-};
+      // Mettre à jour le solde et le portefeuille avec les données du serveur
+      setBalance(response.data.balance);
+      setPortfolio(response.data.portfolio);
+      setSuccessMessage(
+        `Transaction réussie ! Nouveau solde : ${getCurrencySymbol(currency)}${response.data.balance.toFixed(2)}`
+      );
+      setErrorMessage(null);
 
+      // **Rafraîchir l'historique du solde après une transaction réussie**
+      await fetchBalanceHistory();
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de la transaction:", error);
+      setErrorMessage("Erreur lors de l'enregistrement de la transaction");
+      setSuccessMessage(null);
+    }
 
-  // Effet pour récupérer les données du profil
+    setAmount(0);
+    setTransactionType(null);
+  };
+
+  // Effet pour récupérer les données du profil, portefeuille et historique du solde au montage
   useEffect(() => {
     fetchProfileData();
     fetchPortfolio();
     fetchBalanceHistory();
   }, []);
 
+  // Effet pour récupérer le solde au montage
   useEffect(() => {
     fetchBalance();
   }, []);
@@ -461,7 +493,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const handleWindowFocus = () => {
       const storedCurrency = localStorage.getItem('currency');
-      if (storedCurrency && storedCurrency !== currency) {
+      if (storedCurrency && storedCurrency.toLowerCase() !== currency) {
         setCurrency(storedCurrency.toLowerCase());
       }
     };
@@ -472,6 +504,15 @@ export default function DashboardPage() {
       window.removeEventListener('focus', handleWindowFocus);
     };
   }, [currency]);
+
+  // Effet pour rafraîchir l'historique du solde toutes les minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchBalanceHistory();
+    }, 60000); // 60000 ms = 1 minute
+
+    return () => clearInterval(interval); // Nettoyage à la désactivation du composant
+  }, []);
 
   const handleCryptoSelect = (cryptoId: string) => {
     setSelectedCrypto(cryptoId);
@@ -488,7 +529,7 @@ export default function DashboardPage() {
   };
 
   // Données du graphique des prix
-  const chartData = {
+  const chartData = useMemo(() => ({
     labels: priceHistory.map((data) => data.x),
     datasets: [
       {
@@ -511,10 +552,10 @@ export default function DashboardPage() {
         fill: true,
       },
     ],
-  };
+  }), [priceHistory, cryptoData, selectedCrypto, currency]);
 
   // Données du graphique du solde
-  const balanceChartData = {
+  const balanceChartData = useMemo(() => ({
     labels: balanceHistory.map((entry) => entry.date),
     datasets: [
       {
@@ -529,10 +570,13 @@ export default function DashboardPage() {
         fill: true,
       },
     ],
-  };
+  }), [balanceHistory]);
+
+  // Générer une clé unique basée sur la longueur de balanceHistory
+  const balanceChartKey = `balance-chart-${balanceHistory.length}`;
 
   // Options du graphique
-  const chartOptions = {
+  const chartOptions = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
     scales: {
@@ -575,7 +619,7 @@ export default function DashboardPage() {
         },
       },
     },
-  };
+  }), [currency]);
 
   return (
     <motion.div className="flex flex-col min-h-screen bg-[#f8f9fa] text-black">
@@ -641,7 +685,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="flex items-center space-x-2">
-              <Image src={depotLogoImg} alt="Transaction Icon" width={30} height={30} />
+              <Image src={depotLogoImg} alt="Dépôt Icon" width={30} height={30} />
               <Link href="/Depot">
                 <span className="block py-2 text-lg font-semibold hover:text-[#5d3fd3] cursor-pointer">
                   Dépôt
@@ -655,7 +699,7 @@ export default function DashboardPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-              <Image src={quizLogoImg.src} alt="Transaction Icon" width={30} height={30} />
+              <Image src={quizLogoImg.src} alt="Quiz Icon" width={30} height={30} />
               <Link className="text-lg font-semibold hover:text-[#5d3fd3]" href="/Quiz">
                 Quiz d'Investissement
               </Link>
@@ -688,24 +732,30 @@ export default function DashboardPage() {
               {/* Portefeuille */}
               <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow">
                 <h2 className="text-xl font-semibold text-[#5d3fd3]">Votre Portefeuille</h2>
-                {Object.keys(portfolio).length > 0 ? (
-                  <ul className="mt-4 space-y-2">
-                    {Object.keys(portfolio).map((cryptoId) => (
-                      <li key={cryptoId} className="flex justify-between items-center">
-                        <span>{cryptoData[cryptoId]?.name || cryptoId}</span>
-                        <span>{portfolio[cryptoId]}</span>
-                        <Button
-                          onClick={() => {
-                            setSelectedCrypto(cryptoId);
-                            setShowExplore(true);
-                          }}
-                          className="ml-4 text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6]"
-                        >
-                          Détails
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
+                {isPortfolioLoading ? (
+                  <p className="mt-4 text-gray-600">Chargement du portefeuille...</p>
+                ) : Object.keys(portfolio).length > 0 ? (
+                  <>
+                    {console.log('Portfolio:', portfolio)}
+                    {console.log('Crypto Data:', cryptoData)}
+                    <ul className="mt-4 space-y-2">
+                      {Object.keys(portfolio).map((cryptoId) => (
+                        <li key={cryptoId} className="flex justify-between items-center">
+                          <span>{cryptoData[cryptoId]?.name || cryptoId}</span>
+                          <span>{portfolio[cryptoId]}</span>
+                          <Button
+                            onClick={() => {
+                              setSelectedCrypto(cryptoId);
+                              setShowExplore(true);
+                            }}
+                            className="ml-4 text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6]"
+                          >
+                            Détails
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 ) : (
                   <p className="mt-4 text-gray-600">Vous ne possédez aucune cryptomonnaie pour le moment.</p>
                 )}
@@ -716,7 +766,7 @@ export default function DashboardPage() {
                 <h2 className="text-xl font-semibold text-[#5d3fd3] mb-4">Historique du Solde</h2>
                 {balanceHistory.length > 0 ? (
                   <div className="relative w-full h-80">
-                    <Line data={balanceChartData} options={chartOptions} />
+                    <Line key={balanceChartKey} data={balanceChartData} options={chartOptions} />
                   </div>
                 ) : (
                   <p className="text-gray-600">Aucune donnée disponible pour le graphique.</p>
@@ -798,59 +848,85 @@ export default function DashboardPage() {
               </div>
 
               {/* Buy and Sell Buttons */}
-              <div className="mt-6 flex flex-col items-center">
-                <div className="flex justify-around w-full mb-4">
-                  <Button
-                    onClick={() => {
-                      setTransactionType('buy');
-                      setAmount(0);
-                      setErrorMessage(null);
-                      setSuccessMessage(null);
-                    }}
-                    className={`p-2 rounded ${
-                      transactionType === 'buy' ? 'bg-green-500 text-white' : 'bg-gray-200'
-                    }`}
+              <div className="mt-6">
+                {/* Onglets Buy et Sell */}
+                <div className="flex border-b border-gray-200">
+                  <button
+                    onClick={() => setTransactionType('buy')}
+                    className={`flex-1 py-2 px-4 text-center font-semibold ${
+                      transactionType === 'buy'
+                        ? 'border-b-2 border-green-500 text-green-500'
+                        : 'text-gray-600 hover:text-green-500'
+                    } transition-colors duration-200`}
                   >
-                    Acheter
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setTransactionType('sell');
-                      setAmount(0);
-                      setErrorMessage(null);
-                      setSuccessMessage(null);
-                    }}
-                    className={`p-2 rounded ${
-                      transactionType === 'sell' ? 'bg-red-500 text-white' : 'bg-gray-200'
-                    }`}
+                    <div className="flex items-center justify-center">
+                      <FaShoppingCart className="mr-2" />
+                      Acheter
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setTransactionType('sell')}
+                    className={`flex-1 py-2 px-4 text-center font-semibold ${
+                      transactionType === 'sell'
+                        ? 'border-b-2 border-red-500 text-red-500'
+                        : 'text-gray-600 hover:text-red-500'
+                    } transition-colors duration-200`}
                   >
-                    Vendre
-                  </Button>
+                    <div className="flex items-center justify-center">
+                      <FaDollarSign className="mr-2" />
+                      Vendre
+                    </div>
+                  </button>
                 </div>
 
-                {transactionType && (
-                  <>
-                    <input
-                      type="number"
-                      value={amount}
-                      onChange={(e) => setAmount(parseFloat(e.target.value))}
-                      placeholder={`Entrez le montant en ${selectedCrypto}`}
-                      className="p-2 border rounded w-full mb-4"
-                    />
-
-                    {/* Confirmer Transaction */}
-                    <Button
-                      onClick={() => handleTransaction(selectedCrypto!)}
-                      className="p-2 bg-blue-500 text-white rounded"
+                <AnimatePresence>
+                  {transactionType && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-4 p-4 bg-gray-50 rounded-lg shadow-md"
                     >
-                      Confirmer Transaction
-                    </Button>
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleTransaction(selectedCrypto!);
+                        }}
+                        className="space-y-4"
+                      >
+                        <div>
+                          <label className="block text-gray-700 font-medium mb-2">
+                            {transactionType === 'buy' ? 'Montant à Acheter' : 'Montant à Vendre'}
+                          </label>
+                          <input
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(parseFloat(e.target.value))}
+                            placeholder={`Entrez le montant en ${selectedCrypto}`}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5d3fd3] transition duration-200"
+                            required
+                            min="0"
+                            step="any"
+                          />
+                        </div>
 
-                    {/* Affichage des messages */}
-                    {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
-                    {successMessage && <p className="text-green-500 mt-2">{successMessage}</p>}
-                  </>
-                )}
+                        <div className="flex items-center justify-between">
+                          <Button
+                            type="submit"
+                            className="w-full bg-[#5d3fd3] text-white py-2 px-4 rounded-lg hover:bg-[#4629a6] transition-colors duration-200"
+                          >
+                            Confirmer Transaction
+                          </Button>
+                        </div>
+
+                        {/* Affichage des messages */}
+                        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                        {successMessage && <p className="text-green-500">{successMessage}</p>}
+                      </form>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           ) : (
@@ -879,7 +955,7 @@ export default function DashboardPage() {
                   placeholder="Rechercher une cryptomonnaie..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="p-2 border rounded w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5d3fd3] transition duration-200"
                 />
               </div>
 
@@ -889,14 +965,14 @@ export default function DashboardPage() {
                   {searchResults.map((crypto) => (
                     <li
                       key={crypto.id}
-                      className="flex justify-between items-center bg-gray-100 p-4 rounded-lg"
+                      className="flex justify-between items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                     >
                       <span className="font-medium">
                         {crypto.name} ({crypto.symbol.toUpperCase()})
                       </span>
                       <Button
                         onClick={() => handleCryptoSelect(crypto.id)}
-                        className="ml-4 text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6]"
+                        className="text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6] transition-colors duration-200"
                       >
                         Sélectionner
                       </Button>
@@ -906,11 +982,11 @@ export default function DashboardPage() {
               )}
 
               {/* Liste des cryptomonnaies prédéfinies */}
-              <ul className="space-y-4">
+              <ul className="space-y-4 mt-4">
                 {Object.keys(cryptoData).map((crypto, index) => (
                   <li
                     key={index}
-                    className="flex justify-between items-center bg-gray-100 p-4 rounded-lg"
+                    className="flex justify-between items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                   >
                     <span className="font-medium">{cryptoData[crypto]?.name}</span>
                     <span className="text-sm text-gray-600">{cryptoData[crypto]?.price}</span>
@@ -925,7 +1001,7 @@ export default function DashboardPage() {
                     </span>
                     <Button
                       onClick={() => handleCryptoSelect(crypto)}
-                      className="ml-4 text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6]"
+                      className="text-sm font-semibold bg-[#5d3fd3] text-white py-1 px-3 rounded hover:bg-[#4629a6] transition-colors duration-200"
                     >
                       Sélectionner
                     </Button>

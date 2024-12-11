@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import { NextResponse } from 'next/server';
 
+// Fonction de connexion à la base de données
 async function connectToDatabase() {
   const uri = process.env.MONGODB_URI;
   if (!uri) {
@@ -14,6 +15,7 @@ async function connectToDatabase() {
   return db;
 }
 
+// Gestionnaire pour les requêtes GET
 export async function GET(req) {
   try {
     const userId = req.nextUrl.searchParams.get('userId');
@@ -37,17 +39,36 @@ export async function GET(req) {
   }
 }
 
+// Gestionnaire pour les requêtes POST
 export async function POST(req) {
   try {
     const { userId, type, crypto, amount, value, date } = await req.json();
 
+    // Validation des données d'entrée
     if (!ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Invalid user ID." }, { status: 400 });
+    }
+
+    if (!type || !['buy', 'sell'].includes(type)) {
+      return NextResponse.json({ error: "Invalid transaction type." }, { status: 400 });
+    }
+
+    if (!crypto || typeof crypto !== 'string') {
+      return NextResponse.json({ error: "Invalid or missing cryptocurrency ID." }, { status: 400 });
+    }
+
+    if (amount <= 0 || isNaN(amount)) {
+      return NextResponse.json({ error: "Invalid amount." }, { status: 400 });
+    }
+
+    if (value <= 0 || isNaN(value)) {
+      return NextResponse.json({ error: "Invalid value." }, { status: 400 });
     }
 
     const db = await connectToDatabase();
     const usersCollection = db.collection('utilisateur'); 
     const transactionsCollection = db.collection('transactions');
+    const balanceHistoryCollection = db.collection('balanceHistory');
 
     // Recherche de l'utilisateur dans la base de données avec l'ID fourni.
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
@@ -62,7 +83,7 @@ export async function POST(req) {
     const userBalance = Number(user.balance);
 
     let updatedBalance;
-    let updatedPortfolio = user.portfolio || {};
+    let updatedPortfolio = user.portfolio ? { ...user.portfolio } : {};
 
     // Vérification du type de transaction et mise à jour du solde et du portefeuille
     if (type === 'buy') {
@@ -105,6 +126,14 @@ export async function POST(req) {
       date: new Date(date),
     });
     console.log("Transaction inserted successfully");
+
+    // Insertion d'une nouvelle entrée dans la collection balanceHistory
+    await balanceHistoryCollection.insertOne({
+      userId: new ObjectId(userId),
+      balance: updatedBalance,
+      date: new Date(date),
+    });
+    console.log("Balance history updated successfully");
 
     return NextResponse.json({ balance: updatedBalance, portfolio: updatedPortfolio }, { status: 200 });
   } catch (error) {
