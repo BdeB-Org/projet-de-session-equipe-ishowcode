@@ -1,10 +1,12 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { motion } from "framer-motion"; 
 
 export default function RequestPasswordReset() {
   const [email, setEmail] = useState('');
@@ -21,7 +23,7 @@ export default function RequestPasswordReset() {
         headers: {
           'Content-Type': 'application/json'
         },
-        //envoie l'email 
+        // Envoie l'email 
         body: JSON.stringify({ email }),
       });
 
@@ -40,21 +42,30 @@ export default function RequestPasswordReset() {
       alert("Erreur lors de l'envoi de l'email. Veuillez vérifier la console pour plus d'informations.");
     }
   };
-  //frontend de la page
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#1a1a40] text-white">
-      <header className="px-4 lg:px-6 h-14 flex items-center border-b border-black-700">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-black text-white">
+      {/* Header */}
+      <header className="px-4 lg:px-6 h-16 flex items-center justify-between bg-transparent">
         <Link className="flex items-center justify-center" href="/">
-          <span className="font-bold text-xl slide-down">Lazuli</span>
+          <span className="font-bold text-2xl text-blue-300 hover:text-purple-400 transition-all slide-down">
+            Lazuli
+          </span>
         </Link>
       </header>
+
+      {/* Main Content */}
       <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h2 className="mt-6 text-[3rem] font-bold slide-down">Réinitialiser votre mot de passe</h2>
-            <p className="mt-2 text-sm text-blue-300 slide-down">
-              Vous avez oublié votre mot de passe!
-              <br />
+        <motion.div
+          className="w-full max-w-md bg-gradient-to-r from-purple-700 to-blue-700 p-8 rounded-xl shadow-xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-extrabold mb-2 slide-down">Réinitialiser votre mot de passe</h2>
+            <p className="text-lg text-gray-200 slide-down">
+              Vous avez oublié votre mot de passe!<br />
               Entrez votre adresse courriel
             </p>
           </div>
@@ -70,45 +81,46 @@ export default function RequestPasswordReset() {
                   required
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
-                  className="bg-white text-blue-900 placeholder-blue-150 rounded-full text-lg py-3 px-4"
+                  className="w-full bg-white text-blue-900 placeholder-blue-500 rounded-full px-4 py-3 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200"
                   placeholder="Adresse e-mail"
                 />
               </div>
-              <div className="text-center slide-down-form4 text-sm text-blue-300 hover:text-blue-200">
-              Vous recevrez un email pour réinitialiser votre mot de passe
-            </div>
+              <div className="text-center text-sm text-blue-300 hover:text-blue-200 transition-all slide-down-form4">
+                Vous recevrez un email pour réinitialiser votre mot de passe
+              </div>
             </div>
             <div>
               <Button 
                 type="submit" 
-                className={`w-full ${loading ? 'bg-gray-500' : 'bg-[#3b3b82]'} text-white hover:bg-[#4c4c96] text-base py-2 px-4 rounded-full slide-down-form3`}
+                className={`w-full ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-blue-500 to-purple-500'} text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform duration-200 slide-down-form3`}
                 disabled={loading}
               >
                 {loading ? 'Envoi...' : 'Envoyer'}
               </Button>
-              <div  className="text-center slide-down-form4 text-sm text-blue-300 hover:text-blue-200">
-              <Link href="/login">Vous vous souvenez de votre mot de passe? Connectez vous</Link>
+              <div className="text-center text-sm text-blue-300 hover:text-blue-200 transition-all slide-down-form4 mt-4">
+                <Link href="/login">Vous vous souvenez de votre mot de passe? Connectez-vous</Link>
+              </div>
             </div>
-            </div>
-            
-            
           </form>
-          
-        </div>
+        </motion.div>
       </main>
-      <footer className="py-6 px-4 md:px-6 border-t border-white-700">
+
+      {/* Footer */}
+      <footer className="py-6 px-4 md:px-6 border-t border-gray-700 text-center text-sm text-gray-400">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-white-400">© 2024 Lazuli. Tous droits réservés.</p>
+          <p className="text-sm text-gray-400">© 2024 Lazuli. Tous droits réservés.</p>
           <nav className="flex gap-4 sm:gap-6 mt-4 sm:mt-0">
-            <Link className="text-sm text-white-400 hover:text-blue-300" href="#">
+            <Link className="text-sm text-gray-400 hover:text-blue-300" href="#">
               Conditions d'utilisation
             </Link>
-            <Link className="text-sm text-white-400 hover:text-blue-300" href="#">
+            <Link className="text-sm text-gray-400 hover:text-blue-300" href="#">
               Politique de confidentialité
             </Link>
           </nav>
         </div>
       </footer>
+
+      {/* Styles Globaux */}
       <style jsx global>{`
         @tailwind base;
         @tailwind components;
@@ -129,9 +141,13 @@ export default function RequestPasswordReset() {
         .slide-down-form3 {
           animation: slideUp 2s ease-in-out;
         }
-          .slide-down-form4 {
+        .slide-down-form4 {
           animation: slideUp 2.2s ease-in-out;
         }
+        .slide-down-form5 {
+          animation: slideUp 2.6s ease-in-out;
+        }
+
         @keyframes fadeIn {
           from {
             opacity: 0.5;
@@ -140,6 +156,7 @@ export default function RequestPasswordReset() {
             opacity: 1;
           }
         }
+
         @keyframes slideDown {
           from {
             transform: translateY(-100px);
